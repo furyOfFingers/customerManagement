@@ -5,19 +5,25 @@ import { useRoutes, navigate } from "hookrouter";
 
 function App(): JSX.Element {
   const isAuth = true;
-  const routes = {
+  const authRoutes = {
     "/": () => <Auth />,
     "/home": () => <Home />,
     // '/products': () => <ProductOverview />,
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };
 
-  const routeResult = useRoutes(routes);
+  const withoutAuthRoutes = {
+    "/": () => <Auth />,
+  };
+
+  const authResult = useRoutes(authRoutes);
+  const withoutAuthResult = useRoutes(withoutAuthRoutes);
 
   if (isAuth) {
-    return routeResult || <div>not found</div>;
+    return authResult || <div>not found</div>;
   } else {
-    return navigate("/");
+    navigate("/");
+    return withoutAuthResult;
   }
 }
 
