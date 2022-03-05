@@ -12,18 +12,18 @@ function App(): JSX.Element {
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };
 
-  const withoutAuthRoutes = {
+  const nottAuthRoutes = {
     "/": () => <Auth />,
   };
 
   const authResult = useRoutes(authRoutes);
-  const withoutAuthResult = useRoutes(withoutAuthRoutes);
+  const notAuthResult = useRoutes(nottAuthRoutes);
 
   if (isAuth) {
     return authResult || <div>not found</div>;
   } else {
     navigate("/");
-    return withoutAuthResult;
+    return notAuthResult;
   }
 }
 
