@@ -1,5 +1,6 @@
 /* eslint-disable */
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const path = require("path");
 
 const htmlPlugin = new HtmlWebPackPlugin({
@@ -34,14 +35,6 @@ module.exports = {
         ],
       },
       {
-        enforce: "pre",
-        test: /\.(ts|js)x?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "eslint-loader",
-        },
-      },
-      {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         use: {
@@ -72,5 +65,12 @@ module.exports = {
     liveReload: true,
     historyApiFallback: true,
   },
-  plugins: [htmlPlugin],
+  plugins: [
+    htmlPlugin,
+    new ESLintPlugin({
+      exclude: "node_modules",
+      files: ["src/**/*.ts", "src/**/*.tsx"],
+      extensions: ["ts", "tsx"],
+    }),
+  ],
 };
