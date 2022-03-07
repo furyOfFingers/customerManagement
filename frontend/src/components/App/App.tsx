@@ -31,6 +31,7 @@ function Home() {
   return (
     <main>
       <h2>Home</h2>
+      <button onClick={() => navigate("/")}>to auth</button>
     </main>
   );
 }
