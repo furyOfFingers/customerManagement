@@ -20,6 +20,8 @@ module.exports = {
       components: path.resolve(__dirname, "src/components/"),
       router: path.resolve(__dirname, "src/router/"),
       pages: path.resolve(__dirname, "src/pages/"),
+      interfaces: path.resolve(__dirname, "src/interfaces/"),
+      schemes: path.resolve(__dirname, "src/schemes/"),
     },
     extensions: [".ts", ".tsx", ".js"],
   },
@@ -42,7 +44,12 @@ module.exports = {
         },
       },
       {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.styl$/,
+        exclude: /node_modules/,
         use: [
           { loader: "style-loader" },
           {

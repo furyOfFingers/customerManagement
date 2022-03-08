@@ -1,45 +1,31 @@
-import React, { FC } from "react";
-import { Route, Routes, Link } from "react-router-dom";
-// import AuthForm from "pages/AuthForm/AuthForm";
-// import WrongUrl from "pages/WrongUrl/WrongUrl";
-// import { useSelector } from "react-redux";
-import Auth from "pages/Auth/Auth";
-function Home() {
-  return (
-    <>
-      <main>
-        <h2>Welcome to the homepage!</h2>
-        <p>You can do this, I believe in you.</p>
-      </main>
-      <nav>
-        <Link to="/about">About</Link>
-      </nav>
-    </>
-  );
-}
+import React from "react";
+import { useRoutes, navigate } from "hookrouter";
 
-function About() {
-  return (
-    <>
-      <main>
-        <h2>Who are we?</h2>
-      </main>
-      <nav>
-        <Link to="/">Home</Link>
-      </nav>
-    </>
-  );
-}
+import Auth from "pages/Auth/Auth";
+import Home from "pages/Home/Home";
 
 const MainRouter = (): JSX.Element => {
-  // const token: string = useSelector((state: IAppState) => state?.token?.token);
+  const isAuth = true;
+  const authRoutes = {
+    "/": () => <Auth />,
+    "/home": () => <Home />,
+    // '/products': () => <ProductOverview />,
+    // '/products/:id': ({id}) => <ProductDetails id={id} />
+  };
 
-  return (
-    <Routes>
-      <Route path="/" element={() => <Auth />} />
-      <Route path="about" element={() => <About />} />
-    </Routes>
-  );
+  const notAuthRoutes = {
+    "/": () => <Auth />,
+  };
+
+  const authResult = useRoutes(authRoutes);
+  const notAuthResult = useRoutes(notAuthRoutes);
+
+  if (isAuth) {
+    return authResult || <div>not found</div>;
+  } else {
+    navigate("/");
+    return notAuthResult;
+  }
 };
 
 export default MainRouter;
