@@ -8,11 +8,12 @@ import s from "./SignUp.styl";
 
 interface ISignUp {
   onFormChange: (str: string) => void;
+  onFinish: (formName: string, data: IAuthSignUp) => void;
 }
 
-const SignUp = ({ onFormChange }: ISignUp): JSX.Element => {
-  const onFinish = (values: IAuthSignUp) => {
-    console.log("sign up:", values);
+const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
+  const onSubmit = (data: IAuthSignUp) => {
+    onFinish("signup", data);
   };
 
   return (
@@ -22,7 +23,7 @@ const SignUp = ({ onFormChange }: ISignUp): JSX.Element => {
         initialValues={{
           remember: true,
         }}
-        onFinish={onFinish}
+        onFinish={onSubmit}
       >
         <Form.Item
           name="username"

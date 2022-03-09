@@ -22,6 +22,7 @@ module.exports = {
       pages: path.resolve(__dirname, "src/pages/"),
       interfaces: path.resolve(__dirname, "src/interfaces/"),
       schemes: path.resolve(__dirname, "src/schemes/"),
+      hooks: path.resolve(__dirname, "src/hooks/"),
     },
     extensions: [".ts", ".tsx", ".js"],
   },
@@ -71,6 +72,9 @@ module.exports = {
     hot: true,
     liveReload: true,
     historyApiFallback: true,
+    proxy: {
+      "/api": "http://localhost:5000",
+    },
   },
   plugins: [
     htmlPlugin,

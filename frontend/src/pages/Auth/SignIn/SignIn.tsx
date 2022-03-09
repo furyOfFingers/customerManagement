@@ -9,33 +9,24 @@ import s from "./SignIn.styl";
 
 interface ISignIn {
   onFormChange: (str: string) => void;
+  onFinish: (formName: string, data: IAuthSignIn) => void;
 }
 
-// const schemeSignIn = {
-//   required: "${label} is required!",
-//   username: {
-//     range: "${label} must be between ${min} and ${max}",
-//   },
-//   password: {
-//     range: "${label} must be between ${min} and ${max}",
-//   },
-// };
-
-const SignIn = ({ onFormChange }: ISignIn): JSX.Element => {
-  const onFinish = (values: IAuthSignIn) => {
-    console.log("sign in: ", values);
+const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
+  const onSubmit = (data: IAuthSignIn) => {
+    onFinish("signin", data);
   };
-  // const buttonItemLayout = {
-  //   wrapperCol: { offset: 6 },
-  // };
+
   return (
     <div className={s.container}>
       <Form
         validateMessages={schemeSignIn}
         initialValues={{
           remember: true,
+          username: "MaratAsadullaev",
+          password: "MaratAsadullaev",
         }}
-        onFinish={onFinish}
+        onFinish={onSubmit}
       >
         <Form.Item
           name="username"
