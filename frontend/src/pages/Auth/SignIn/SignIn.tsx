@@ -1,4 +1,5 @@
 import React from "react";
+import { observer } from "mobx-react";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
@@ -10,9 +11,10 @@ import s from "./SignIn.styl";
 interface ISignIn {
   onFormChange: (str: string) => void;
   onFinish: (formName: string, data: IAuthSignIn) => void;
+  disabled: boolean;
 }
 
-const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
+const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
   const onSubmit = (data: IAuthSignIn) => {
     onFinish("signin", data);
   };
@@ -39,6 +41,7 @@ const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
           ]}
         >
           <Input
+            disabled={disabled}
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="username"
           />
@@ -55,6 +58,7 @@ const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
           ]}
         >
           <Input
+            disabled={disabled}
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="password"
@@ -67,11 +71,16 @@ const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              disabled={disabled}
             >
               Sign in
             </Button>
 
-            <Button onClick={() => onFormChange("signUp")} type="link">
+            <Button
+              disabled={disabled}
+              onClick={() => onFormChange("signUp")}
+              type="link"
+            >
               Sign Up
             </Button>
           </div>
@@ -81,4 +90,4 @@ const SignIn = ({ onFormChange, onFinish }: ISignIn): JSX.Element => {
   );
 };
 
-export default SignIn;
+export default observer(SignIn);

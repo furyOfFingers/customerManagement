@@ -1,4 +1,5 @@
 import React from "react";
+import { observer } from "mobx-react";
 import { Form, Input, Button, Radio } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 
@@ -9,9 +10,10 @@ import s from "./SignUp.styl";
 interface ISignUp {
   onFormChange: (str: string) => void;
   onFinish: (formName: string, data: IAuthSignUp) => void;
+  disabled: boolean;
 }
 
-const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
+const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
   const onSubmit = (data: IAuthSignUp) => {
     onFinish("signup", data);
   };
@@ -20,10 +22,13 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
     <div className={s.container}>
       <Form
         validateMessages={schemeSignUp}
+        onFinish={onSubmit}
         initialValues={{
           remember: true,
+          username: "MaratAsadullaev",
+          password: "MaratAsadullaev",
+          email: "wills900@mail.ru",
         }}
-        onFinish={onSubmit}
       >
         <Form.Item
           name="username"
@@ -38,6 +43,7 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="username"
+            disabled={disabled}
           />
         </Form.Item>
 
@@ -51,13 +57,14 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
           ]}
         >
           <Input
+            disabled={disabled}
             prefix={<MailOutlined className="site-form-item-icon" />}
             placeholder="email"
           />
         </Form.Item>
 
         <Form.Item name="gender" initialValue="male">
-          <Radio.Group buttonStyle="outline">
+          <Radio.Group buttonStyle="outline" disabled={disabled}>
             <Radio.Button value="male">male</Radio.Button>
             <Radio.Button value="female">female</Radio.Button>
           </Radio.Group>
@@ -77,6 +84,7 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="password"
+            disabled={disabled}
           />
         </Form.Item>
 
@@ -86,11 +94,16 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              disabled={disabled}
             >
               Sign Up
             </Button>
 
-            <Button onClick={() => onFormChange("signIn")} type="link">
+            <Button
+              type="link"
+              disabled={disabled}
+              onClick={() => onFormChange("signIn")}
+            >
               Sign In
             </Button>
           </div>
@@ -100,4 +113,4 @@ const SignUp = ({ onFormChange, onFinish }: ISignUp): JSX.Element => {
   );
 };
 
-export default SignUp;
+export default observer(SignUp);
