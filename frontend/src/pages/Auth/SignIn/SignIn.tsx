@@ -5,7 +5,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import { IAuthSignIn } from "interfaces/auth";
 import { schemeSignIn } from "schemes/auth";
-
+import { SIGNIN, SIGNUP } from "constants/auth";
 import s from "./SignIn.styl";
 
 interface ISignIn {
@@ -16,7 +16,7 @@ interface ISignIn {
 
 const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
   const onSubmit = (data: IAuthSignIn) => {
-    onFinish("signin", data);
+    onFinish(SIGNIN, data);
   };
 
   return (
@@ -78,7 +78,7 @@ const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
 
             <Button
               disabled={disabled}
-              onClick={() => onFormChange("signUp")}
+              onClick={() => onFormChange(SIGNUP)}
               type="link"
             >
               Sign Up

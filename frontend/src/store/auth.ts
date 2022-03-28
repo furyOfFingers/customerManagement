@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import spin from "store/spin";
 import error from "store/errorHandle";
 import { IAuthSignIn, IAuthSignUp } from "interfaces/auth";
-import { AUTH_SIGNIN, AUTH_SIGNUP, API_AUTH } from "constants/api";
+import { AUTH_SIGNIN, AUTH_SIGNUP, API, AUTH } from "constants/api";
 
 class Auth {
   constructor() {
@@ -14,7 +14,7 @@ class Auth {
   signUp(data: IAuthSignUp) {
     spin.setSpin(true);
     axios
-      .post(`${API_AUTH}${AUTH_SIGNUP}`, data)
+      .post(`${API}${AUTH}${AUTH_SIGNUP}`, data)
       .then((res) => {
         console.log("--> signUp", res);
       })
@@ -27,7 +27,7 @@ class Auth {
   signIn(data: IAuthSignIn) {
     spin.setSpin(true);
     axios
-      .post(`${API_AUTH}${AUTH_SIGNIN}`, data)
+      .post(`${API}${AUTH}${AUTH_SIGNIN}`, data)
       .then((res) => {
         console.log("--> signIn", res);
       })

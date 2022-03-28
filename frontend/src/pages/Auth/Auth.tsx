@@ -7,21 +7,21 @@ import SignUp from "./SignUp/SignUp";
 import { IAuthSignIn, IAuthSignUp } from "interfaces/auth";
 import auth from "store/auth";
 import spin from "store/spin";
-import { AUTH_SIGNIN } from "constants/api";
+import { SIGNIN, SIGNUP } from "constants/auth";
 
-const Auth = observer((): JSX.Element => {
-  const [isSignIn, setIsSignIn] = useState("signIn");
+const Auth = (): JSX.Element => {
+  const [isSignIn, setIsSignIn] = useState(SIGNIN);
 
   const handleFormChange = (formName: string) => {
-    if (formName === "signUp") {
-      setIsSignIn("signUp");
+    if (formName === SIGNUP) {
+      setIsSignIn(SIGNUP);
     } else {
-      setIsSignIn("signIn");
+      setIsSignIn(SIGNIN);
     }
   };
 
   const onFinish = (formName: string, data: IAuthSignIn | IAuthSignUp) => {
-    if (formName === AUTH_SIGNIN) {
+    if (formName === SIGNIN) {
       auth.signIn(data as IAuthSignIn);
     } else {
       auth.signUp(data as IAuthSignUp);
@@ -29,7 +29,7 @@ const Auth = observer((): JSX.Element => {
   };
 
   const renderForm = (): JSX.Element => {
-    return isSignIn === "signIn" ? (
+    return isSignIn === SIGNIN ? (
       <SignIn
         onFinish={onFinish}
         disabled={spin.spin}
@@ -49,6 +49,6 @@ const Auth = observer((): JSX.Element => {
       <div className={s.formBody}>{renderForm()}</div>
     </div>
   );
-});
+};
 
-export default Auth;
+export default observer(Auth);
