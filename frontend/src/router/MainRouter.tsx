@@ -1,11 +1,16 @@
 import React from "react";
+import { observer } from "mobx-react";
+import { toJS } from "mobx";
 import { useRoutes, navigate } from "hookrouter";
+import { isEmpty } from "ramda";
 
 import Auth from "pages/Auth/Auth";
 import Home from "pages/Home/Home";
+import user from "store/user";
 
 const MainRouter = (): JSX.Element => {
-  const isAuth = true;
+  const isAuth = !isEmpty(toJS(user?.user));
+
   const authRoutes = {
     "/": () => <Auth />,
     "/home": () => <Home />,
@@ -28,4 +33,4 @@ const MainRouter = (): JSX.Element => {
   }
 };
 
-export default MainRouter;
+export default observer(MainRouter);

@@ -8,6 +8,7 @@ const Layout = (): JSX.Element => {
   return (
     <div className={s.container}>
       <Header />
+
       <MainRouter />
     </div>
   );

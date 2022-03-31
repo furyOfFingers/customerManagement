@@ -1,8 +1,10 @@
-export interface IAuthSignIn{
-  username: string,
-  password: string,
+export interface IAuthSignIn {
+  email: string;
+  password: string;
 }
-export interface IAuthSignUp extends IAuthSignIn{
-  email: string,
-  gender: 'female'|'male'
+export interface IAuthSignUp {
+  email: string;
+  gender: "female" | "male";
+  username: string;
+  password: string;
 }

@@ -1,11 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react";
+import { toJS } from "mobx";
 import { Form, Input, Button, Radio } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 
 import { schemeSignUp } from "schemes/auth";
 import { IAuthSignUp } from "interfaces/auth";
 import { SIGNIN, SIGNUP } from "constants/auth";
+import error from "store/errorHandle";
 import s from "./SignUp.styl";
 
 interface ISignUp {
@@ -16,8 +18,10 @@ interface ISignUp {
 
 const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
   const onSubmit = (data: IAuthSignUp) => {
+    error.removeError("", "", true);
     onFinish(SIGNUP, data);
   };
+  const err = toJS(error.error);
 
   return (
     <div className={s.container}>
@@ -36,7 +40,7 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
           rules={[
             {
               required: true,
-              min: 8,
+              min: 5,
               max: 30,
             },
           ]}
@@ -50,6 +54,8 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
 
         <Form.Item
           name="email"
+          validateStatus={err?.signup?.email ? "error" : undefined}
+          help={err?.signup?.email}
           rules={[
             {
               required: true,
@@ -58,6 +64,7 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
           ]}
         >
           <Input
+            onChange={() => error.removeError("signup", "email")}
             disabled={disabled}
             prefix={<MailOutlined className="site-form-item-icon" />}
             placeholder="email"
@@ -91,12 +98,7 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
 
         <Form.Item>
           <div className={s.buttons}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              disabled={disabled}
-            >
+            <Button type="primary" htmlType="submit" disabled={disabled}>
               Sign Up
             </Button>
 

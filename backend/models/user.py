@@ -20,5 +20,24 @@ class User(Base):
     #     self.date_created = date_created
 
     def __repr__(self):
-        return f'<User {self.username} / {self.email} / {self.gender} / {self.date_created}>'
-        # return '{"username": {self.username}, "email": {self.email}, "gender": {self.gender}, "date_created": {self.date_created}}'
+        # return f'<{self.username} / {self.email} / {self.gender} / {self.date_created} / {self.password}>'
+        # date = {
+        #     "year": self.date_created.year,
+        #     "month": self.date_created.month,
+        #     "day": self.date_created.day,
+        #     "hour": self.date_created.hour,
+        #     "minute": self.date_created.minute,
+        #     "second": self.date_created.second,
+        #     "timestamp": datetime.timestamp(self.date_created)
+        # }
+
+        return str(
+            {
+                "id": str(self.id),
+                "email": self.email,
+                "gender": self.gender,
+                "password": self.password,
+                "username": self.username,
+                "date_created": str(datetime.timestamp(self.date_created)),
+            }
+        )

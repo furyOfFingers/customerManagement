@@ -1,11 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react";
+import { toJS } from "mobx";
 import { Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 
 import { IAuthSignIn } from "interfaces/auth";
 import { schemeSignIn } from "schemes/auth";
 import { SIGNIN, SIGNUP } from "constants/auth";
+import error from "store/errorHandle";
 import s from "./SignIn.styl";
 
 interface ISignIn {
@@ -16,39 +18,45 @@ interface ISignIn {
 
 const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
   const onSubmit = (data: IAuthSignIn) => {
+    error.removeError("", "", true);
     onFinish(SIGNIN, data);
   };
+  const err = toJS(error.error);
 
   return (
     <div className={s.container}>
       <Form
+        onValuesChange={() => error.removeError("signin", "email")}
         validateMessages={schemeSignIn}
         initialValues={{
           remember: true,
-          username: "MaratAsadullaev",
+          email: "wills900@mail.ru",
           password: "MaratAsadullaev",
         }}
         onFinish={onSubmit}
       >
         <Form.Item
-          name="username"
+          name="email"
+          validateStatus={err?.signin?.email ? "error" : undefined}
+          help={err?.signin?.email}
           rules={[
             {
               required: true,
-              min: 8,
+              min: 5,
               max: 30,
             },
           ]}
         >
           <Input
             disabled={disabled}
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="username"
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="email"
           />
         </Form.Item>
 
         <Form.Item
           name="password"
+          validateStatus={err?.signin?.email ? "error" : undefined}
           rules={[
             {
               required: true,
@@ -67,12 +75,7 @@ const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
 
         <Form.Item>
           <div className={s.buttons}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              disabled={disabled}
-            >
+            <Button type="primary" htmlType="submit" disabled={disabled}>
               Sign in
             </Button>
 
