@@ -1,5 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
+import Sidebar from "modules/Sidebar";
 // import { toJS } from "mobx";
 // import { Form, Input, Button, Radio } from "antd";
 // import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
@@ -18,7 +19,11 @@ import s from "./Home.styl";
 
 const Home = (): // {}: IHome
 JSX.Element => {
-  return <div className={s.container}>home</div>;
+  return (
+    <div className={s.container}>
+      <Sidebar />
+    </div>
+  );
 };
 
 export default observer(Home);

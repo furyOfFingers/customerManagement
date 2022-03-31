@@ -34,10 +34,29 @@ function Header(): JSX.Element {
 
   const renderBody = () => {
     if (isEmpty(user?.user)) {
-      return null;
+      return <></>;
     } else {
       return (
-        <>
+        <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
+          {spin.spin && <Spin size="large" className={s.spin} />}
+          {/* <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          onClick={users.getUsers}
+        >
+          users
+        </Button>
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          onClick={() =>
+            console.log("--> errorHandle.error", toJS(errorHandle.error.signup))
+          }
+        >
+          show Error
+        </Button> */}
           <Dropdown
             overlay={menu}
             placement="bottomRight"
@@ -49,35 +68,12 @@ function Header(): JSX.Element {
           <Avatar className={s.avatar} shape="square" icon={<UserOutlined />} />
 
           <div className={s.username}>{user?.user?.username}</div>
-        </>
+        </div>
       );
     }
   };
 
-  return (
-    <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
-      {spin.spin && <Spin size="large" className={s.spin} />}
-      {/* <Button
-        type="primary"
-        htmlType="submit"
-        className="login-form-button"
-        onClick={users.getUsers}
-      >
-        users
-      </Button>
-      <Button
-        type="primary"
-        htmlType="submit"
-        className="login-form-button"
-        onClick={() =>
-          console.log("--> errorHandle.error", toJS(errorHandle.error.signup))
-        }
-      >
-        show Error
-      </Button> */}
-      {renderBody()}
-    </div>
-  );
+  return renderBody();
 }
 
 export default observer(Header);

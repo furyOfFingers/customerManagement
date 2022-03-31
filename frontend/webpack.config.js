@@ -25,6 +25,7 @@ module.exports = {
       constants: path.resolve(__dirname, "src/constants/"),
       store: path.resolve(__dirname, "src/store/"),
       hooks: path.resolve(__dirname, "src/hooks/"),
+      modules: path.resolve(__dirname, "src/modules/"),
     },
     extensions: [".ts", ".tsx", ".js"],
   },
