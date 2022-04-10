@@ -4,6 +4,7 @@ from flask import Flask, request
 from db.database import init_db, db_session
 from models.user import User
 from routes.auth import signup, signin
+from routes.student import create, getStudent
 
 
 app = Flask(__name__)
@@ -37,6 +38,16 @@ def auth_signup():
 @app.route('/api/auth/signin', methods=["POST"])
 def auth_signin():
     return signin.signin()
+
+
+@app.route('/api/student', methods=["POST"])
+def student_create():
+    return create.create()
+
+
+@app.route('/api/student', methods=["GET"])
+def student_getStudent():
+    return getStudent.getStudent()
 
 
 if __name__ == '__main__':

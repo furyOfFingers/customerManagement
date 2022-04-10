@@ -16,7 +16,7 @@ class ErrorHandle {
       this.error = {};
     } else {
       const targetObj = this.error?.[parentPropName];
-      delete targetObj?.[childPropName];
+      delete targetObj?.[childPropName as string];
 
       if (isEmpty(targetObj)) {
         delete this.error?.[parentPropName];

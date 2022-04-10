@@ -23,7 +23,7 @@ class Auth {
         }
         console.log("--> signUp", res);
       })
-      .then(() => navigate("/home"))
+      .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
@@ -40,7 +40,7 @@ class Auth {
         }
         console.log("--> signIn", res);
       })
-      .then(() => navigate("/home"))
+      .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })

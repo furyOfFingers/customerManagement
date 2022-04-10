@@ -43,7 +43,7 @@ const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
             {
               required: true,
               min: 5,
-              max: 30,
+              max: 120,
             },
           ]}
         >
@@ -61,7 +61,7 @@ const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
             {
               required: true,
               min: 8,
-              max: 80,
+              max: 120,
             },
           ]}
         >

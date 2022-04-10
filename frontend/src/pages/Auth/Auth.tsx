@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react";
+import { toJS } from "mobx";
+import { navigate } from "hookrouter";
+import { isEmpty } from "ramda";
 
 import s from "./Auth.styl";
-import SignIn from "./SignIn/SignIn";
-import SignUp from "./SignUp/SignUp";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 import { IAuthSignIn, IAuthSignUp } from "interfaces/auth";
 import auth from "store/auth";
 import spin from "store/spin";
+import user from "store/user";
 import { SIGNIN, SIGNUP } from "constants/auth";
 
 const Auth = (): JSX.Element => {
   const [isSignIn, setIsSignIn] = useState(SIGNIN);
+
+  useEffect(() => {
+    const isAuth = !isEmpty(toJS(user?.user));
+
+    isAuth && navigate("/students");
+  }, []);
 
   const handleFormChange = (formName: string) => {
     if (formName === SIGNUP) {

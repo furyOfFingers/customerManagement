@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { isEmpty } from "ramda";
 import { Spin, Avatar, Menu, Dropdown, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import cls from "classnames";
@@ -33,13 +32,10 @@ function Header(): JSX.Element {
   );
 
   const renderBody = () => {
-    if (isEmpty(user?.user)) {
-      return <></>;
-    } else {
-      return (
-        <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
-          {spin.spin && <Spin size="large" className={s.spin} />}
-          {/* <Button
+    return (
+      <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
+        {spin.spin && <Spin size="large" className={s.spin} />}
+        {/* <Button
           type="primary"
           htmlType="submit"
           className="login-form-button"
@@ -57,20 +53,19 @@ function Header(): JSX.Element {
         >
           show Error
         </Button> */}
-          <Dropdown
-            overlay={menu}
-            placement="bottomRight"
-            arrow={{ pointAtCenter: true }}
-          >
-            <Button>menu</Button>
-          </Dropdown>
+        <Dropdown
+          overlay={menu}
+          placement="bottomRight"
+          arrow={{ pointAtCenter: true }}
+        >
+          <Button>menu</Button>
+        </Dropdown>
 
-          <Avatar className={s.avatar} shape="square" icon={<UserOutlined />} />
+        <Avatar className={s.avatar} shape="square" icon={<UserOutlined />} />
 
-          <div className={s.username}>{user?.user?.username}</div>
-        </div>
-      );
-    }
+        <div className={s.username}>{user?.user?.username}</div>
+      </div>
+    );
   };
 
   return renderBody();

@@ -9,7 +9,7 @@ class User(Base):
     username = Column(String(50), nullable=False)
     password = Column(String(120), nullable=False)
     email = Column(String(120), unique=True)
-    gender = Column(String(10), nullable=False)
+    gender = Column(String(6), nullable=False)
     date_created = Column(DateTime, default=datetime.utcnow)
 
     # def __init__(self, username=None, email=None, password=None, gender=None, date_created=None):

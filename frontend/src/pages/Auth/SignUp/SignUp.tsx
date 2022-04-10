@@ -41,7 +41,7 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
             {
               required: true,
               min: 5,
-              max: 30,
+              max: 50,
             },
           ]}
         >
@@ -84,7 +84,7 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
             {
               required: true,
               min: 8,
-              max: 80,
+              max: 120,
             },
           ]}
         >

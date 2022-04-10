@@ -4,17 +4,29 @@ import { toJS } from "mobx";
 import { useRoutes, navigate } from "hookrouter";
 import { isEmpty } from "ramda";
 
-import Auth from "pages/Auth/Auth";
-import Home from "pages/Home/Home";
+import Auth from "pages/Auth";
+import PageWrapper from "components/PageWrapper";
+import Students from "pages/Students";
+import Teachers from "pages/Teachers";
+import Groups from "pages/Groups";
+import Payments from "pages/Payments";
+import MoneyReport from "pages/MoneyReport";
 import user from "store/user";
 
 const MainRouter = (): JSX.Element => {
   const isAuth = !isEmpty(toJS(user?.user));
 
+  const wrapper = (children: JSX.Element) => (
+    <PageWrapper>{children}</PageWrapper>
+  );
+
   const authRoutes = {
     "/": () => <Auth />,
-    "/home": () => <Home />,
-    // '/products': () => <ProductOverview />,
+    "/students": () => wrapper(<Students />),
+    "/teachers": () => wrapper(<Teachers />),
+    "/groups": () => wrapper(<Groups />),
+    "/payments": () => wrapper(<Payments />),
+    "/moneyReport": () => wrapper(<MoneyReport />),
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };
 
