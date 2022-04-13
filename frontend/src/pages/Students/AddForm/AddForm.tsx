@@ -5,6 +5,7 @@ import moment from "moment";
 
 import Uploader from "components/Uploader";
 import { IStudents } from "interfaces/student";
+import { schemeAddForm } from "schemes/student";
 import s from "./AddForm.styl";
 import spin from "store/spin";
 import student from "store/student";
@@ -18,7 +19,7 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
 
   const onSubmit = async (data: IStudents) => {
     const newData = { ...data, photo: image };
-    console.log("--> newData", newData);
+
     await student.createStudent(newData as IStudents);
     await student.getStudents();
     handleOk();
@@ -31,7 +32,7 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
   return (
     <div className={s.container}>
       <Form
-        // validateMessages={schemeSignUp}
+        validateMessages={schemeAddForm}
         onFinish={onSubmit}
         initialValues={{
           remember: true,
@@ -53,6 +54,8 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
           rules={[
             {
               required: true,
+              min: 2,
+              max: 80,
             },
           ]}
         >
@@ -65,8 +68,8 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
           rules={[
             {
               required: true,
-              min: 5,
-              max: 50,
+              min: 2,
+              max: 80,
             },
           ]}
         >
@@ -79,6 +82,8 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
           rules={[
             {
               required: true,
+              min: 2,
+              max: 80,
             },
           ]}
         >
@@ -91,6 +96,8 @@ const AddForm = ({ handleOk }: IAddForm): JSX.Element => {
           rules={[
             {
               required: true,
+              min: 5,
+              max: 30,
             },
           ]}
         >
