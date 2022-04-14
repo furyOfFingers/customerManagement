@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
-import { Button, Modal } from "antd";
+import { Button} from "antd";
 import { isEmpty } from "ramda";
 
 import AddForm from "./AddForm";
@@ -40,18 +40,7 @@ const Students = (): JSX.Element | null => {
 
       <StudentsTable students={toJS(student.students)} />
 
-      <Modal
-        title="Add student"
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-        ]}
-      >
-        <AddForm handleOk={handleOk} />
-      </Modal>
+      {isModalVisible && <AddForm onReject={handleCancel} onSubmit={handleOk}/>}
     </div>
   );
 };
