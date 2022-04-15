@@ -5,6 +5,7 @@ import spin from "store/spin";
 import error from "store/errorHandle";
 import { IStudents } from "interfaces/student";
 import { STUDENT, API } from "constants/api";
+import {message} from "antd";
 
 class student {
   students = [];
@@ -19,7 +20,14 @@ class student {
       .post(`${API}${STUDENT}`, data)
       .then((res) => {
         if (res.status === 201) {
-          this.students = res.data;
+          message.success(
+            {
+              content: `student: ${data.firstname} added`,
+              style: {
+                marginTop: "20vh",
+              },
+            },
+            5);
         }
         console.log("--> createStudent", res);
       })
