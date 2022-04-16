@@ -1,29 +1,54 @@
-import React from "react";
+import React, {useCallback, useState} from "react";
 import { observer } from "mobx-react";
 import { List, Avatar } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import { IStudents } from "interfaces/student";
 import s from "./StudentsTable.styl";
+import AddForm from "../AddForm";
 
 interface IStudentsTable {
   students: IStudents[];
 }
 
 const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
-  const handleEdit = (id: string) => {
+  const [isEditStudentModalShown, setIsEditStudentModalShown] = useState(false);
+  const [studentId, setStudentId] = useState<string | null>(null);
+  const handleEdit = useCallback((id: string) => {
     console.log("--> id", id);
-  };
+    id && setStudentId(id);
+    handleViewEditStudentModal();
+  }, []);
 
-  const handleRemove = (id: string) => {
-    console.log("--> id", id);
-  };
+  const handleViewEditStudentModal = useCallback(() => {
+    setIsEditStudentModalShown(true);
+  }, []);
 
-  const handleDetail = (id: string) => {
+  const handleHideEditStudentModal = useCallback(() => {
+    setIsEditStudentModalShown(false);
+  }, []);
+
+  const handleRemove = useCallback((id: string) => {
     console.log("--> id", id);
-  };
+    id && setStudentId(id);
+  }, []);
+
+  const handleDetail = useCallback((id: string) => {
+    console.log("--> id", id);
+    id && setStudentId(id);
+  }, []);
+
+  const handleUpdateStudent = useCallback(() => {
+    handleHideEditStudentModal();
+  }, []);
+
+  const handleCloseEditStudentModal = useCallback(() => {
+    setStudentId(null);
+    handleHideEditStudentModal();
+  }, []);
 
   return (
+    <>
     <div className={s.container}>
       <List
         className={s.list}
@@ -62,6 +87,10 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
         }}
       />
     </div>
+    {isEditStudentModalShown && (
+      <AddForm onSubmit={handleUpdateStudent} onReject={handleCloseEditStudentModal} id={studentId}/>
+    )}
+    </>
   );
 };
 

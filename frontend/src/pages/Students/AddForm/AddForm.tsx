@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
 import moment from "moment";
@@ -12,9 +12,10 @@ import {ButtonsConfig, formItemLayout} from "./constants";
 import {locale} from "common/locale";
 import {getModalMode} from "./utils";
 import {EModalMode} from "common/enums";
+import {Maybe} from "common/types";
 
 interface IAddForm {
-  id?: string;
+  id?: Maybe<string>;
   onSubmit: VoidFunction;
   onReject: VoidFunction;
 }
@@ -23,12 +24,33 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
   const [image, setImage] = useState<Blob | undefined>();
   const [mode] = useState(getModalMode(id));
 
+  useEffect(() => {
+    if (id) {
+      student.getStudent(id);
+    }
+  }, []);
+
   const handleSubmitClick = async (data: IStudents) => {
     const newData = { ...data, photo: image };
-    console.log("--> newData", newData);
-    await student.createStudent(newData as IStudents);
+    const action = mode === EModalMode.EDIT
+      ? handleUpdateStudent
+      : handleAddStudent;
+    await action(newData);
     await student.getStudents();
     onSubmit();
+  };
+
+  const handleUpdateStudent = async (data: IStudents) => {
+    if (!id) return;
+    console.log("--> newData", data);
+
+    await student.updateStudent(id, data as IStudents);
+  };
+
+  const handleAddStudent = async (data: IStudents) => {
+
+    console.log("--> newData", data);
+    await student.createStudent(data as IStudents);
   };
 
   const onPhotoLoader = (photo: Blob) => {
