@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, BLOB
 from datetime import datetime
+
 from db.database import Base
+from sqlalchemy import Column, DateTime, Integer, String
 
 
 class Student(Base):
@@ -11,7 +12,7 @@ class Student(Base):
     patronymic = Column(String(80), nullable=False)
 
     phone = Column(String(30), nullable=False)
-    birth_day = Column(String(10), nullable=False)
+    birthday = Column(String(10), nullable=False)
     photo = Column(String())
     gender = Column(String(10), nullable=False)
     # groups = Column(String(10), nullable=False)
@@ -28,7 +29,7 @@ class Student(Base):
                 "firstname": self.firstname,
                 "patronymic": self.patronymic,
                 "phone": self.phone,
-                "birth_day": self.birth_day,
+                "birthday": self.birthday,
                 "photo": self.photo,
                 "gender": self.gender,
                 # "groups": self.groups,

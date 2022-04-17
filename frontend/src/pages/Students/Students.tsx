@@ -4,6 +4,7 @@ import { toJS } from "mobx";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
 
+import { IStudents } from "interfaces/student";
 import AddForm from "./AddForm";
 import s from "./Students.styl";
 import student from "store/student";
@@ -11,46 +12,105 @@ import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
 
 const Students = (): JSX.Element | null => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [pickedStudent, setPickedStudent] = useState<null | IStudents>(null);
 
   useEffect(() => {
-    console.log("--> toJS(student.students", toJS(student.students));
     if (isEmpty(toJS(student.students))) {
       student.getStudents();
     }
   }, []);
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const handleRemove = (id: string) => {
+    const selectedStudent = toJS(student.students).find(
+      (el: IStudents) => el.id === id
+    );
+
+    setPickedStudent(selectedStudent ? selectedStudent : null);
+    handleOpenMW("remove");
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  const handleOpenMW = (name: string) => {
+    switch (name) {
+      case "add":
+        setIsAddModalOpen(true);
+        break;
+      // case 'edit':
+      //     setIsEditModalOpen(true);
+      case "remove":
+        setIsRemoveModalOpen(true);
+        break;
+    }
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const handleCancel = (name: string) => {
+    switch (name) {
+      case "add":
+        setIsAddModalOpen(false);
+        break;
+      // case 'edit':
+      //     setIsEditModalOpen(true);
+      case "remove":
+        setIsRemoveModalOpen(false);
+        break;
+    }
+  };
+
+  const confirmHandleRemove = async () => {
+    await student.removeStudent(pickedStudent?.id as string);
+    await student.getStudents();
+    handleCancel("remove");
+    setPickedStudent(null);
   };
 
   return spin.spin ? null : (
     <div className={s.container}>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={() => handleOpenMW("add")}>
         Add student
       </Button>
 
-      <StudentsTable students={toJS(student.students)} />
+      <StudentsTable
+        listStudents={toJS(student.students)}
+        remove={handleRemove}
+      />
 
       <Modal
         title="Add student"
-        visible={isModalVisible}
-        onCancel={handleCancel}
+        onCancel={() => handleCancel("add")}
+        visible={isAddModalOpen}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" onClick={() => handleCancel("add")}>
             Cancel
           </Button>,
         ]}
       >
-        <AddForm handleOk={handleOk} />
+        <AddForm handleOk={() => handleCancel("add")} />
+      </Modal>
+
+      <Modal
+        title="Remove student"
+        onCancel={() => handleCancel("remove")}
+        visible={isRemoveModalOpen}
+        footer={[
+          <Button key="remove" type="primary" onClick={confirmHandleRemove}>
+            Remove
+          </Button>,
+
+          <Button key="back" onClick={() => handleCancel("remove")}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        <div>
+          remove student{" "}
+          <span>
+            {`${pickedStudent?.lastname}
+            ${pickedStudent?.firstname.substring(0, 1)}.
+            ${pickedStudent?.patronymic.substring(0, 1)}.`}{" "}
+            ?
+          </span>
+        </div>
       </Modal>
     </div>
   );

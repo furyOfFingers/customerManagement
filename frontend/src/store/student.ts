@@ -50,6 +50,29 @@ class Student {
       })
       .finally(() => spin.setSpin(false));
   }
+
+  removeStudent(id: string) {
+    spin.setSpin(true);
+    axios
+      .delete(`${API}${STUDENT}`, { params: { id } })
+      .then((res) => {
+        if (res.status === 200) {
+          message.success(
+            {
+              content: res.data,
+              style: {
+                marginTop: "20vh",
+              },
+            },
+            5
+          );
+        }
+      })
+      .catch((err: AxiosError) => {
+        error.errorHandle(err);
+      })
+      .finally(() => spin.setSpin(false));
+  }
 }
 
 export default new Student();

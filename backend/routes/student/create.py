@@ -1,8 +1,7 @@
-from flask import request
-from db.database import db_session
-from models.student import Student
 from cerberus import Validator
-from termcolor import colored
+from db.database import db_session
+from flask import request
+from models.student import Student
 
 
 def create():
@@ -23,7 +22,7 @@ def create():
             'phone': {
                 'type': 'string', 'minlength': 5, 'maxlength': 30
             },
-            'birth_day': {
+            'birthday': {
                 'type': 'string'
             },
             'photo': {
@@ -40,23 +39,20 @@ def create():
             firstname = request_data['firstname']
             patronymic = request_data['patronymic']
             phone = request_data['phone']
-            birth_day = request_data['birthday']
+            birthday = request_data['birthday']
             gender = request_data['gender']
+            photo = request_data.get('photo', '')
             # groups = request_data['groups']
             # parents = request_data['parents']
             # payment = request_data['payment']
             # is_phone_number_client = request_data['is_phone_number_client']
-            if hasattr(request_data, 'photo'):
-                photo = request_data['photo']
-            else:
-                photo = ''
 
             new_student = Student(
                 lastname=lastname,
                 firstname=firstname,
                 patronymic=patronymic,
                 phone=phone,
-                birth_day=birth_day,
+                birthday=birthday,
                 photo=photo,
                 gender=gender,
                 # groups=groups,
@@ -73,7 +69,7 @@ def create():
                     "firstname": firstname,
                     "patronymic": patronymic,
                     "phone": phone,
-                    "birth_day": birth_day,
+                    "birthday": birthday,
                     "photo": photo,
                     "gender": gender,
                     "id": new_student.id,

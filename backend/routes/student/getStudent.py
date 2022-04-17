@@ -1,8 +1,5 @@
 from flask import request
-from db.database import db_session
 from models.student import Student
-from cerberus import Validator
-from termcolor import colored
 
 
 def getStudent():
@@ -11,7 +8,7 @@ def getStudent():
             students = Student.query.all()
             correctDict = str(students).replace("'", '"')
 
-            return correctDict
+            return correctDict, 200
 
         except Exception as e:
             return str(e)
