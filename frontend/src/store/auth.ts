@@ -21,7 +21,6 @@ class Auth {
         if (res.status === 201) {
           user.setUser(res.data);
         }
-        console.log("--> signUp", res);
       })
       .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
@@ -38,7 +37,6 @@ class Auth {
         if (res.status === 201) {
           user.setUser(res.data);
         }
-        console.log("--> signIn", res);
       })
       .then(() => navigate("/students"))
       .catch((err: AxiosError) => {

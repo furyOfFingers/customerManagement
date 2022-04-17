@@ -1,11 +1,12 @@
 import json
 import os
-from flask import Flask, request
-from db.database import init_db, db_session
-from models.user import User
-from routes.auth import signup, signin
-from routes.student import create, getStudent
 
+from flask import Flask, request
+
+from db.database import db_session, init_db
+from models.user import User
+from routes.auth import signin, signup
+from routes.student import create, delete, getStudent
 
 app = Flask(__name__)
 init_db()
@@ -30,6 +31,7 @@ def get_users():
         return 'wrong method'
 
 
+# auth
 @app.route('/api/auth/signup', methods=["POST"])
 def auth_signup():
     return signup.signup()
@@ -40,14 +42,20 @@ def auth_signin():
     return signin.signin()
 
 
+# student
+@app.route('/api/student', methods=["GET"])
+def student_getStudent():
+    return getStudent.getStudent()
+
+
 @app.route('/api/student', methods=["POST"])
 def student_create():
     return create.create()
 
 
-@app.route('/api/student', methods=["GET"])
-def student_getStudent():
-    return getStudent.getStudent()
+@app.route('/api/student', methods=["DELETE"])
+def student_delete():
+    return delete.delete()
 
 
 if __name__ == '__main__':

@@ -23,9 +23,6 @@ class Users {
     spin.setSpin(true);
     axios
       .get(`${API}${AUTH_USERS}`)
-      .then((res) => {
-        console.log("--> users", res);
-      })
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
