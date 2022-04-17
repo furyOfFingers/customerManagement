@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 import { message } from "antd";
-
 import axios, { AxiosError } from "axios";
 
 import spin from "store/spin";

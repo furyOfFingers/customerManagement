@@ -76,19 +76,6 @@ const Students = (): JSX.Element | null => {
       />
 
       <Modal
-        title="Add student"
-        onCancel={() => handleCancel("add")}
-        visible={isAddModalOpen}
-        footer={[
-          <Button key="back" onClick={() => handleCancel("add")}>
-            Cancel
-          </Button>,
-        ]}
-      >
-        <AddForm handleOk={() => handleCancel("add")} />
-      </Modal>
-
-      <Modal
         title="Remove student"
         onCancel={() => handleCancel("remove")}
         visible={isRemoveModalOpen}
@@ -112,6 +99,8 @@ const Students = (): JSX.Element | null => {
           </span>
         </div>
       </Modal>
+
+      {isAddModalOpen && <AddForm onCancel={() => handleCancel("add")} />}
     </div>
   );
 };
