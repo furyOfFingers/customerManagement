@@ -8,10 +8,10 @@ import { IStudents } from "interfaces/student";
 import s from "./AddForm.styl";
 import spin from "store/spin";
 import student from "store/student";
-import {ButtonsConfig, formItemLayout} from "./constants";
-import {locale} from "common/locale";
-import {getModalMode} from "./utils";
-import {EModalMode} from "common/enums";
+import { ButtonsConfig, formItemLayout } from "./constants";
+import { locale } from "common/locale";
+import { getModalMode } from "./utils";
+import { EModalMode } from "common/enums";
 
 interface IAddForm {
   id?: string;
@@ -37,7 +37,7 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
 
   return (
     <Modal
-      title={`${mode === EModalMode.ADD ? "Add" : "Edit" } student`}
+      title={`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}
       visible
       onCancel={onReject}
       footer={null}

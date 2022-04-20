@@ -1,9 +1,7 @@
-import {EModalMode} from "common/enums";
+import { EModalMode } from "common/enums";
 
 export function getModalMode(id?: string) {
-  return function() {
-    return id
-      ? EModalMode.EDIT
-      : EModalMode.ADD;
+  return function () {
+    return id ? EModalMode.EDIT : EModalMode.ADD;
   };
 }

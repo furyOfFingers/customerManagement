@@ -1,4 +1,3 @@
-
 export const schemeSignIn = {
   required: "${label} is required!",
   username: {

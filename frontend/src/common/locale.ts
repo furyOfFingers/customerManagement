@@ -5,6 +5,6 @@ export const locale = {
     save: "Save",
     update: "Update",
     add: "Add",
-    cancel: "Cancel"
-  }
+    cancel: "Cancel",
+  },
 };

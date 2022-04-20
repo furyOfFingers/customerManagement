@@ -5,7 +5,7 @@ import spin from "store/spin";
 import error from "store/errorHandle";
 import { IStudents } from "interfaces/student";
 import { STUDENT, API } from "constants/api";
-import {message} from "antd";
+import { message } from "antd";
 
 class student {
   students = [];
@@ -27,7 +27,8 @@ class student {
                 marginTop: "20vh",
               },
             },
-            5);
+            5
+          );
         }
         console.log("--> createStudent", res);
       })
