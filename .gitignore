@@ -1,2 +1,4 @@
 #
 application
+__pycache__/
+*.py[cod]
