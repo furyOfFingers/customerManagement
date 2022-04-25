@@ -1,5 +1,6 @@
 #
 application
 node_modules
-*.pyc
+*.py[cod]
 *.db
+__pycache__/

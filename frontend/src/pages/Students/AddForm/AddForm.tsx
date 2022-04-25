@@ -12,23 +12,23 @@ import { ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
 import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
+import { schemeAddForm } from "schemes/student";
 
 interface IAddForm {
   id?: string;
-  onSubmit: VoidFunction;
-  onReject: VoidFunction;
+  onCancel: VoidFunction;
 }
 
-const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
+const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
   const [image, setImage] = useState<Blob | undefined>();
   const [mode] = useState(getModalMode(id));
 
   const handleSubmitClick = async (data: IStudents) => {
     const newData = { ...data, photo: image };
-    console.log("--> newData", newData);
+
     await student.createStudent(newData as IStudents);
     await student.getStudents();
-    onSubmit();
+    onCancel();
   };
 
   const onPhotoLoader = (photo: Blob) => {
@@ -39,13 +39,13 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
     <Modal
       title={`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}
       visible
-      onCancel={onReject}
+      onCancel={onCancel}
       footer={null}
     >
       <div className={s.container}>
         <Form
           {...formItemLayout}
-          // validateMessages={schemeSignUp}
+          validateMessages={schemeAddForm}
           onFinish={handleSubmitClick}
           labelAlign="left"
           initialValues={{
@@ -68,6 +68,8 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
             rules={[
               {
                 required: true,
+                min: 2,
+                max: 80,
               },
             ]}
           >
@@ -80,8 +82,8 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
             rules={[
               {
                 required: true,
-                min: 5,
-                max: 50,
+                min: 2,
+                max: 80,
               },
             ]}
           >
@@ -94,6 +96,8 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
             rules={[
               {
                 required: true,
+                min: 2,
+                max: 80,
               },
             ]}
           >
@@ -106,6 +110,8 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
             rules={[
               {
                 required: true,
+                min: 5,
+                max: 30,
               },
             ]}
           >
@@ -140,11 +146,12 @@ const AddForm = ({ onSubmit, id, onReject }: IAddForm): JSX.Element => {
           </Form.Item>
 
           <Form.Item>
-            <div className={s.buttons}>
+            <div className={s.centered}>
               <Button type="primary" htmlType="submit">
                 {ButtonsConfig[mode].SubmitButton.title}
               </Button>
-              <Button type="ghost" onClick={onReject}>
+
+              <Button type="ghost" onClick={onCancel}>
                 {locale.form.cancel}
               </Button>
             </div>

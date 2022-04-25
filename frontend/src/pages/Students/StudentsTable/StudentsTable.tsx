@@ -1,44 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { List, Avatar } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  ExpandAltOutlined,
+} from "@ant-design/icons";
 
 import { IStudents } from "interfaces/student";
 import s from "./StudentsTable.styl";
 
 interface IStudentsTable {
-  students: IStudents[];
+  listStudents: IStudents[];
+  remove: (id: string) => void;
 }
 
-const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
+const StudentsTable = ({
+  listStudents,
+  remove,
+}: IStudentsTable): JSX.Element => {
+  const [studentId, setStudentId] = useState<null | string>(null);
+
   const handleEdit = (id: string) => {
-    console.log("--> id", id);
+    console.log("--> handleEdit", id);
   };
 
   const handleRemove = (id: string) => {
-    console.log("--> id", id);
+    remove(id);
   };
 
   const handleDetail = (id: string) => {
-    console.log("--> id", id);
+    setStudentId((studentId) => (studentId ? null : id));
   };
 
   return (
     <div className={s.container}>
       <List
         className={s.list}
+        dataSource={listStudents}
         itemLayout="horizontal"
-        dataSource={students}
         renderItem={(student: IStudents) => {
-          const title = `${student.lastname}
+          if (!student?.firstname) return null;
+
+          const title = `${student?.lastname}
             ${student.firstname.substring(0, 1)}.
             ${student.patronymic.substring(0, 1)}.`;
 
           return (
             <List.Item
+              onBlur={() => setStudentId(null)}
               className={s.listItem}
-              onClick={() => handleDetail(student.id as string)}
               actions={[
+                <ExpandAltOutlined
+                  key={student.id}
+                  className={s.icon}
+                  onClick={() => handleDetail(student.id as string)}
+                />,
                 <EditOutlined
                   key={student.id}
                   className={s.icon}
@@ -52,10 +70,9 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
               ]}
             >
               <List.Item.Meta
-                avatar={<Avatar src={student.photo} />}
-                // title={<a href="https://ant.design">{item.name.last}</a>}
                 title={title}
-                // description="description"
+                description={studentId === student.id ? student.phone : null}
+                avatar={<Avatar src={student.photo} icon={<UserOutlined />} />}
               />
             </List.Item>
           );
