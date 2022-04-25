@@ -1,13 +1,13 @@
 import { makeAutoObservable } from "mobx";
+import { message } from "antd";
 import axios, { AxiosError } from "axios";
 
 import spin from "store/spin";
 import error from "store/errorHandle";
 import { IStudents } from "interfaces/student";
 import { STUDENT, API } from "constants/api";
-import {message} from "antd";
 
-class student {
+class Student {
   students = [];
   student = null;
 
@@ -28,11 +28,10 @@ class student {
                 marginTop: "20vh",
               },
             },
-            5);
+            5
+          );
         }
-        console.log("--> createStudent", res);
       })
-      // .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
@@ -45,7 +44,29 @@ class student {
       .get(`${API}${STUDENT}`)
       .then((res) => {
         this.students = res.data;
-        console.log("--> getStudents", res.data);
+      })
+      .catch((err: AxiosError) => {
+        error.errorHandle(err);
+      })
+      .finally(() => spin.setSpin(false));
+  }
+
+  removeStudent(id: string) {
+    spin.setSpin(true);
+    axios
+      .delete(`${API}${STUDENT}`, { params: { id } })
+      .then((res) => {
+        if (res.status === 200) {
+          message.success(
+            {
+              content: res.data,
+              style: {
+                marginTop: "20vh",
+              },
+            },
+            5
+          );
+        }
       })
       .catch((err: AxiosError) => {
         error.errorHandle(err);
@@ -88,4 +109,4 @@ class student {
   }
 }
 
-export default new student();
+export default new Student();

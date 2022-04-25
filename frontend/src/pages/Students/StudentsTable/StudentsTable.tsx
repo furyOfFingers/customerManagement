@@ -1,17 +1,23 @@
 import React, {useCallback, useState} from "react";
 import { observer } from "mobx-react";
 import { List, Avatar } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  ExpandAltOutlined,
+} from "@ant-design/icons";
 
 import { IStudents } from "interfaces/student";
 import s from "./StudentsTable.styl";
 import AddForm from "../AddForm";
 
 interface IStudentsTable {
-  students: IStudents[];
+  listStudents: IStudents[];
+  remove: (id: string) => void;
 }
 
-const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
+const StudentsTable = ({ listStudents, remove }: IStudentsTable): JSX.Element => {
   const [isEditStudentModalShown, setIsEditStudentModalShown] = useState(false);
   const [studentId, setStudentId] = useState<string | null>(null);
   const handleEdit = useCallback((id: string) => {
@@ -31,15 +37,13 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
   const handleRemove = useCallback((id: string) => {
     console.log("--> id", id);
     id && setStudentId(id);
+    remove(id);
+    setStudentId(null);
   }, []);
 
   const handleDetail = useCallback((id: string) => {
     console.log("--> id", id);
-    id && setStudentId(id);
-  }, []);
-
-  const handleUpdateStudent = useCallback(() => {
-    handleHideEditStudentModal();
+    setStudentId((studentId) => (studentId ? null : id));
   }, []);
 
   const handleCloseEditStudentModal = useCallback(() => {
@@ -52,8 +56,8 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
     <div className={s.container}>
       <List
         className={s.list}
+        dataSource={listStudents}
         itemLayout="horizontal"
-        dataSource={students}
         renderItem={(student: IStudents) => {
           const title = `${student.lastname}
             ${student.firstname.substring(0, 1)}.
@@ -61,9 +65,14 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
 
           return (
             <List.Item
+              onBlur={() => setStudentId(null)}
               className={s.listItem}
-              onClick={() => handleDetail(student.id as string)}
               actions={[
+                <ExpandAltOutlined
+                  key={student.id}
+                  className={s.icon}
+                  onClick={() => handleDetail(student.id as string)}
+                />,
                 <EditOutlined
                   key={student.id}
                   className={s.icon}
@@ -77,10 +86,9 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
               ]}
             >
               <List.Item.Meta
-                avatar={<Avatar src={student.photo} />}
-                // title={<a href="https://ant.design">{item.name.last}</a>}
                 title={title}
-                // description="description"
+                description={studentId === student.id ? student.phone : null}
+                avatar={<Avatar src={student.photo} icon={<UserOutlined />} />}
               />
             </List.Item>
           );
@@ -88,7 +96,7 @@ const StudentsTable = ({ students }: IStudentsTable): JSX.Element => {
       />
     </div>
     {isEditStudentModalShown && (
-      <AddForm onSubmit={handleUpdateStudent} onReject={handleCloseEditStudentModal} id={studentId}/>
+      <AddForm onCancel={handleCloseEditStudentModal} id={studentId}/>
     )}
     </>
   );
