@@ -41,7 +41,9 @@ const StudentsTable = ({
         dataSource={listStudents}
         itemLayout="horizontal"
         renderItem={(student: IStudents) => {
-          const title = `${student.lastname}
+          if (!student?.firstname) return null;
+
+          const title = `${student?.lastname}
             ${student.firstname.substring(0, 1)}.
             ${student.patronymic.substring(0, 1)}.`;
 

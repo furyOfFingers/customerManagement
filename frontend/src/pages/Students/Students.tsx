@@ -70,10 +70,12 @@ const Students = (): JSX.Element | null => {
         Add student
       </Button>
 
-      <StudentsTable
-        listStudents={toJS(student.students)}
-        remove={handleRemove}
-      />
+      {!isEmpty(toJS(student.students)) && (
+        <StudentsTable
+          listStudents={toJS(student.students)}
+          remove={handleRemove}
+        />
+      )}
 
       <Modal
         title="Remove student"
