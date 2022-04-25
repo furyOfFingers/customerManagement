@@ -98,7 +98,8 @@ class Student {
                 marginTop: "20vh",
               },
             },
-            5);
+            5
+          );
         }
         console.log("--> updateStudent", res);
       })

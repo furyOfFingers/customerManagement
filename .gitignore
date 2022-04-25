@@ -1,4 +1,6 @@
 #
 application
-__pycache__/
+node_modules
 *.py[cod]
+*.db
+__pycache__/

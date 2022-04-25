@@ -8,11 +8,11 @@ import { IStudents } from "interfaces/student";
 import s from "./AddForm.styl";
 import spin from "store/spin";
 import student from "store/student";
-import {ButtonsConfig, formItemLayout} from "./constants";
-import {locale} from "common/locale";
-import {getModalMode} from "./utils";
-import {EModalMode} from "common/enums";
-import {Maybe} from "common/types";
+import { ButtonsConfig, formItemLayout } from "./constants";
+import { locale } from "common/locale";
+import { getModalMode } from "./utils";
+import { EModalMode } from "common/enums";
+import { Maybe } from "common/types";
 import { schemeAddForm } from "schemes/student";
 
 interface IAddForm {
@@ -32,9 +32,8 @@ const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
 
   const handleSubmitClick = async (data: IStudents) => {
     const newData = { ...data, photo: image };
-    const action = mode === EModalMode.EDIT
-      ? handleUpdateStudent
-      : handleAddStudent;
+    const action =
+      mode === EModalMode.EDIT ? handleUpdateStudent : handleAddStudent;
     await action(newData);
     await student.getStudents();
     onCancel();
@@ -48,7 +47,6 @@ const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
   };
 
   const handleAddStudent = async (data: IStudents) => {
-
     console.log("--> newData", data);
     await student.createStudent(data as IStudents);
   };

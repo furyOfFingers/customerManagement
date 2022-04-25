@@ -1,10 +1,7 @@
-import {EModalMode} from "common/enums";
-import {Maybe} from "common/types";
+import { EModalMode } from "common/enums";
 
-export function getModalMode(id: Maybe<string>) {
-  return function() {
-    return id
-      ? EModalMode.EDIT
-      : EModalMode.ADD;
+export function getModalMode(id?: string) {
+  return function () {
+    return id ? EModalMode.EDIT : EModalMode.ADD;
   };
 }

@@ -1,4 +1,4 @@
-import {ERequestStatus} from "./enums";
+import { ERequestStatus } from "./enums";
 
 export type Maybe<T> = T | null | undefined;
 
