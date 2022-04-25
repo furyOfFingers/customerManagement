@@ -9,6 +9,7 @@ import { STUDENT, API } from "constants/api";
 
 class Student {
   students = [];
+  student = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -66,6 +67,41 @@ class Student {
             5
           );
         }
+      })
+      .catch((err: AxiosError) => {
+        error.errorHandle(err);
+      })
+      .finally(() => spin.setSpin(false));
+  }
+
+  getStudent(studentId: string) {
+    axios
+      .get(`${API}${STUDENT}/?id=${studentId}`)
+      .then((response) => {
+        this.student = response.data;
+      })
+      .catch((err: AxiosError) => {
+        error.errorHandle(err);
+      });
+  }
+
+  updateStudent(studentId: string, updatedStudent: IStudents) {
+    spin.setSpin(true);
+    axios
+      .put(`${API}${STUDENT}/?id=${studentId}`, updatedStudent)
+      .then((res) => {
+        if (res.status === 201) {
+          message.success(
+            {
+              content: `student: ${updatedStudent.firstname} updated`,
+              style: {
+                marginTop: "20vh",
+              },
+            },
+            5
+          );
+        }
+        console.log("--> updateStudent", res);
       })
       .catch((err: AxiosError) => {
         error.errorHandle(err);
