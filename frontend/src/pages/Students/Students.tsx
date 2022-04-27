@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { toJS } from "mobx";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
 
 import { IStudents } from "interfaces/student";
 import StudentForm from "./StudentForm";
 import s from "./Students.styl";
-import student from "store/student";
+import studentStore from "store/student";
 import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
 
@@ -17,13 +16,19 @@ const Students = (): JSX.Element | null => {
   const [pickedStudent, setPickedStudent] = useState<IStudents | null>(null);
 
   useEffect(() => {
-    if (isEmpty(toJS(student.students))) {
-      student.getStudents();
+    if (isEmpty(studentStore.students.data)) {
+      studentStore.getStudents();
     }
   }, []);
 
+  const handleCloseEditModal = useCallback(() => {
+    setIsAddMWOpen(false);
+  }, []);
+
   const handleRemove = (id: string) => {
-    const selectedStudent = toJS(student.students).find(
+    if (!studentStore.students.data?.length || !id) return;
+
+    const selectedStudent = studentStore.students.data.find(
       (el: IStudents) => el.id === id
     );
 
@@ -46,9 +51,6 @@ const Students = (): JSX.Element | null => {
 
   const handleCancel = (name: string) => {
     switch (name) {
-      case "add":
-        setIsAddMWOpen(false);
-        break;
       // case 'edit':
       //     setIsEditModalOpen(true);
       case "remove":
@@ -58,8 +60,8 @@ const Students = (): JSX.Element | null => {
   };
 
   const confirmHandleRemove = async () => {
-    await student.removeStudent(pickedStudent?.id as string);
-    await student.getStudents();
+    await studentStore.removeStudent(pickedStudent?.id as string);
+    await studentStore.getStudents();
     handleCancel("remove");
     setPickedStudent(null);
   };
@@ -70,9 +72,9 @@ const Students = (): JSX.Element | null => {
         Add student
       </Button>
 
-      {!isEmpty(toJS(student.students)) && (
+      {!!studentStore.students.data?.length && (
         <StudentsTable
-          listStudents={toJS(student.students)}
+          listStudents={studentStore.students.data}
           remove={handleRemove}
         />
       )}
@@ -102,7 +104,7 @@ const Students = (): JSX.Element | null => {
         </div>
       </Modal>
 
-      {isAddMWOpen && <StudentForm onCancel={() => handleCancel("add")} />}
+      {isAddMWOpen && <StudentForm onCancel={handleCloseEditModal} />}
     </div>
   );
 };

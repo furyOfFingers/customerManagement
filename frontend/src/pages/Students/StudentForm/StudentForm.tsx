@@ -8,7 +8,7 @@ import Uploader from "components/Uploader";
 import { IStudents } from "interfaces/student";
 import s from "./StudentForm.styl";
 import spin from "store/spin";
-import student from "store/student";
+import studentStore from "store/student";
 import { ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
 import { getModalMode } from "./utils";
@@ -16,15 +16,12 @@ import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
 
-interface IStudentForm {
+interface IOwnProps {
   pickedStudent?: IStudents;
   onCancel: VoidFunction;
 }
 
-const StudentForm = ({
-  pickedStudent,
-  onCancel,
-}: IStudentForm): JSX.Element => {
+const StudentForm = ({ pickedStudent, onCancel }: IOwnProps): JSX.Element => {
   const [image, setImage] = useState<Blob>();
   const [mode] = useState(getModalMode(pickedStudent));
 
@@ -50,17 +47,17 @@ const StudentForm = ({
       mode === EModalMode.EDIT ? handleUpdateStudent : handleAddStudent;
 
     await action(newData);
-    await student.getStudents();
+    await studentStore.getStudents();
     onCancel();
   };
 
   const handleUpdateStudent = async (data: IStudents) => {
     const newData = { ...data, id: pickedStudent?.id };
-    await student.updateStudent(newData);
+    await studentStore.updateStudent(newData);
   };
 
   const handleAddStudent = async (data: IStudents) => {
-    await student.createStudent(data as IStudents);
+    await studentStore.createStudent(data as IStudents);
   };
 
   const onPhotoLoader = (photo: Blob) => {
