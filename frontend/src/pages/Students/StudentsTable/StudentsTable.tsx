@@ -10,7 +10,7 @@ import {
 
 import { IStudents } from "interfaces/student";
 import s from "./StudentsTable.styl";
-import AddForm from "../AddForm";
+import StudentForm from "../StudentForm";
 
 interface IStudentsTable {
   listStudents: IStudents[];
@@ -21,37 +21,29 @@ const StudentsTable = ({
   listStudents,
   remove,
 }: IStudentsTable): JSX.Element => {
-  const [isEditStudentModalShown, setIsEditStudentModalShown] = useState(false);
-  const [studentId, setStudentId] = useState<string | null>(null);
+  const [isEditMWOpen, setIsEditMWOpen] = useState(false);
+  const [studentId, setStudentId] = useState<string>();
+  const [pickedStudent, setPickedStudent] = useState<IStudents>();
+
   const handleEdit = useCallback((id: string) => {
-    console.log("--> id", id);
-    id && setStudentId(id);
-    handleViewEditStudentModal();
-  }, []);
+    const actualStudent = listStudents.find((student) => student.id === id);
 
-  const handleViewEditStudentModal = useCallback(() => {
-    setIsEditStudentModalShown(true);
-  }, []);
-
-  const handleHideEditStudentModal = useCallback(() => {
-    setIsEditStudentModalShown(false);
+    setPickedStudent(actualStudent);
+    setIsEditMWOpen(true);
   }, []);
 
   const handleRemove = useCallback((id: string) => {
-    console.log("--> id", id);
-    id && setStudentId(id);
     remove(id);
-    setStudentId(null);
+    setStudentId("");
   }, []);
 
   const handleDetail = useCallback((id: string) => {
-    console.log("--> id", id);
-    setStudentId((studentId) => (studentId ? null : id));
+    setStudentId((studentId) => (studentId ? "" : id));
   }, []);
 
   const handleCloseEditStudentModal = useCallback(() => {
-    setStudentId(null);
-    handleHideEditStudentModal();
+    setStudentId("");
+    setIsEditMWOpen(false);
   }, []);
 
   return (
@@ -59,8 +51,8 @@ const StudentsTable = ({
       <div className={s.container}>
         <List
           className={s.list}
-          dataSource={listStudents}
           itemLayout="horizontal"
+          dataSource={listStudents}
           renderItem={(student: IStudents) => {
             if (!student?.firstname) return null;
 
@@ -70,7 +62,7 @@ const StudentsTable = ({
 
             return (
               <List.Item
-                onBlur={() => setStudentId(null)}
+                onBlur={() => setStudentId("")}
                 className={s.listItem}
                 actions={[
                   <ExpandAltOutlined
@@ -78,11 +70,13 @@ const StudentsTable = ({
                     className={s.icon}
                     onClick={() => handleDetail(student.id as string)}
                   />,
+
                   <EditOutlined
                     key={student.id}
                     className={s.icon}
                     onClick={() => handleEdit(student.id as string)}
                   />,
+
                   <DeleteOutlined
                     key={student.id}
                     className={s.icon}
@@ -102,8 +96,12 @@ const StudentsTable = ({
           }}
         />
       </div>
-      {isEditStudentModalShown && (
-        <AddForm onCancel={handleCloseEditStudentModal} id={studentId} />
+
+      {isEditMWOpen && (
+        <StudentForm
+          pickedStudent={pickedStudent}
+          onCancel={handleCloseEditStudentModal}
+        />
       )}
     </>
   );

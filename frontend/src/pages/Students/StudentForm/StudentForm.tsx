@@ -1,53 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
+import { isEmpty } from "ramda";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
 import { IStudents } from "interfaces/student";
-import s from "./AddForm.styl";
+import s from "./StudentForm.styl";
 import spin from "store/spin";
 import student from "store/student";
 import { ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
 import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
-import { Maybe } from "common/types";
-import { schemeAddForm } from "schemes/student";
+import { schemeStudentForm } from "schemes/student";
+import { initialValues } from "./constants";
 
-interface IAddForm {
-  id?: Maybe<string>;
+interface IStudentForm {
+  pickedStudent?: IStudents;
   onCancel: VoidFunction;
 }
 
-const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
-  const [image, setImage] = useState<Blob | undefined>();
-  const [mode] = useState(getModalMode(id));
+const StudentForm = ({
+  pickedStudent,
+  onCancel,
+}: IStudentForm): JSX.Element => {
+  const [image, setImage] = useState<Blob>();
+  const [mode] = useState(getModalMode(pickedStudent));
 
-  useEffect(() => {
-    if (id) {
-      student.getStudent(id);
+  const setInitialValue = (pickedStudent?: IStudents) => {
+    if (isEmpty(pickedStudent)) {
+      return initialValues;
     }
-  }, []);
+
+    return {
+      remember: true,
+      firstname: pickedStudent?.firstname,
+      lastname: pickedStudent?.lastname,
+      patronymic: pickedStudent?.patronymic,
+      phone: pickedStudent?.phone,
+      birthday: moment(pickedStudent?.birthday, "DD-MM-YYYY"),
+      photo: pickedStudent?.photo,
+    };
+  };
 
   const handleSubmitClick = async (data: IStudents) => {
     const newData = { ...data, photo: image };
     const action =
       mode === EModalMode.EDIT ? handleUpdateStudent : handleAddStudent;
+
     await action(newData);
     await student.getStudents();
     onCancel();
   };
 
   const handleUpdateStudent = async (data: IStudents) => {
-    if (!id) return;
-    console.log("--> newData", data);
-
-    await student.updateStudent(id, data as IStudents);
+    await student.updateStudent(data);
   };
 
   const handleAddStudent = async (data: IStudents) => {
-    console.log("--> newData", data);
     await student.createStudent(data as IStudents);
   };
 
@@ -64,23 +75,11 @@ const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
     >
       <div className={s.container}>
         <Form
-          {...formItemLayout}
-          validateMessages={schemeAddForm}
-          onFinish={handleSubmitClick}
           labelAlign="left"
-          initialValues={{
-            remember: true,
-            firstname: "Марат",
-            lastname: "Асадуллаев",
-            patronymic: "Абакарович",
-            phone: "89064422353",
-            birthday: moment("28-01-1990", "DD-MM-YYYY"),
-            photo: "photo",
-            // groups: ['1'],
-            // parents: ["2"],
-            // payment: ['3'],
-            // is_phone_number_client: true,
-          }}
+          {...formItemLayout}
+          onFinish={handleSubmitClick}
+          validateMessages={schemeStudentForm}
+          initialValues={setInitialValue(pickedStudent)}
         >
           <Form.Item
             name="lastname"
@@ -182,4 +181,4 @@ const AddForm = ({ id, onCancel }: IAddForm): JSX.Element => {
   );
 };
 
-export default observer(AddForm);
+export default observer(StudentForm);
