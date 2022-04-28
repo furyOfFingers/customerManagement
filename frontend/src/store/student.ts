@@ -85,15 +85,15 @@ class Student {
       });
   }
 
-  updateStudent(studentId: string, updatedStudent: IStudents) {
+  updateStudent(data: IStudents) {
     spin.setSpin(true);
     axios
-      .put(`${API}${STUDENT}/?id=${studentId}`, updatedStudent)
+      .put(`${API}${STUDENT}/?id=${data.id}`, data)
       .then((res) => {
         if (res.status === 201) {
           message.success(
             {
-              content: `student: ${updatedStudent.firstname} updated`,
+              content: `student: ${data.firstname} updated`,
               style: {
                 marginTop: "20vh",
               },

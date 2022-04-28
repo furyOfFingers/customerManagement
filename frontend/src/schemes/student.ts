@@ -1,4 +1,4 @@
-export const schemeAddForm = {
+export const schemeStudentForm = {
   required: "${label} is required!",
   lastname: {
     range: "${label} must be between ${min} and ${max}",

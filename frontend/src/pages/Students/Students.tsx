@@ -5,16 +5,16 @@ import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
 
 import { IStudents } from "interfaces/student";
-import AddForm from "./AddForm";
+import StudentForm from "./StudentForm";
 import s from "./Students.styl";
 import student from "store/student";
 import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
 
 const Students = (): JSX.Element | null => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
-  const [pickedStudent, setPickedStudent] = useState<null | IStudents>(null);
+  const [isAddMWOpen, setIsAddMWOpen] = useState(false);
+  const [isRemoveMWOpen, setIsRemoveMWOpen] = useState(false);
+  const [pickedStudent, setPickedStudent] = useState<IStudents | null>(null);
 
   useEffect(() => {
     if (isEmpty(toJS(student.students))) {
@@ -34,12 +34,12 @@ const Students = (): JSX.Element | null => {
   const handleOpenMW = (name: string) => {
     switch (name) {
       case "add":
-        setIsAddModalOpen(true);
+        setIsAddMWOpen(true);
         break;
       // case 'edit':
       //     setIsEditModalOpen(true);
       case "remove":
-        setIsRemoveModalOpen(true);
+        setIsRemoveMWOpen(true);
         break;
     }
   };
@@ -47,12 +47,12 @@ const Students = (): JSX.Element | null => {
   const handleCancel = (name: string) => {
     switch (name) {
       case "add":
-        setIsAddModalOpen(false);
+        setIsAddMWOpen(false);
         break;
       // case 'edit':
       //     setIsEditModalOpen(true);
       case "remove":
-        setIsRemoveModalOpen(false);
+        setIsRemoveMWOpen(false);
         break;
     }
   };
@@ -80,7 +80,7 @@ const Students = (): JSX.Element | null => {
       <Modal
         title="Remove student"
         onCancel={() => handleCancel("remove")}
-        visible={isRemoveModalOpen}
+        visible={isRemoveMWOpen}
         footer={[
           <Button key="remove" type="primary" onClick={confirmHandleRemove}>
             Remove
@@ -102,7 +102,7 @@ const Students = (): JSX.Element | null => {
         </div>
       </Modal>
 
-      {isAddModalOpen && <AddForm onCancel={() => handleCancel("add")} />}
+      {isAddMWOpen && <StudentForm onCancel={() => handleCancel("add")} />}
     </div>
   );
 };
