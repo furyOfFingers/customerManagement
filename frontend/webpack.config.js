@@ -27,6 +27,7 @@ module.exports = {
       hooks: path.resolve(__dirname, "src/hooks/"),
       modules: path.resolve(__dirname, "src/modules/"),
       common: path.resolve(__dirname, "src/common"),
+      services: path.resolve(__dirname, "src/services"),
     },
     extensions: [".ts", ".tsx", ".js"],
   },
