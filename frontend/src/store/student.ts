@@ -29,13 +29,13 @@ class Student {
     makeAutoObservable(this);
   }
 
-  async createStudent(student: IStudents) {
+  *createStudent(student: IStudents) {
     this.createRequest = {
       ...this.createRequest,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { status, data } = await this.services.create(student);
+      const { status, data } = yield this.services.create(student);
 
       if (status === 201) {
         message.success(
@@ -62,14 +62,14 @@ class Student {
     }
   }
 
-  async getStudents() {
+  *getStudents() {
     spin.setSpin(true);
     this.students = {
       ...this.students,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { data } = await this.services.getStudents();
+      const { data } = yield this.services.getStudents();
       this.students = {
         data,
         status: ERequestStatus.SUCCESS,
@@ -86,13 +86,13 @@ class Student {
     }
   }
 
-  async removeStudent(id: string) {
+  *removeStudent(id: string) {
     this.removeRequest = {
       ...this.removeRequest,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { data, status } = await this.services.deleteStudent(id);
+      const { data, status } = yield this.services.deleteStudent(id);
       this.removeRequest = {
         data,
         status: ERequestStatus.SUCCESS,
@@ -119,13 +119,13 @@ class Student {
     }
   }
 
-  async getStudent(studentId: string) {
+  *getStudent(studentId: string) {
     this.student = {
       ...this.student,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { data } = await this.services.getStudent(studentId);
+      const { data } = yield this.services.getStudent(studentId);
       this.student = {
         data,
         status: ERequestStatus.SUCCESS,
@@ -140,15 +140,13 @@ class Student {
     }
   }
 
-  async updateStudent(updatedStudent: IStudents) {
-    this.updateRequest = {
-      ...this.updateRequest,
-      status: ERequestStatus.PENDING,
-    };
+  *updateStudent(updatedStudent: IStudents) {
+    this.updateRequest.status = ERequestStatus.PENDING;
     try {
-      const { data, status } = await this.services.updateStudent(
+      const { data, status } = yield this.services.updateStudent(
         updatedStudent
       );
+
       this.updateRequest = {
         data,
         status: ERequestStatus.SUCCESS,
@@ -167,11 +165,8 @@ class Student {
         );
       }
     } catch (err) {
-      this.updateRequest = {
-        ...this.updateRequest,
-        status: ERequestStatus.FAIL,
-        error: err as AxiosError,
-      };
+      this.updateRequest.status = ERequestStatus.FAIL;
+      this.updateRequest.error = err as AxiosError;
     }
   }
 }

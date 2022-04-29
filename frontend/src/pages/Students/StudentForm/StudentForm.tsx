@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
-import { isEmpty } from "ramda";
+import { Form, Input, Radio, DatePicker, Button, Modal, Spin } from "antd";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
@@ -15,6 +14,7 @@ import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
+import { isPending } from "common/utils/data.utils";
 
 interface IOwnProps {
   pickedStudent?: IStudents;
@@ -26,7 +26,7 @@ const StudentForm = ({ pickedStudent, onCancel }: IOwnProps): JSX.Element => {
   const [mode] = useState(getModalMode(pickedStudent));
 
   const setInitialValue = (pickedStudent?: IStudents) => {
-    if (isEmpty(pickedStudent)) {
+    if (!pickedStudent) {
       return initialValues;
     }
 
@@ -70,111 +70,127 @@ const StudentForm = ({ pickedStudent, onCancel }: IOwnProps): JSX.Element => {
       visible
       onCancel={onCancel}
       footer={null}
+      mask
     >
-      <div className={s.container}>
-        <Form
-          labelAlign="left"
-          {...formItemLayout}
-          onFinish={handleSubmitClick}
-          validateMessages={schemeStudentForm}
-          initialValues={setInitialValue(pickedStudent)}
-        >
-          <Form.Item
-            name="lastname"
-            label="lastname"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
+      <Spin
+        tip="Loading..."
+        spinning={
+          isPending(studentStore.updateRequest) ||
+          isPending(studentStore.createRequest)
+        }
+      >
+        <div className={s.container}>
+          <Form
+            labelAlign="left"
+            {...formItemLayout}
+            onFinish={handleSubmitClick}
+            validateMessages={schemeStudentForm}
+            initialValues={setInitialValue(pickedStudent)}
           >
-            <Input disabled={spin.spin} placeholder="lastname" />
-          </Form.Item>
-
-          <Form.Item
-            name="firstname"
-            label="firstname"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
-          >
-            <Input placeholder="firstname" disabled={spin.spin} />
-          </Form.Item>
-
-          <Form.Item
-            name="patronymic"
-            label="patronymic"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
-          >
-            <Input disabled={spin.spin} placeholder="patronymic" />
-          </Form.Item>
-
-          <Form.Item
-            name="phone"
-            label="phone"
-            rules={[
-              {
-                required: true,
-                min: 5,
-                max: 30,
-              },
-            ]}
-          >
-            <Input disabled={spin.spin} placeholder="phone" />
-          </Form.Item>
-
-          <Form.Item
-            name="birthday"
-            label="birthday"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
-          </Form.Item>
-
-          <Form.Item name="photo" label="photo">
-            <Uploader onPhotoLoader={onPhotoLoader} />
-          </Form.Item>
-
-          <Form.Item name="gender" label="gender" initialValue="male">
-            <Radio.Group
-              buttonStyle="outline"
-              className={s.centered}
-              disabled={spin.spin}
+            <Form.Item
+              name="lastname"
+              label="lastname"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
             >
-              <Radio.Button value="male">male</Radio.Button>
-              <Radio.Button value="female">female</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
+              <Input disabled={spin.spin} placeholder="lastname" />
+            </Form.Item>
 
-          <Form.Item>
-            <div className={s.centered}>
-              <Button type="primary" htmlType="submit">
-                {ButtonsConfig[mode].SubmitButton.title}
-              </Button>
+            <Form.Item
+              name="firstname"
+              label="firstname"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
+            >
+              <Input placeholder="firstname" disabled={spin.spin} />
+            </Form.Item>
 
-              <Button type="ghost" onClick={onCancel}>
-                {locale.form.cancel}
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      </div>
+            <Form.Item
+              name="patronymic"
+              label="patronymic"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
+            >
+              <Input disabled={spin.spin} placeholder="patronymic" />
+            </Form.Item>
+
+            <Form.Item
+              name="phone"
+              label="phone"
+              rules={[
+                {
+                  required: true,
+                  min: 5,
+                  max: 30,
+                },
+              ]}
+            >
+              <Input disabled={spin.spin} placeholder="phone" />
+            </Form.Item>
+
+            <Form.Item
+              name="birthday"
+              label="birthday"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
+            </Form.Item>
+
+            <Form.Item name="photo" label="photo">
+              <Uploader onPhotoLoader={onPhotoLoader} />
+            </Form.Item>
+
+            <Form.Item name="gender" label="gender" initialValue="male">
+              <Radio.Group
+                buttonStyle="outline"
+                className={s.centered}
+                disabled={spin.spin}
+              >
+                <Radio.Button value="male">male</Radio.Button>
+                <Radio.Button value="female">female</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item>
+              <div className={s.centered}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={
+                    isPending(studentStore.updateRequest) ||
+                    isPending(studentStore.createRequest)
+                  }
+                >
+                  {ButtonsConfig[mode].SubmitButton.title}
+                </Button>
+
+                <Button type="ghost" onClick={onCancel}>
+                  {locale.form.cancel}
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </div>
+      </Spin>
     </Modal>
   );
 };
