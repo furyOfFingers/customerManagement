@@ -21,7 +21,7 @@ def delete():
                 Student.query.filter_by(id=id).delete()
                 db_session.flush()
                 db_session.commit()
-                return "student {} {}. {}. has bees removed.".format(lastname,
+                return "student {} {}. {}. has been removed.".format(lastname,
                                                                      firstname,
                                                                      patronymic), 200
 

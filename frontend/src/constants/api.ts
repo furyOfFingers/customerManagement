@@ -7,3 +7,4 @@ export const AUTH_SIGNUP = "/signup";
 export const AUTH_USERS = "/users";
 
 export const STUDENT = "/student";
+export const STUDENTS = "/students";

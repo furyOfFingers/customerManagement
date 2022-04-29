@@ -6,7 +6,7 @@ from flask import Flask, request
 from db.database import db_session, init_db
 from models.user import User
 from routes.auth import signin, signup
-from routes.student import create, delete, getStudent
+from routes.student import create, delete, getStudents, getStudent, updateStudent
 
 app = Flask(__name__)
 init_db()
@@ -46,6 +46,16 @@ def auth_signin():
 @app.route('/api/student', methods=["GET"])
 def student_getStudent():
     return getStudent.getStudent()
+
+
+@app.route('/api/student', methods=["PUT"])
+def student_update():
+    return updateStudent.updateStudent()
+
+
+@app.route('/api/students', methods=["GET"])
+def student_getStudents():
+    return getStudents.getStudents()
 
 
 @app.route('/api/student', methods=["POST"])

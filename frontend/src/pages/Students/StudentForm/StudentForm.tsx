@@ -55,7 +55,8 @@ const StudentForm = ({
   };
 
   const handleUpdateStudent = async (data: IStudents) => {
-    await student.updateStudent(data);
+    const newData = { ...data, id: pickedStudent?.id };
+    await student.updateStudent(newData);
   };
 
   const handleAddStudent = async (data: IStudents) => {
