@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
 
-import { IStudents } from "interfaces/student";
+import { IStudent } from "interfaces/student";
 import StudentForm from "./StudentForm";
 import s from "./Students.styl";
 import studentStore from "store/student";
@@ -11,9 +11,9 @@ import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
 
 const Students = (): JSX.Element | null => {
-  const [isAddMWOpen, setIsAddMWOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveMWOpen, setIsRemoveMWOpen] = useState(false);
-  const [pickedStudent, setPickedStudent] = useState<IStudents | null>(null);
+  const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
 
   useEffect(() => {
     if (isEmpty(studentStore.students.data)) {
@@ -22,24 +22,44 @@ const Students = (): JSX.Element | null => {
   }, []);
 
   const handleCloseEditModal = useCallback(() => {
-    setIsAddMWOpen(false);
+    setPickedStudent(null);
+    setIsModalOpen(false);
+  }, []);
+
+  const handleUpdateStudent = useCallback(async (data: IStudent) => {
+    await studentStore.updateStudent(data);
+  }, []);
+
+  const handleAddStudent = useCallback(async (data: IStudent) => {
+    await studentStore.createStudent(data as IStudent);
   }, []);
 
   const handleRemove = (id: string) => {
     if (!studentStore.students.data?.length || !id) return;
 
     const selectedStudent = studentStore.students.data.find(
-      (el: IStudents) => el.id === id
+      (el: IStudent) => el.id === id
     );
 
     setPickedStudent(selectedStudent ? selectedStudent : null);
     handleOpenMW("remove");
   };
 
+  const handleEdit = useCallback((id: string) => {
+    if (!studentStore.students.data) return;
+
+    const actualStudent = studentStore.students.data.find(
+      (student) => student.id === id
+    );
+
+    setPickedStudent(actualStudent!);
+    setIsModalOpen(true);
+  }, []);
+
   const handleOpenMW = (name: string) => {
     switch (name) {
       case "add":
-        setIsAddMWOpen(true);
+        setIsModalOpen(true);
         break;
       // case 'edit':
       //     setIsEditModalOpen(true);
@@ -55,6 +75,7 @@ const Students = (): JSX.Element | null => {
       //     setIsEditModalOpen(true);
       case "remove":
         setIsRemoveMWOpen(false);
+        setPickedStudent(null);
         break;
     }
   };
@@ -76,6 +97,7 @@ const Students = (): JSX.Element | null => {
         <StudentsTable
           listStudents={studentStore.students.data}
           remove={handleRemove}
+          onEdit={handleEdit}
         />
       )}
 
@@ -104,7 +126,14 @@ const Students = (): JSX.Element | null => {
         </div>
       </Modal>
 
-      {isAddMWOpen && <StudentForm onCancel={handleCloseEditModal} />}
+      {isModalOpen && (
+        <StudentForm
+          pickedStudent={pickedStudent}
+          onCancel={handleCloseEditModal}
+          onUpdate={handleUpdateStudent}
+          onAdd={handleAddStudent}
+        />
+      )}
     </div>
   );
 };

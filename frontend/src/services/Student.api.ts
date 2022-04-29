@@ -1,11 +1,11 @@
 import axios from "axios";
 import { API, STUDENT, STUDENTS } from "constants/api";
-import { IStudentApi, IStudents } from "interfaces/student";
+import { IStudentApi, IStudent } from "interfaces/student";
 
 const STUDENT_URL = `${API}${STUDENT}`;
 
 export default class StudentApi implements IStudentApi {
-  async create(data: IStudents) {
+  async create(data: IStudent) {
     return await axios.post(STUDENT_URL, data);
   }
 
@@ -21,7 +21,7 @@ export default class StudentApi implements IStudentApi {
     return await axios.get(STUDENT_URL, { params: { id } });
   }
 
-  async updateStudent(updatedStudent: IStudents) {
+  async updateStudent(updatedStudent: IStudent) {
     return await axios.put(STUDENT_URL, updatedStudent);
   }
 }

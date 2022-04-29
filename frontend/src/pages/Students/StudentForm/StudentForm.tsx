@@ -4,7 +4,7 @@ import { Form, Input, Radio, DatePicker, Button, Modal, Spin } from "antd";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
-import { IStudents } from "interfaces/student";
+import { IStudent } from "interfaces/student";
 import s from "./StudentForm.styl";
 import spin from "store/spin";
 import studentStore from "store/student";
@@ -15,17 +15,23 @@ import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
-
 interface IOwnProps {
-  pickedStudent?: IStudents;
+  pickedStudent: IStudent | null;
   onCancel: VoidFunction;
+  onUpdate: (data: IStudent) => Promise<void>;
+  onAdd: (data: IStudent) => Promise<void>;
 }
 
-const StudentForm = ({ pickedStudent, onCancel }: IOwnProps): JSX.Element => {
+const StudentForm = ({
+  pickedStudent,
+  onCancel,
+  onUpdate,
+  onAdd,
+}: IOwnProps): JSX.Element => {
   const [image, setImage] = useState<Blob>();
   const [mode] = useState(getModalMode(pickedStudent));
 
-  const setInitialValue = (pickedStudent?: IStudents) => {
+  const setInitialValue = (pickedStudent: IStudent | null) => {
     if (!pickedStudent) {
       return initialValues;
     }
@@ -41,23 +47,18 @@ const StudentForm = ({ pickedStudent, onCancel }: IOwnProps): JSX.Element => {
     };
   };
 
-  const handleSubmitClick = async (data: IStudents) => {
+  const handleSubmitClick = async (data: IStudent) => {
     const newData = { ...data, photo: image };
-    const action =
-      mode === EModalMode.EDIT ? handleUpdateStudent : handleAddStudent;
+    let editFunc = onAdd;
 
-    await action(newData);
+    if (mode === EModalMode.EDIT) {
+      newData.id = pickedStudent?.id;
+      editFunc = onUpdate;
+    }
+
+    await editFunc(newData);
     await studentStore.getStudents();
     onCancel();
-  };
-
-  const handleUpdateStudent = async (data: IStudents) => {
-    const newData = { ...data, id: pickedStudent?.id };
-    await studentStore.updateStudent(newData);
-  };
-
-  const handleAddStudent = async (data: IStudents) => {
-    await studentStore.createStudent(data as IStudents);
   };
 
   const onPhotoLoader = (photo: Blob) => {
