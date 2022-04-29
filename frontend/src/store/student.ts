@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import spin from "store/spin";
 import error from "store/errorHandle";
 import { IStudents } from "interfaces/student";
-import { STUDENT, API } from "constants/api";
+import { STUDENT, STUDENTS, API } from "constants/api";
 
 class Student {
   students = [];
@@ -41,7 +41,7 @@ class Student {
   getStudents() {
     spin.setSpin(true);
     axios
-      .get(`${API}${STUDENT}`)
+      .get(`${API}${STUDENTS}`)
       .then((res) => {
         this.students = res.data;
       })
@@ -74,9 +74,9 @@ class Student {
       .finally(() => spin.setSpin(false));
   }
 
-  getStudent(studentId: string) {
+  getStudent(id: string) {
     axios
-      .get(`${API}${STUDENT}/?id=${studentId}`)
+      .get(`${API}${STUDENT}`, { params: { id } })
       .then((response) => {
         this.student = response.data;
       })
@@ -88,7 +88,7 @@ class Student {
   updateStudent(data: IStudents) {
     spin.setSpin(true);
     axios
-      .put(`${API}${STUDENT}/?id=${data.id}`, data)
+      .put(`${API}${STUDENT}`, data)
       .then((res) => {
         if (res.status === 201) {
           message.success(
