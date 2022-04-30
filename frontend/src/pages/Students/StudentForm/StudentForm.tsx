@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Radio, DatePicker, Button, Modal, Spin } from "antd";
+import {
+  Form,
+  Input,
+  Radio,
+  DatePicker,
+  Button,
+  Modal,
+  Spin,
+  Avatar,
+  Space,
+} from "antd";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
@@ -8,13 +18,15 @@ import { IStudent } from "interfaces/student";
 import s from "./StudentForm.styl";
 import spin from "store/spin";
 import studentStore from "store/student";
-import { ButtonsConfig, formItemLayout } from "./constants";
+import { AVATAR_SIZE, ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
 import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
+import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
+
 interface IOwnProps {
   pickedStudent: IStudent | null;
   onCancel: VoidFunction;
@@ -65,14 +77,19 @@ const StudentForm = ({
     setImage(photo);
   };
 
+  const renderTitle = () => (
+    <Space align="baseline">
+      <Avatar
+        size={AVATAR_SIZE}
+        src={pickedStudent?.photo}
+        icon={<UserOutlined />}
+      />
+      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}</p>
+    </Space>
+  );
+
   return (
-    <Modal
-      title={`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}
-      visible
-      onCancel={onCancel}
-      footer={null}
-      mask
-    >
+    <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
       <Spin
         tip="Loading..."
         spinning={
