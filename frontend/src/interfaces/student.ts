@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 
-export interface IStudents {
+export interface IStudent {
   id?: string;
   firstname: string;
   lastname: string;
@@ -16,13 +16,13 @@ export interface IStudents {
 }
 
 export interface IStudentApi {
-  create(data: IStudents): Promise<AxiosResponse>;
+  create(data: IStudent): Promise<AxiosResponse>;
 
-  getStudents(): Promise<AxiosResponse<IStudents[]>>;
+  getStudents(): Promise<AxiosResponse<IStudent[]>>;
 
   deleteStudent(id: string): Promise<AxiosResponse>;
 
-  getStudent(studentId: string): Promise<AxiosResponse<IStudents>>;
+  getStudent(studentId: string): Promise<AxiosResponse<IStudent>>;
 
-  updateStudent(updatedStudent: IStudents): Promise<AxiosResponse>;
+  updateStudent(updatedStudent: IStudent): Promise<AxiosResponse>;
 }

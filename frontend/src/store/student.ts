@@ -3,14 +3,14 @@ import { message } from "antd";
 import { AxiosError } from "axios";
 
 import spin from "store/spin";
-import { IStudentApi, IStudents } from "interfaces/student";
+import { IStudentApi, IStudent } from "interfaces/student";
 import StudentApi from "services/Student.api";
 import { getInitialData } from "./utils/utils";
 import { ERequestStatus } from "common/enums";
 
 const initial = {
-  students: getInitialData<IStudents[]>([]),
-  student: getInitialData<IStudents>(null),
+  students: getInitialData<IStudent[]>([]),
+  student: getInitialData<IStudent>(null),
   removeRequest: getInitialData(null),
   updateRequest: getInitialData(null),
   createRequest: getInitialData(null),
@@ -29,7 +29,7 @@ class Student {
     makeAutoObservable(this);
   }
 
-  *createStudent(student: IStudents) {
+  *createStudent(student: IStudent) {
     this.createRequest = {
       ...this.createRequest,
       status: ERequestStatus.PENDING,
@@ -140,7 +140,7 @@ class Student {
     }
   }
 
-  *updateStudent(updatedStudent: IStudents) {
+  *updateStudent(updatedStudent: IStudent) {
     this.updateRequest.status = ERequestStatus.PENDING;
     try {
       const { data, status } = yield this.services.updateStudent(
