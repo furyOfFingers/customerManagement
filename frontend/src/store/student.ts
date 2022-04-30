@@ -10,7 +10,7 @@ import { ERequestStatus } from "common/enums";
 
 const initial = {
   students: getInitialData<IStudent[]>([]),
-  student: getInitialData<IStudent>(null),
+  student: getInitialData<IStudent | null>(null),
   removeRequest: getInitialData(null),
   updateRequest: getInitialData(null),
   createRequest: getInitialData(null),
@@ -127,7 +127,7 @@ class Student {
     try {
       const { data } = yield this.services.getStudent(studentId);
       this.student = {
-        data,
+        data: data as IStudent,
         status: ERequestStatus.SUCCESS,
         error: null,
       };
@@ -168,6 +168,12 @@ class Student {
       this.updateRequest.status = ERequestStatus.FAIL;
       this.updateRequest.error = err as AxiosError;
     }
+  }
+
+  findStudent(id: string) {
+    const result = this.students.data?.find((student) => student.id === id);
+
+    return result;
   }
 }
 

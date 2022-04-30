@@ -9,16 +9,20 @@ import s from "./Students.styl";
 import studentStore from "store/student";
 import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
+import { isPending } from "common/utils/data.utils";
 
 const Students = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRemoveMWOpen, setIsRemoveMWOpen] = useState(false);
   const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
 
   useEffect(() => {
     if (isEmpty(studentStore.students.data)) {
       studentStore.getStudents();
     }
+  }, []);
+
+  const handleOpenModal = useCallback(() => {
+    setIsModalOpen(true);
   }, []);
 
   const handleCloseEditModal = useCallback(() => {
@@ -37,12 +41,22 @@ const Students = (): JSX.Element | null => {
   const handleRemove = (id: string) => {
     if (!studentStore.students.data?.length || !id) return;
 
-    const selectedStudent = studentStore.students.data.find(
-      (el: IStudent) => el.id === id
-    );
+    const selectedStudent = studentStore.findStudent(id);
 
-    setPickedStudent(selectedStudent ? selectedStudent : null);
-    handleOpenMW("remove");
+    if (!selectedStudent) return;
+
+    setPickedStudent(selectedStudent);
+    Modal.confirm({
+      title: "Remove student",
+      content: `remove student ${selectedStudent.lastname}
+        ${selectedStudent.firstname.substring(0, 1)}.
+        ${selectedStudent.patronymic.substring(0, 1)}. ?`,
+      onOk: () => confirmHandleRemove(selectedStudent.id!),
+      onCancel: handleResetStudent,
+      okButtonProps: {
+        loading: isPending(studentStore.removeRequest),
+      },
+    });
   };
 
   const handleEdit = useCallback((id: string) => {
@@ -56,75 +70,27 @@ const Students = (): JSX.Element | null => {
     setIsModalOpen(true);
   }, []);
 
-  const handleOpenMW = (name: string) => {
-    switch (name) {
-      case "add":
-        setIsModalOpen(true);
-        break;
-      // case 'edit':
-      //     setIsEditModalOpen(true);
-      case "remove":
-        setIsRemoveMWOpen(true);
-        break;
-    }
-  };
-
-  const handleCancel = (name: string) => {
-    switch (name) {
-      // case 'edit':
-      //     setIsEditModalOpen(true);
-      case "remove":
-        setIsRemoveMWOpen(false);
-        setPickedStudent(null);
-        break;
-    }
-  };
-
-  const confirmHandleRemove = async () => {
-    await studentStore.removeStudent(pickedStudent?.id as string);
-    await studentStore.getStudents();
-    handleCancel("remove");
+  const handleResetStudent = useCallback(() => {
     setPickedStudent(null);
+  }, []);
+
+  const confirmHandleRemove = async (studentId: string) => {
+    await studentStore.removeStudent(studentId);
+    await studentStore.getStudents();
+    handleResetStudent();
   };
 
   return spin.spin ? null : (
     <div className={s.container}>
-      <Button type="primary" onClick={() => handleOpenMW("add")}>
+      <Button type="primary" onClick={handleOpenModal}>
         Add student
       </Button>
 
-      {!!studentStore.students.data?.length && (
-        <StudentsTable
-          listStudents={studentStore.students.data}
-          remove={handleRemove}
-          onEdit={handleEdit}
-        />
-      )}
-
-      <Modal
-        title="Remove student"
-        onCancel={() => handleCancel("remove")}
-        visible={isRemoveMWOpen}
-        footer={[
-          <Button key="remove" type="primary" onClick={confirmHandleRemove}>
-            Remove
-          </Button>,
-
-          <Button key="back" onClick={() => handleCancel("remove")}>
-            Cancel
-          </Button>,
-        ]}
-      >
-        <div>
-          remove student{" "}
-          <span>
-            {`${pickedStudent?.lastname}
-            ${pickedStudent?.firstname.substring(0, 1)}.
-            ${pickedStudent?.patronymic.substring(0, 1)}.`}{" "}
-            ?
-          </span>
-        </div>
-      </Modal>
+      <StudentsTable
+        listStudents={studentStore.students.data}
+        remove={handleRemove}
+        onEdit={handleEdit}
+      />
 
       {isModalOpen && (
         <StudentForm
