@@ -1,6 +1,6 @@
 .container
   display flex
-  flex-direction column
+  flex-direction row
   justify-content center
   & > button
     margin 0 auto 10px auto
@@ -8,3 +8,26 @@
 .centered
   display flex
   justify-content center
+
+.action_panel
+  display flex
+  justify-content flex-end
+  & > *:last-child
+    margin-left 0.25rem
+.icon
+  font-size 1.25rem
+  &:hover
+    cursor pointer
+    color rgb(24, 144, 255)
+
+.form_container
+  margin-top 60px
+  margin-right 1rem
+
+.view {
+  &_box {
+    justify-content stretch
+    flex-direction column
+  }
+}
+

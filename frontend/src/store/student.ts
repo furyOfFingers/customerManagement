@@ -93,12 +93,6 @@ class Student {
     };
     try {
       const { data, status } = yield this.services.deleteStudent(id);
-      this.removeRequest = {
-        data,
-        status: ERequestStatus.SUCCESS,
-        error: null,
-      };
-
       if (status === 200) {
         message.success(
           {
@@ -109,6 +103,11 @@ class Student {
           },
           5
         );
+        this.removeRequest = {
+          data,
+          status: ERequestStatus.SUCCESS,
+          error: null,
+        };
       }
     } catch (err) {
       this.removeRequest = {

@@ -1,17 +1,41 @@
 .container
-  width 800px
+  color: black
 
 .list
-  padding 15px
   border-radius 10px
   background-color #f6f6f8
   & .listItem
+    padding 1rem 1rem
     border-right 1px solid transparent
     &:hover
       border-right-color rgb(24, 144, 255)
+    &:first-of-type
+      border-top-left-radius 10px
+      border-top-right-radius 10px
+    &:last-of-type
+      border-bottom-left-radius 10px
+      border-bottom-right-radius 10px
 
 .icon
   &:hover
     cursor pointer
     color rgb(24, 144, 255)
+
+.view_box 
+  & .list 
+    background-color #fff
+    & .listItem 
+      display flex
+      align-items flex-start
+      max-width 320px
+      min-width 270px
+      min-height 140px
+      padding 1rem 1rem
+      background-color: #f6f6f8;
+.view_list
+  & .list 
+    width 800px
+
+  
+
 
