@@ -1,8 +1,7 @@
 import { EModalMode } from "common/enums";
-import { IStudents } from "interfaces/student";
 
-export function getModalMode(id?: IStudents) {
+export function getModalMode(value?: unknown) {
   return function () {
-    return id ? EModalMode.EDIT : EModalMode.ADD;
+    return value ? EModalMode.EDIT : EModalMode.ADD;
   };
 }

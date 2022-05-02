@@ -37,3 +37,5 @@ export const initialValues = {
   // payment: ['3'],
   // is_phone_number_client: true,
 };
+
+export const AVATAR_SIZE = 56;

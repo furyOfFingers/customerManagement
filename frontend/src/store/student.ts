@@ -1,113 +1,182 @@
 import { makeAutoObservable } from "mobx";
 import { message } from "antd";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 
 import spin from "store/spin";
-import error from "store/errorHandle";
-import { IStudents } from "interfaces/student";
-import { STUDENT, STUDENTS, API } from "constants/api";
+import { IStudentApi, IStudent } from "interfaces/student";
+import StudentApi from "services/Student.api";
+import { getInitialData } from "./utils/utils";
+import { ERequestStatus } from "common/enums";
+
+const initial = {
+  students: getInitialData<IStudent[]>([]),
+  student: getInitialData<IStudent | null>(null),
+  removeRequest: getInitialData(null),
+  updateRequest: getInitialData(null),
+  createRequest: getInitialData(null),
+};
 
 class Student {
-  students = [];
-  student = null;
+  private services: IStudentApi;
+  students = initial.students;
+  student = initial.student;
+  removeRequest = initial.removeRequest;
+  updateRequest = initial.updateRequest;
+  createRequest = initial.createRequest;
 
-  constructor() {
+  constructor(services: IStudentApi) {
+    this.services = services;
     makeAutoObservable(this);
   }
 
-  createStudent(data: IStudents) {
-    spin.setSpin(true);
-    axios
-      .post(`${API}${STUDENT}`, data)
-      .then((res) => {
-        if (res.status === 201) {
-          message.success(
-            {
-              content: `student: ${data.firstname} added`,
-              style: {
-                marginTop: "20vh",
-              },
+  *createStudent(student: IStudent) {
+    this.createRequest = {
+      ...this.createRequest,
+      status: ERequestStatus.PENDING,
+    };
+    try {
+      const { status, data } = yield this.services.create(student);
+
+      if (status === 201) {
+        message.success(
+          {
+            content: `student: ${student.firstname} added`,
+            style: {
+              marginTop: "20vh",
             },
-            5
-          );
-        }
-      })
-      .catch((err: AxiosError) => {
-        error.errorHandle(err);
-      })
-      .finally(() => spin.setSpin(false));
+          },
+          5
+        );
+      }
+      this.createRequest = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+    } catch (err) {
+      this.createRequest = {
+        ...this.createRequest,
+        status: ERequestStatus.FAIL,
+        error: err as AxiosError,
+      };
+    }
   }
 
-  getStudents() {
+  *getStudents() {
     spin.setSpin(true);
-    axios
-      .get(`${API}${STUDENTS}`)
-      .then((res) => {
-        this.students = res.data;
-      })
-      .catch((err: AxiosError) => {
-        error.errorHandle(err);
-      })
-      .finally(() => spin.setSpin(false));
+    this.students = {
+      ...this.students,
+      status: ERequestStatus.PENDING,
+    };
+    try {
+      const { data } = yield this.services.getStudents();
+      this.students = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+      spin.setSpin(false);
+    } catch (err) {
+      this.students = {
+        ...this.students,
+        status: ERequestStatus.FAIL,
+        error: err as AxiosError,
+      };
+      spin.setSpin(false);
+    }
   }
 
-  removeStudent(id: string) {
-    spin.setSpin(true);
-    axios
-      .delete(`${API}${STUDENT}`, { params: { id } })
-      .then((res) => {
-        if (res.status === 200) {
-          message.success(
-            {
-              content: res.data,
-              style: {
-                marginTop: "20vh",
-              },
+  *removeStudent(id: string) {
+    this.removeRequest = {
+      ...this.removeRequest,
+      status: ERequestStatus.PENDING,
+    };
+    try {
+      const { data, status } = yield this.services.deleteStudent(id);
+      this.removeRequest = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+
+      if (status === 200) {
+        message.success(
+          {
+            content: data,
+            style: {
+              marginTop: "20vh",
             },
-            5
-          );
-        }
-      })
-      .catch((err: AxiosError) => {
-        error.errorHandle(err);
-      })
-      .finally(() => spin.setSpin(false));
+          },
+          5
+        );
+      }
+    } catch (err) {
+      this.removeRequest = {
+        ...this.removeRequest,
+        status: ERequestStatus.FAIL,
+        error: err as AxiosError,
+      };
+    }
   }
 
-  getStudent(id: string) {
-    axios
-      .get(`${API}${STUDENT}`, { params: { id } })
-      .then((response) => {
-        this.student = response.data;
-      })
-      .catch((err: AxiosError) => {
-        error.errorHandle(err);
-      });
+  *getStudent(studentId: string) {
+    this.student = {
+      ...this.student,
+      status: ERequestStatus.PENDING,
+    };
+    try {
+      const { data } = yield this.services.getStudent(studentId);
+      this.student = {
+        data: data as IStudent,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+    } catch (err) {
+      this.student = {
+        ...this.student,
+        status: ERequestStatus.FAIL,
+        error: err as AxiosError,
+      };
+    }
   }
 
-  updateStudent(data: IStudents) {
-    spin.setSpin(true);
-    axios
-      .put(`${API}${STUDENT}`, data)
-      .then((res) => {
-        if (res.status === 201) {
-          message.success(
-            {
-              content: `student: ${data.firstname} updated`,
-              style: {
-                marginTop: "20vh",
-              },
+  *updateStudent(updatedStudent: IStudent) {
+    this.updateRequest.status = ERequestStatus.PENDING;
+    try {
+      const { data, status } = yield this.services.updateStudent(
+        updatedStudent
+      );
+
+      this.updateRequest = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+
+      if (status === 201) {
+        message.success(
+          {
+            content: `student: ${updatedStudent.firstname} updated`,
+            style: {
+              marginTop: "20vh",
             },
-            5
-          );
-        }
-        console.log("--> updateStudent", res);
-      })
-      .catch((err: AxiosError) => {
-        error.errorHandle(err);
-      })
-      .finally(() => spin.setSpin(false));
+          },
+          5
+        );
+      }
+    } catch (err) {
+      this.updateRequest.status = ERequestStatus.FAIL;
+      this.updateRequest.error = err as AxiosError;
+    }
+  }
+
+  findStudent(id: string) {
+    const result = this.students.data?.find((student) => student.id === id);
+
+    return result;
   }
 }
 
-export default new Student();
+const studentApi = new StudentApi();
+
+export default new Student(studentApi);
