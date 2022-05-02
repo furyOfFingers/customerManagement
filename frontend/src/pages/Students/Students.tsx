@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
+import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
+import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 
 import { IStudent } from "interfaces/student";
 import StudentForm from "./StudentForm";
@@ -9,11 +11,14 @@ import s from "./Students.styl";
 import studentStore from "store/student";
 import StudentsTable from "./StudentsTable";
 import spin from "store/spin";
-import { isPending } from "common/utils/data.utils";
+
+import { ETableView } from "common/enums";
+import classNames from "classnames";
 
 const Students = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
+  const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
 
   useEffect(() => {
     if (isEmpty(studentStore.students.data)) {
@@ -53,9 +58,6 @@ const Students = (): JSX.Element | null => {
         ${selectedStudent.patronymic.substring(0, 1)}. ?`,
       onOk: () => confirmHandleRemove(selectedStudent.id!),
       onCancel: handleResetStudent,
-      okButtonProps: {
-        loading: isPending(studentStore.removeRequest),
-      },
     });
   };
 
@@ -80,17 +82,42 @@ const Students = (): JSX.Element | null => {
     handleResetStudent();
   };
 
+  const handleSetView = useCallback(
+    (view: ETableView) => () => {
+      setTableView(view);
+    },
+    []
+  );
+
   return spin.spin ? null : (
-    <div className={s.container}>
+    <div className={s.form_container}>
+      <div className={s.action_panel}>
+        <AppstoreOutlined
+          className={s.icon}
+          onClick={handleSetView(ETableView.BOX)}
+        />
+        <MenuOutlined
+          className={s.icon}
+          onClick={handleSetView(ETableView.LIST)}
+        />
+      </div>
+
       <Button type="primary" onClick={handleOpenModal}>
         Add student
       </Button>
 
-      <StudentsTable
-        listStudents={studentStore.students.data}
-        remove={handleRemove}
-        onEdit={handleEdit}
-      />
+      <div
+        className={classNames(s.container, {
+          [s.view_box]: tableView === ETableView.BOX,
+        })}
+      >
+        <StudentsTable
+          listStudents={studentStore.students.data}
+          remove={handleRemove}
+          onEdit={handleEdit}
+          view={tableView}
+        />
+      </div>
 
       {isModalOpen && (
         <StudentForm

@@ -10,17 +10,22 @@ import {
 
 import { IStudent } from "interfaces/student";
 import s from "./StudentsTable.styl";
+import { ETableView } from "common/enums";
+import classNames from "classnames";
+import { getGridConfig } from "./constants";
 
 interface IStudentsTable {
   listStudents: IStudent[];
   remove: (id: string) => void;
   onEdit: (id: string) => void;
+  view?: ETableView;
 }
 
 const StudentsTable = ({
   listStudents,
   remove,
   onEdit,
+  view = ETableView.LIST,
 }: IStudentsTable): JSX.Element => {
   const [studentId, setStudentId] = useState<string>();
 
@@ -34,8 +39,14 @@ const StudentsTable = ({
   }, []);
 
   return (
-    <div className={s.container}>
+    <div
+      className={classNames(s.container, {
+        [s.view_box]: view === ETableView.BOX,
+        [s.view_list]: view === ETableView.LIST,
+      })}
+    >
       <List
+        grid={getGridConfig(view)}
         className={s.list}
         itemLayout="horizontal"
         dataSource={listStudents}
@@ -73,7 +84,13 @@ const StudentsTable = ({
               <List.Item.Meta
                 title={title}
                 description={studentId === student.id ? student.phone : null}
-                avatar={<Avatar src={student.photo} icon={<UserOutlined />} />}
+                avatar={
+                  <Avatar
+                    size={view === ETableView.BOX ? 56 : "default"}
+                    src={student.photo}
+                    icon={<UserOutlined />}
+                  />
+                }
               />
             </List.Item>
           );
