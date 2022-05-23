@@ -1,33 +1,49 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
+import {
+  Form,
+  Input,
+  Radio,
+  DatePicker,
+  Button,
+  Modal,
+  Spin,
+  Avatar,
+  Space,
+} from "antd";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
-import { IStudents } from "interfaces/student";
+import { IStudent } from "interfaces/student";
 import s from "./StudentForm.styl";
 import spin from "store/spin";
-import student from "store/student";
-import { ButtonsConfig, formItemLayout } from "./constants";
+import studentStore from "store/student";
+import { AVATAR_SIZE, ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
 import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
+import { isPending } from "common/utils/data.utils";
+import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
 
-interface IStudentForm {
-  pickedStudent?: IStudents;
+interface IOwnProps {
+  pickedStudent: IStudent | null;
   onCancel: VoidFunction;
+  onUpdate: (data: IStudent) => Promise<void>;
+  onAdd: (data: IStudent) => Promise<void>;
 }
 
 const StudentForm = ({
   pickedStudent,
   onCancel,
-}: IStudentForm): JSX.Element => {
+  onUpdate,
+  onAdd,
+}: IOwnProps): JSX.Element => {
   const [image, setImage] = useState<Blob>();
   const [mode] = useState(getModalMode(pickedStudent));
 
-  const setInitialValue = (pickedStudent?: IStudents) => {
+  const setInitialValue = (pickedStudent: IStudent | null) => {
     if (!pickedStudent) {
       return initialValues;
     }
@@ -43,140 +59,156 @@ const StudentForm = ({
     };
   };
 
-  const handleSubmitClick = async (data: IStudents) => {
+  const handleSubmitClick = async (data: IStudent) => {
     const newData = { ...data, photo: image };
-    const action =
-      mode === EModalMode.EDIT ? handleUpdateStudent : handleAddStudent;
+    let editFunc = onAdd;
 
-    await action(newData);
-    await student.getStudents();
+    if (mode === EModalMode.EDIT) {
+      newData.id = pickedStudent?.id;
+      editFunc = onUpdate;
+    }
+
+    await editFunc(newData);
+    await studentStore.getStudents();
     onCancel();
-  };
-
-  const handleUpdateStudent = async (data: IStudents) => {
-    const newData = { ...data, id: pickedStudent?.id };
-    await student.updateStudent(newData);
-  };
-
-  const handleAddStudent = async (data: IStudents) => {
-    await student.createStudent(data as IStudents);
   };
 
   const onPhotoLoader = (photo: Blob) => {
     setImage(photo);
   };
 
+  const renderTitle = () => (
+    <Space align="baseline">
+      <Avatar
+        size={AVATAR_SIZE}
+        src={pickedStudent?.photo}
+        icon={<UserOutlined />}
+      />
+      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}</p>
+    </Space>
+  );
+
   return (
-    <Modal
-      title={`${mode === EModalMode.ADD ? "Add" : "Edit"} student`}
-      visible
-      onCancel={onCancel}
-      footer={null}
-    >
-      <div className={s.container}>
-        <Form
-          labelAlign="left"
-          {...formItemLayout}
-          onFinish={handleSubmitClick}
-          validateMessages={schemeStudentForm}
-          initialValues={setInitialValue(pickedStudent)}
-        >
-          <Form.Item
-            name="lastname"
-            label="lastname"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
+    <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
+      <Spin
+        tip="Loading..."
+        spinning={
+          isPending(studentStore.updateRequest) ||
+          isPending(studentStore.createRequest)
+        }
+      >
+        <div className={s.container}>
+          <Form
+            labelAlign="left"
+            {...formItemLayout}
+            onFinish={handleSubmitClick}
+            validateMessages={schemeStudentForm}
+            initialValues={setInitialValue(pickedStudent)}
           >
-            <Input disabled={spin.spin} placeholder="lastname" />
-          </Form.Item>
-
-          <Form.Item
-            name="firstname"
-            label="firstname"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
-          >
-            <Input placeholder="firstname" disabled={spin.spin} />
-          </Form.Item>
-
-          <Form.Item
-            name="patronymic"
-            label="patronymic"
-            rules={[
-              {
-                required: true,
-                min: 2,
-                max: 80,
-              },
-            ]}
-          >
-            <Input disabled={spin.spin} placeholder="patronymic" />
-          </Form.Item>
-
-          <Form.Item
-            name="phone"
-            label="phone"
-            rules={[
-              {
-                required: true,
-                min: 5,
-                max: 30,
-              },
-            ]}
-          >
-            <Input disabled={spin.spin} placeholder="phone" />
-          </Form.Item>
-
-          <Form.Item
-            name="birthday"
-            label="birthday"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
-          </Form.Item>
-
-          <Form.Item name="photo" label="photo">
-            <Uploader onPhotoLoader={onPhotoLoader} />
-          </Form.Item>
-
-          <Form.Item name="gender" label="gender" initialValue="male">
-            <Radio.Group
-              buttonStyle="outline"
-              className={s.centered}
-              disabled={spin.spin}
+            <Form.Item
+              name="lastname"
+              label="lastname"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
             >
-              <Radio.Button value="male">male</Radio.Button>
-              <Radio.Button value="female">female</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
+              <Input disabled={spin.spin} placeholder="lastname" />
+            </Form.Item>
 
-          <Form.Item>
-            <div className={s.centered}>
-              <Button type="primary" htmlType="submit">
-                {ButtonsConfig[mode].SubmitButton.title}
-              </Button>
+            <Form.Item
+              name="firstname"
+              label="firstname"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
+            >
+              <Input placeholder="firstname" disabled={spin.spin} />
+            </Form.Item>
 
-              <Button type="ghost" onClick={onCancel}>
-                {locale.form.cancel}
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      </div>
+            <Form.Item
+              name="patronymic"
+              label="patronymic"
+              rules={[
+                {
+                  required: true,
+                  min: 2,
+                  max: 80,
+                },
+              ]}
+            >
+              <Input disabled={spin.spin} placeholder="patronymic" />
+            </Form.Item>
+
+            <Form.Item
+              name="phone"
+              label="phone"
+              rules={[
+                {
+                  required: true,
+                  min: 5,
+                  max: 30,
+                },
+              ]}
+            >
+              <Input disabled={spin.spin} placeholder="phone" />
+            </Form.Item>
+
+            <Form.Item
+              name="birthday"
+              label="birthday"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
+            </Form.Item>
+
+            <Form.Item name="photo" label="photo">
+              <Uploader onPhotoLoader={onPhotoLoader} />
+            </Form.Item>
+
+            <Form.Item name="gender" label="gender" initialValue="male">
+              <Radio.Group
+                buttonStyle="outline"
+                className={s.centered}
+                disabled={spin.spin}
+              >
+                <Radio.Button value="male">male</Radio.Button>
+                <Radio.Button value="female">female</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item>
+              <div className={s.centered}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={
+                    isPending(studentStore.updateRequest) ||
+                    isPending(studentStore.createRequest)
+                  }
+                >
+                  {ButtonsConfig[mode].SubmitButton.title}
+                </Button>
+
+                <Button type="ghost" onClick={onCancel}>
+                  {locale.form.cancel}
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </div>
+      </Spin>
     </Modal>
   );
 };

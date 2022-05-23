@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { toJS } from "mobx";
+
 import { useRoutes, navigate } from "hookrouter";
 import { isEmpty } from "ramda";
 
@@ -14,7 +14,7 @@ import MoneyReport from "pages/MoneyReport";
 import user from "store/user";
 
 const MainRouter = (): JSX.Element => {
-  const isAuth = !isEmpty(toJS(user?.user));
+  const isAuth = !isEmpty(user?.user);
 
   const wrapper = (children: JSX.Element) => (
     <PageWrapper>{children}</PageWrapper>

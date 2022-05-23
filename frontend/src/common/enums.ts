@@ -9,3 +9,8 @@ export enum ERequestStatus {
   SUCCESS,
   FAIL,
 }
+
+export enum ETableView {
+  LIST = "LIST",
+  BOX = "BOX",
+}
