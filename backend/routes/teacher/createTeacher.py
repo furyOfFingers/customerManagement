@@ -4,7 +4,7 @@ from flask import request
 from models.teacher import Teacher
 
 
-def create():
+def createTeacher():
     if request.method == "POST":
         request_data = request.get_json()
         v = Validator()
@@ -31,7 +31,14 @@ def create():
             'gender': {
                 'type': 'string', 'allowed': ['male', 'female']
             },
+            'students': {
+                'type': 'string', 'required': False
+            },
         }
+        students_string = request_data.get('students', '')
+        students_string = ','.join(students_string)
+        request_data['students'] = students_string
+
         if not v.validate(request_data, schema):
             return v.errors, 400
         else:
@@ -42,9 +49,7 @@ def create():
             birthday = request_data['birthday']
             gender = request_data['gender']
             photo = request_data.get('photo', '')
-            # groups = request_data['groups']
-            # parents = request_data['parents']
-            # payment = request_data['payment']
+            students = request_data['students']
 
             new_teacher = Teacher(
                 lastname=lastname,
@@ -54,9 +59,7 @@ def create():
                 birthday=birthday,
                 photo=photo,
                 gender=gender,
-                # groups=groups,
-                # parents=parents,
-                # payment=payment,
+                students=students,
             )
             try:
                 db_session.add(new_teacher)
@@ -70,6 +73,7 @@ def create():
                     "birthday": birthday,
                     "photo": photo,
                     "gender": gender,
+                    "students": students,
                     "id": new_teacher.id,
                     "date_created": new_teacher.date_created
                 }, 201

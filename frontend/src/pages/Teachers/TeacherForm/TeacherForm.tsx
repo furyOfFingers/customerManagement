@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
-import { isEmpty } from "ramda";
+import { Form, Input, Radio, DatePicker, Button, Modal, Select } from "antd";
 import moment from "moment";
 
+import { IStudents } from "interfaces/student";
 import Uploader from "components/Uploader";
 import { ITeacher } from "interfaces/teacher";
 import s from "./TeacherForm.styl";
@@ -15,7 +15,9 @@ import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeTeacherForm } from "schemes/teacher";
 import { initialValues } from "./constants";
+import studentStore from "store/student";
 
+const { Option } = Select;
 interface ITeacherForm {
   pickedTeacher?: ITeacher;
   onCancel: VoidFunction;
@@ -29,7 +31,7 @@ const TeacherForm = ({
   const [mode] = useState(getModalMode(pickedTeacher));
 
   const setInitialValue = (pickedTeacher?: ITeacher) => {
-    if (isEmpty(pickedTeacher)) {
+    if (!pickedTeacher) {
       return initialValues;
     }
 
@@ -42,6 +44,18 @@ const TeacherForm = ({
       birthday: moment(pickedTeacher?.birthday, "DD-MM-YYYY"),
       photo: pickedTeacher?.photo,
     };
+  };
+
+  const renderOptions = () => {
+    return studentStore.students.map((student: IStudents) => {
+      return (
+        <Option key={student.id} value={student.id}>
+          {student.id}
+          {"-"}
+          {student.lastname}. {student.firstname[0]}. {student.patronymic[0]}
+        </Option>
+      );
+    });
   };
 
   const handleSubmit = async (data: ITeacher) => {
@@ -148,6 +162,19 @@ const TeacherForm = ({
           >
             <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
           </Form.Item>
+
+          {studentStore.students && (
+            <Form.Item name="students" label="students">
+              <Select
+                defaultValue={pickedTeacher?.students}
+                allowClear
+                mode="multiple"
+                placeholder="select students"
+              >
+                {renderOptions()}
+              </Select>
+            </Form.Item>
+          )}
 
           <Form.Item name="photo" label="photo">
             <Uploader onPhotoLoader={onPhotoLoader} />

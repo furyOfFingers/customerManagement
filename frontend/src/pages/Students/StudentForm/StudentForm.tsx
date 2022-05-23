@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Radio, DatePicker, Button, Modal } from "antd";
-import { isEmpty } from "ramda";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
@@ -29,7 +28,7 @@ const StudentForm = ({
   const [mode] = useState(getModalMode(pickedStudent));
 
   const setInitialValue = (pickedStudent?: IStudents) => {
-    if (isEmpty(pickedStudent)) {
+    if (!pickedStudent) {
       return initialValues;
     }
 

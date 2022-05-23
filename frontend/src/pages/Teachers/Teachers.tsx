@@ -9,6 +9,7 @@ import { ITeacher } from "interfaces/teacher";
 import teacher from "store/teacher";
 import spin from "store/spin";
 import s from "./Teachers.styl";
+import student from "store/student";
 
 const Teachers = (): JSX.Element | null => {
   const [isAddMWOpen, setIsAddMWOpen] = useState(false);
@@ -18,8 +19,10 @@ const Teachers = (): JSX.Element | null => {
   useEffect(() => {
     if (isEmpty(teacher.teachers)) {
       teacher.getTeachers();
+      student.getStudents();
     }
   }, []);
+
   const handleRemove = (id: string) => {
     const selectedTeacher = teacher.teachers.find(
       (el: ITeacher) => el.id === id
@@ -56,7 +59,7 @@ const Teachers = (): JSX.Element | null => {
   };
 
   const confirmHandleRemove = async () => {
-    // await teacher.removeTeacher(pickedTeacher?.id as string);
+    await teacher.removeTeacher(pickedTeacher?.id as string);
     await teacher.getTeachers();
     handleCancel("remove");
     setPickedTeacher(null);
@@ -87,13 +90,9 @@ const Teachers = (): JSX.Element | null => {
         ]}
       >
         <div>
-          remove teacher{" "}
-          <span>
-            {`${pickedTeacher?.lastname}
+          {`remove teacher ${pickedTeacher?.lastname}
             ${pickedTeacher?.firstname.substring(0, 1)}.
-            ${pickedTeacher?.patronymic.substring(0, 1)}.`}{" "}
-            ?
-          </span>
+            ${pickedTeacher?.patronymic.substring(0, 1)}. ?`}
         </div>
       </Modal>
 

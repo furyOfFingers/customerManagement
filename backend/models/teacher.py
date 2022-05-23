@@ -2,6 +2,7 @@ from datetime import datetime
 
 from db.database import Base
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
 
 class Teacher(Base):
@@ -10,17 +11,15 @@ class Teacher(Base):
     lastname = Column(String(80), nullable=False)
     firstname = Column(String(80), nullable=False)
     patronymic = Column(String(80), nullable=False)
-
     phone = Column(String(30), nullable=False)
     birthday = Column(String(10), nullable=False)
     photo = Column(String())
     gender = Column(String(10), nullable=False)
-    # groups = Column(String(10), nullable=False)
-    # parents = Column(String(10), nullable=False)
-    # payment = Column(String(10), nullable=False)
+    students = Column(String())
     date_created = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
+        students_arr = self.students.split(',')
         return str(
             {
                 "id": str(self.id),
@@ -31,9 +30,7 @@ class Teacher(Base):
                 "birthday": self.birthday,
                 "photo": self.photo,
                 "gender": self.gender,
-                # "groups": self.groups,
-                # "parents": self.parents,
-                # "payment": self.payment,
+                "students": students_arr,
                 "date_created": str(datetime.timestamp(self.date_created)),
             }
         )

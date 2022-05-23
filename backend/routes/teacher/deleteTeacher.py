@@ -3,7 +3,7 @@ from flask import request
 from models.teacher import Teacher
 
 
-def delete():
+def deleteTeacher():
     if request.method == "DELETE":
         id = request.args.get("id")
 

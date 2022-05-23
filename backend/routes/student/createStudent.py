@@ -4,7 +4,7 @@ from flask import request
 from models.student import Student
 
 
-def create():
+def createStudent():
     if request.method == "POST":
         request_data = request.get_json()
         v = Validator()

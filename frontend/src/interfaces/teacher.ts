@@ -7,6 +7,7 @@ export interface ITeacher {
   birthday: string;
   gender: "male" | "female";
   photo: Blob | undefined;
+  students: Array<string>;
   // groups: ['1'],
   // students: ["2"],
   // payments: ['3'],

@@ -6,8 +6,8 @@ from flask import Flask, request
 from db.database import db_session, init_db
 from models.user import User
 from routes.auth import signin, signup
-from routes.student import create, delete, getStudent, getStudents, updateStudent
-from routes.teacher import create, delete, getTeacher, getTeachers, updateTeacher
+from routes.student import createStudent, deleteStudent, getStudent, getStudents, updateStudent
+from routes.teacher import createTeacher, deleteTeacher, getTeacher, getTeachers, updateTeacher
 
 app = Flask(__name__)
 init_db()
@@ -46,7 +46,7 @@ def auth_signin():
 # student
 @app.route('/api/student', methods=["POST"])
 def student_create():
-    return create.create()
+    return createStudent.createStudent()
 
 
 @app.route('/api/student', methods=["GET"])
@@ -66,13 +66,13 @@ def student_update():
 
 @app.route('/api/student', methods=["DELETE"])
 def student_delete():
-    return delete.delete()
+    return deleteStudent.deleteStudent()
 
 
 # teacher
 @app.route('/api/teacher', methods=["POST"])
 def teacher_create():
-    return create.create()
+    return createTeacher.createTeacher()
 
 
 @app.route('/api/teacher', methods=["GET"])
@@ -92,7 +92,7 @@ def teacher_update():
 
 @app.route('/api/teacher', methods=["DELETE"])
 def teacher_delete():
-    return delete.delete()
+    return deleteTeacher.deleteTeacher()
 
 
 if __name__ == '__main__':

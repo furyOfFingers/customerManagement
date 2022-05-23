@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { toJS } from "mobx";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
 
@@ -17,13 +16,13 @@ const Students = (): JSX.Element | null => {
   const [pickedStudent, setPickedStudent] = useState<IStudents | null>(null);
 
   useEffect(() => {
-    if (isEmpty(toJS(student.students))) {
+    if (isEmpty(student.students)) {
       student.getStudents();
     }
   }, []);
 
   const handleRemove = (id: string) => {
-    const selectedStudent = toJS(student.students).find(
+    const selectedStudent = student.students.find(
       (el: IStudents) => el.id === id
     );
 
@@ -70,11 +69,8 @@ const Students = (): JSX.Element | null => {
         Add student
       </Button>
 
-      {!isEmpty(toJS(student.students)) && (
-        <StudentsTable
-          listStudents={toJS(student.students)}
-          remove={handleRemove}
-        />
+      {!isEmpty(student.students) && (
+        <StudentsTable listStudents={student.students} remove={handleRemove} />
       )}
 
       <Modal
@@ -92,13 +88,9 @@ const Students = (): JSX.Element | null => {
         ]}
       >
         <div>
-          remove student{" "}
-          <span>
-            {`${pickedStudent?.lastname}
+          {`remove student ${pickedStudent?.lastname}
             ${pickedStudent?.firstname.substring(0, 1)}.
-            ${pickedStudent?.patronymic.substring(0, 1)}.`}{" "}
-            ?
-          </span>
+            ${pickedStudent?.patronymic.substring(0, 1)}. ?`}
         </div>
       </Modal>
 

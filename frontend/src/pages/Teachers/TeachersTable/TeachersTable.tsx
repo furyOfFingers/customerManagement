@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { observer } from "mobx-react";
 import { List, Avatar } from "antd";
 import {
   EditOutlined,
@@ -23,12 +22,12 @@ const TeachersTable = ({
 }: ITeachersTable): JSX.Element => {
   const [isEditMWOpen, setIsEditMWOpen] = useState(false);
   const [teacherId, setTeacherId] = useState<string>();
-  const [pickedTeacher, setpickedTeacher] = useState<ITeacher>();
+  const [pickedTeacher, setPickedTeacher] = useState<ITeacher>();
 
   const handleEdit = useCallback((id: string) => {
     const actualTeacher = listTeachers.find((teacher) => teacher.id === id);
 
-    setpickedTeacher(actualTeacher);
+    setPickedTeacher(actualTeacher);
     setIsEditMWOpen(true);
   }, []);
 
@@ -43,6 +42,7 @@ const TeachersTable = ({
 
   const handleCloseEditModal = useCallback(() => {
     setTeacherId("");
+    setPickedTeacher(undefined);
     setIsEditMWOpen(false);
   }, []);
 
@@ -107,4 +107,4 @@ const TeachersTable = ({
   );
 };
 
-export default observer(TeachersTable);
+export default TeachersTable;
