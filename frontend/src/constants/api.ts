@@ -8,3 +8,6 @@ export const AUTH_USERS = "/users";
 
 export const STUDENT = "/student";
 export const STUDENTS = "/students";
+
+export const TEACHER = "/teacher";
+export const TEACHERS = "/teachers";

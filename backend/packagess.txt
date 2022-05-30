@@ -1,4 +1,0 @@
-pip
-flask
-cerberus
-sqlalchemy

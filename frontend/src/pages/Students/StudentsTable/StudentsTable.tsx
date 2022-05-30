@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { observer } from "mobx-react";
 import { List, Avatar } from "antd";
 import {
   EditOutlined,
@@ -100,4 +99,4 @@ const StudentsTable = ({
   );
 };
 
-export default observer(StudentsTable);
+export default StudentsTable;

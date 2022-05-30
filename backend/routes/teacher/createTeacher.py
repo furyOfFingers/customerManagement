@@ -1,10 +1,10 @@
 from cerberus import Validator
 from db.database import db_session
 from flask import request
-from models.student import Student
+from models.teacher import Teacher
 
 
-def create():
+def createTeacher():
     if request.method == "POST":
         request_data = request.get_json()
         v = Validator()
@@ -31,7 +31,14 @@ def create():
             'gender': {
                 'type': 'string', 'allowed': ['male', 'female']
             },
+            'students': {
+                'type': 'string', 'required': False
+            },
         }
+        students_string = request_data.get('students', '')
+        students_string = ','.join(students_string)
+        request_data['students'] = students_string
+
         if not v.validate(request_data, schema):
             return v.errors, 400
         else:
@@ -42,12 +49,9 @@ def create():
             birthday = request_data['birthday']
             gender = request_data['gender']
             photo = request_data.get('photo', '')
-            # groups = request_data['groups']
-            # parents = request_data['parents']
-            # payment = request_data['payment']
-            # is_phone_number_client = request_data['is_phone_number_client']
+            students = request_data['students']
 
-            new_student = Student(
+            new_teacher = Teacher(
                 lastname=lastname,
                 firstname=firstname,
                 patronymic=patronymic,
@@ -55,13 +59,10 @@ def create():
                 birthday=birthday,
                 photo=photo,
                 gender=gender,
-                # groups=groups,
-                # parents=parents,
-                # payment=payment,
-                # is_phone_number_client=is_phone_number_client,
+                students=students,
             )
             try:
-                db_session.add(new_student)
+                db_session.add(new_teacher)
                 db_session.flush()
                 db_session.commit()
                 return {
@@ -72,8 +73,9 @@ def create():
                     "birthday": birthday,
                     "photo": photo,
                     "gender": gender,
-                    "id": new_student.id,
-                    "date_created": new_student.date_created
+                    "students": students,
+                    "id": new_teacher.id,
+                    "date_created": new_teacher.date_created
                 }, 201
 
             except Exception as e:

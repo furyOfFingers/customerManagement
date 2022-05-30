@@ -6,7 +6,8 @@ from flask import Flask, request
 from db.database import db_session, init_db
 from models.user import User
 from routes.auth import signin, signup
-from routes.student import create, delete, getStudents, getStudent, updateStudent
+from routes.student import createStudent, deleteStudent, getStudent, getStudents, updateStudent
+from routes.teacher import createTeacher, deleteTeacher, getTeacher, getTeachers, updateTeacher
 
 app = Flask(__name__)
 init_db()
@@ -43,14 +44,14 @@ def auth_signin():
 
 
 # student
+@app.route('/api/student', methods=["POST"])
+def student_create():
+    return createStudent.createStudent()
+
+
 @app.route('/api/student', methods=["GET"])
 def student_getStudent():
     return getStudent.getStudent()
-
-
-@app.route('/api/student', methods=["PUT"])
-def student_update():
-    return updateStudent.updateStudent()
 
 
 @app.route('/api/students', methods=["GET"])
@@ -58,14 +59,40 @@ def student_getStudents():
     return getStudents.getStudents()
 
 
-@app.route('/api/student', methods=["POST"])
-def student_create():
-    return create.create()
+@app.route('/api/student', methods=["PUT"])
+def student_update():
+    return updateStudent.updateStudent()
 
 
 @app.route('/api/student', methods=["DELETE"])
 def student_delete():
-    return delete.delete()
+    return deleteStudent.deleteStudent()
+
+
+# teacher
+@app.route('/api/teacher', methods=["POST"])
+def teacher_create():
+    return createTeacher.createTeacher()
+
+
+@app.route('/api/teacher', methods=["GET"])
+def teacher_getTeacher():
+    return getTeacher.getTeacher()
+
+
+@app.route('/api/teachers', methods=["GET"])
+def teacher_getTeachers():
+    return getTeachers.getTeachers()
+
+
+@app.route('/api/teacher', methods=["PUT"])
+def teacher_update():
+    return updateTeacher.updateTeacher()
+
+
+@app.route('/api/teacher', methods=["DELETE"])
+def teacher_delete():
+    return deleteTeacher.deleteTeacher()
 
 
 if __name__ == '__main__':
