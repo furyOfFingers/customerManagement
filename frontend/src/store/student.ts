@@ -9,8 +9,8 @@ import { getInitialData } from "./utils/utils";
 import { ERequestStatus } from "common/enums";
 
 const initial = {
-  students: getInitialData<IStudent[]>([]),
   student: getInitialData<IStudent | null>(null),
+  students: getInitialData<IStudent[]>([]),
   removeRequest: getInitialData(null),
   updateRequest: getInitialData(null),
   createRequest: getInitialData(null),
@@ -93,6 +93,7 @@ class Student {
     };
     try {
       const { data, status } = yield this.services.deleteStudent(id);
+
       if (status === 200) {
         message.success(
           {
@@ -118,13 +119,14 @@ class Student {
     }
   }
 
-  *getStudent(studentId: string) {
+  *getStudent(id: string) {
     this.student = {
       ...this.student,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { data } = yield this.services.getStudent(studentId);
+      const { data } = yield this.services.getStudent(id);
+
       this.student = {
         data: data as IStudent,
         status: ERequestStatus.SUCCESS,

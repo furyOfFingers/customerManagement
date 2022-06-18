@@ -20,6 +20,7 @@ class Teacher(Base):
 
     def __repr__(self):
         students_arr = self.students.split(',')
+
         return str(
             {
                 "id": str(self.id),

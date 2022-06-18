@@ -1,102 +1,133 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
+import cls from "classnames";
+import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
+import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 
 import TeacherForm from "./TeacherForm";
 import TeachersTable from "./TeachersTable";
 import { ITeacher } from "interfaces/teacher";
-import teacher from "store/teacher";
-import spin from "store/spin";
+import teacherStore from "store/teacher";
+import spinStore from "store/spin";
+import studentStore from "store/student";
 import s from "./Teachers.styl";
-import student from "store/student";
+import { ETableView } from "common/enums";
 
 const Teachers = (): JSX.Element | null => {
-  const [isAddMWOpen, setIsAddMWOpen] = useState(false);
-  const [isRemoveMWOpen, setIsRemoveMWOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedTeacher, setPickedTeacher] = useState<ITeacher | null>(null);
+  const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
 
   useEffect(() => {
-    if (isEmpty(teacher.teachers)) {
-      teacher.getTeachers();
-      student.getStudents();
+    if (isEmpty(teacherStore.teachers.data)) {
+      teacherStore.getTeachers();
+      studentStore.getStudents();
     }
   }, []);
 
+  const handleOpenModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseEditModal = useCallback(() => {
+    setPickedTeacher(null);
+    setIsModalOpen(false);
+  }, []);
+
+  const handleUpdate = useCallback(async (data: ITeacher) => {
+    await teacherStore.updateTeacher(data);
+  }, []);
+
+  const handleAdd = useCallback(async (data: ITeacher) => {
+    await teacherStore.createTeacher(data as ITeacher);
+  }, []);
+
   const handleRemove = (id: string) => {
-    const selectedTeacher = teacher.teachers.find(
-      (el: ITeacher) => el.id === id
+    if (!teacherStore.teachers.data?.length || !id) return;
+
+    const selectedTeacher = teacherStore.findTeacher(id);
+
+    if (!selectedTeacher) return;
+
+    setPickedTeacher(selectedTeacher);
+    Modal.confirm({
+      title: "Remove teacher",
+      content: `remove teacher ${selectedTeacher.lastname}
+        ${selectedTeacher.firstname.substring(0, 1)}.
+        ${selectedTeacher.patronymic.substring(0, 1)}. ?`,
+      onOk: () => confirmHandleRemove(selectedTeacher.id!),
+      onCancel: handleResetTeacher,
+    });
+  };
+
+  const handleEdit = useCallback((id: string) => {
+    if (!teacherStore.teachers.data) return;
+
+    const actualTeacher = teacherStore.teachers.data.find(
+      (teacher) => teacher.id === id
     );
 
-    setPickedTeacher(selectedTeacher ? selectedTeacher : null);
-    handleOpenMW("remove");
-  };
+    setPickedTeacher(actualTeacher!);
+    setIsModalOpen(true);
+  }, []);
 
-  const handleOpenMW = (name: string) => {
-    switch (name) {
-      case "add":
-        setIsAddMWOpen(true);
-        break;
-      // case 'edit':
-      //     setIsEditModalOpen(true);
-      case "remove":
-        setIsRemoveMWOpen(true);
-        break;
-    }
-  };
-
-  const handleCancel = (name: string) => {
-    switch (name) {
-      case "add":
-        setIsAddMWOpen(false);
-        break;
-      // case 'edit':
-      //     setIsEditModalOpen(true);
-      case "remove":
-        setIsRemoveMWOpen(false);
-        break;
-    }
-  };
-
-  const confirmHandleRemove = async () => {
-    await teacher.removeTeacher(pickedTeacher?.id as string);
-    await teacher.getTeachers();
-    handleCancel("remove");
+  const handleResetTeacher = useCallback(() => {
     setPickedTeacher(null);
+  }, []);
+
+  const confirmHandleRemove = async (id: string) => {
+    await teacherStore.removeTeacher(id);
+    await teacherStore.getTeachers();
+    handleResetTeacher();
   };
 
-  return spin.spin ? null : (
-    <div className={s.container}>
-      <Button type="primary" onClick={() => handleOpenMW("add")}>
+  const handleSetView = useCallback(
+    (view: ETableView) => () => {
+      setTableView(view);
+    },
+    []
+  );
+
+  return spinStore.spin ? null : (
+    <div className={s.form_container}>
+      <div className={s.action_panel}>
+        <AppstoreOutlined
+          className={s.icon}
+          onClick={handleSetView(ETableView.BOX)}
+        />
+        <MenuOutlined
+          className={s.icon}
+          onClick={handleSetView(ETableView.LIST)}
+        />
+      </div>
+
+      <Button type="primary" onClick={handleOpenModal}>
         Add teacher
       </Button>
 
-      {!isEmpty(teacher.teachers) && (
-        <TeachersTable listTeachers={teacher.teachers} remove={handleRemove} />
-      )}
-
-      <Modal
-        title="Remove teacher"
-        onCancel={() => handleCancel("remove")}
-        visible={isRemoveMWOpen}
-        footer={[
-          <Button key="remove" type="primary" onClick={confirmHandleRemove}>
-            Remove
-          </Button>,
-
-          <Button key="back" onClick={() => handleCancel("remove")}>
-            Cancel
-          </Button>,
-        ]}
+      <div
+        className={cls(s.container, {
+          [s.view_box]: tableView === ETableView.BOX,
+        })}
       >
-        <div>
-          {`remove teacher ${pickedTeacher?.lastname}
-            ${pickedTeacher?.firstname.substring(0, 1)}.
-            ${pickedTeacher?.patronymic.substring(0, 1)}. ?`}
-        </div>
-      </Modal>
+        <TeachersTable
+          listTeachers={teacherStore.teachers.data}
+          remove={handleRemove}
+          onEdit={handleEdit}
+          view={tableView}
+        />
+      </div>
 
-      {isAddMWOpen && <TeacherForm onCancel={() => handleCancel("add")} />}
+      {isModalOpen && (
+        <TeacherForm
+          pickedTeacher={pickedTeacher}
+          onCancel={handleCloseEditModal}
+          onUpdate={handleUpdate}
+          onAdd={handleAdd}
+        />
+      )}
     </div>
   );
 };

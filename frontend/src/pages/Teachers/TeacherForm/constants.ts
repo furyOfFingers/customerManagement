@@ -32,8 +32,6 @@ export const initialValues = {
   phone: "89064422353",
   birthday: moment("28-01-1990", "DD-MM-YYYY"),
   photo: "photo",
-  // groups: ['1'],
-  // parents: ["2"],
-  // payment: ['3'],
-  // is_phone_number_client: true,
 };
+
+export const AVATAR_SIZE = 56;

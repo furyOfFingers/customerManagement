@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import cls from "classnames";
 import { List, Avatar } from "antd";
 import {
   EditOutlined,
@@ -8,16 +9,15 @@ import {
 } from "@ant-design/icons";
 
 import { IStudent } from "interfaces/student";
-import s from "./StudentsTable.styl";
 import { ETableView } from "common/enums";
-import classNames from "classnames";
 import { getGridConfig } from "./constants";
+import s from "./StudentsTable.styl";
 
 interface IStudentsTable {
+  view?: ETableView;
   listStudents: IStudent[];
   remove: (id: string) => void;
   onEdit: (id: string) => void;
-  view?: ETableView;
 }
 
 const StudentsTable = ({
@@ -39,7 +39,7 @@ const StudentsTable = ({
 
   return (
     <div
-      className={classNames(s.container, {
+      className={cls(s.container, {
         [s.view_box]: view === ETableView.BOX,
         [s.view_list]: view === ETableView.LIST,
       })}
@@ -63,19 +63,25 @@ const StudentsTable = ({
               actions={[
                 <ExpandAltOutlined
                   key={student.id}
-                  className={s.icon}
+                  className={cls(s.icon, {
+                    [s.icon_size]: view === ETableView.BOX,
+                  })}
                   onClick={() => handleDetail(student.id as string)}
                 />,
 
                 <EditOutlined
                   key={student.id}
-                  className={s.icon}
+                  className={cls(s.icon, {
+                    [s.icon_size]: view === ETableView.BOX,
+                  })}
                   onClick={() => onEdit(student.id as string)}
                 />,
 
                 <DeleteOutlined
                   key={student.id}
-                  className={s.icon}
+                  className={cls(s.icon, {
+                    [s.icon_size]: view === ETableView.BOX,
+                  })}
                   onClick={() => handleRemove(student.id as string)}
                 />,
               ]}

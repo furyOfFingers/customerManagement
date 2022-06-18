@@ -35,9 +35,9 @@ def createTeacher():
                 'type': 'string', 'required': False
             },
         }
-        students_string = request_data.get('students', '')
-        students_string = ','.join(students_string)
-        request_data['students'] = students_string
+        if 'students' in request_data:
+            students_string = ','.join(request_data['students'])
+            request_data['students'] = students_string
 
         if not v.validate(request_data, schema):
             return v.errors, 400
@@ -49,7 +49,7 @@ def createTeacher():
             birthday = request_data['birthday']
             gender = request_data['gender']
             photo = request_data.get('photo', '')
-            students = request_data['students']
+            students = request_data.get('students', '')
 
             new_teacher = Teacher(
                 lastname=lastname,
