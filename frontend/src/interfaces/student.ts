@@ -9,10 +9,7 @@ export interface IStudent {
   birthday: string;
   gender: "male" | "female";
   photo: Blob | undefined;
-  // groups: ['1'],
-  // parents: ["2"],
-  // payment: ['3'],
-  // is_phone_number_client: true,
+  teachers: Array<string>;
 }
 
 export interface IStudentApi {
@@ -22,7 +19,7 @@ export interface IStudentApi {
 
   deleteStudent(id: string): Promise<AxiosResponse>;
 
-  getStudent(studentId: string): Promise<AxiosResponse<IStudent>>;
+  getStudent(id: string): Promise<AxiosResponse<IStudent>>;
 
   updateStudent(updatedStudent: IStudent): Promise<AxiosResponse>;
 }

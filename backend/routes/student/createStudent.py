@@ -31,7 +31,14 @@ def createStudent():
             'gender': {
                 'type': 'string', 'allowed': ['male', 'female']
             },
+            'teachers': {
+                'type': 'string', 'required': False
+            },
         }
+        if 'teachers' in request_data:
+            teachers_string = ','.join(request_data['teachers'])
+            request_data['teachers'] = teachers_string
+
         if not v.validate(request_data, schema):
             return v.errors, 400
         else:
@@ -42,10 +49,7 @@ def createStudent():
             birthday = request_data['birthday']
             gender = request_data['gender']
             photo = request_data.get('photo', '')
-            # groups = request_data['groups']
-            # parents = request_data['parents']
-            # payment = request_data['payment']
-            # is_phone_number_client = request_data['is_phone_number_client']
+            teachers = request_data.get('teachers', '')
 
             new_student = Student(
                 lastname=lastname,
@@ -55,10 +59,7 @@ def createStudent():
                 birthday=birthday,
                 photo=photo,
                 gender=gender,
-                # groups=groups,
-                # parents=parents,
-                # payment=payment,
-                # is_phone_number_client=is_phone_number_client,
+                teachers=teachers,
             )
             try:
                 db_session.add(new_student)
@@ -72,6 +73,7 @@ def createStudent():
                     "birthday": birthday,
                     "photo": photo,
                     "gender": gender,
+                    "teachers": teachers,
                     "id": new_student.id,
                     "date_created": new_student.date_created
                 }, 201

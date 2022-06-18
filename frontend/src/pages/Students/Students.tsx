@@ -2,18 +2,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
 import { isEmpty } from "ramda";
+import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 
 import { IStudent } from "interfaces/student";
 import StudentForm from "./StudentForm";
-import s from "./Students.styl";
+import teacherStore from "store/teacher";
 import studentStore from "store/student";
 import StudentsTable from "./StudentsTable";
-import spin from "store/spin";
-
+import spinStore from "store/spin";
 import { ETableView } from "common/enums";
-import classNames from "classnames";
+import s from "./Students.styl";
 
 const Students = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +22,7 @@ const Students = (): JSX.Element | null => {
 
   useEffect(() => {
     if (isEmpty(studentStore.students.data)) {
+      teacherStore.getTeachers();
       studentStore.getStudents();
     }
   }, []);
@@ -76,8 +77,8 @@ const Students = (): JSX.Element | null => {
     setPickedStudent(null);
   }, []);
 
-  const confirmHandleRemove = async (studentId: string) => {
-    await studentStore.removeStudent(studentId);
+  const confirmHandleRemove = async (id: string) => {
+    await studentStore.removeStudent(id);
     await studentStore.getStudents();
     handleResetStudent();
   };
@@ -89,7 +90,7 @@ const Students = (): JSX.Element | null => {
     []
   );
 
-  return spin.spin ? null : (
+  return spinStore.spin ? null : (
     <div className={s.form_container}>
       <div className={s.action_panel}>
         <AppstoreOutlined
@@ -107,24 +108,24 @@ const Students = (): JSX.Element | null => {
       </Button>
 
       <div
-        className={classNames(s.container, {
+        className={cls(s.container, {
           [s.view_box]: tableView === ETableView.BOX,
         })}
       >
         <StudentsTable
-          listStudents={studentStore.students.data}
-          remove={handleRemove}
-          onEdit={handleEdit}
           view={tableView}
+          onEdit={handleEdit}
+          remove={handleRemove}
+          listStudents={studentStore.students.data}
         />
       </div>
 
       {isModalOpen && (
         <StudentForm
-          pickedStudent={pickedStudent}
-          onCancel={handleCloseEditModal}
-          onUpdate={handleUpdateStudent}
           onAdd={handleAddStudent}
+          pickedStudent={pickedStudent}
+          onUpdate={handleUpdateStudent}
+          onCancel={handleCloseEditModal}
         />
       )}
     </div>

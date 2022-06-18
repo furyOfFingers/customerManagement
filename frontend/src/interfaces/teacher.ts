@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 export interface ITeacher {
   id?: string;
   firstname: string;
@@ -8,8 +10,16 @@ export interface ITeacher {
   gender: "male" | "female";
   photo: Blob | undefined;
   students: Array<string>;
-  // groups: ['1'],
-  // students: ["2"],
-  // payments: ['3'],
-  // is_phone_number_client: true,
+}
+
+export interface ITeacherApi {
+  create(data: ITeacher): Promise<AxiosResponse>;
+
+  getTeachers(): Promise<AxiosResponse<ITeacher[]>>;
+
+  deleteTeacher(id: string): Promise<AxiosResponse>;
+
+  getTeacher(id: string): Promise<AxiosResponse<ITeacher>>;
+
+  updateTeacher(updatedTeacher: ITeacher): Promise<AxiosResponse>;
 }

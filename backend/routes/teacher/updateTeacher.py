@@ -22,7 +22,13 @@ def updateTeacher():
                 update_teacher.phone = request_data['phone']
                 update_teacher.birthday = request_data['birthday']
                 update_teacher.gender = request_data['gender']
-                update_teacher.photo = request_data.get('photo', '')
+
+                if 'photo' in request_data:
+                    update_teacher.photo = request_data['photo']
+
+                if 'students' in request_data:
+                    students_string = ','.join(request_data['students'])
+                    update_teacher.students = students_string
 
                 db_session.commit()
                 return "", 204

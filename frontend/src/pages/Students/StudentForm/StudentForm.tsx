@@ -10,13 +10,14 @@ import {
   Spin,
   Avatar,
   Space,
+  Select,
 } from "antd";
 import moment from "moment";
 
 import Uploader from "components/Uploader";
 import { IStudent } from "interfaces/student";
-import s from "./StudentForm.styl";
-import spin from "store/spin";
+import spinStore from "store/spin";
+import teacherStore from "store/teacher";
 import studentStore from "store/student";
 import { AVATAR_SIZE, ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
@@ -26,6 +27,11 @@ import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
+import s from "./StudentForm.styl";
+import { ITeacher } from "interfaces/teacher";
+import { isEmpty } from "ramda";
+
+const { Option } = Select;
 
 interface IOwnProps {
   pickedStudent: IStudent | null;
@@ -77,6 +83,18 @@ const StudentForm = ({
     setImage(photo);
   };
 
+  const renderOptions = () => {
+    return teacherStore.teachers.data.map((teacher: ITeacher) => {
+      return (
+        <Option key={teacher.id} value={teacher.id}>
+          {teacher.id}
+          {"-"}
+          {teacher.lastname}. {teacher.firstname[0]}. {teacher.patronymic[0]}
+        </Option>
+      );
+    });
+  };
+
   const renderTitle = () => (
     <Space align="baseline">
       <Avatar
@@ -116,7 +134,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spin.spin} placeholder="lastname" />
+              <Input disabled={spinStore.spin} placeholder="lastname" />
             </Form.Item>
 
             <Form.Item
@@ -130,7 +148,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input placeholder="firstname" disabled={spin.spin} />
+              <Input placeholder="firstname" disabled={spinStore.spin} />
             </Form.Item>
 
             <Form.Item
@@ -144,7 +162,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spin.spin} placeholder="patronymic" />
+              <Input disabled={spinStore.spin} placeholder="patronymic" />
             </Form.Item>
 
             <Form.Item
@@ -158,7 +176,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spin.spin} placeholder="phone" />
+              <Input disabled={spinStore.spin} placeholder="phone" />
             </Form.Item>
 
             <Form.Item
@@ -173,6 +191,19 @@ const StudentForm = ({
               <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
             </Form.Item>
 
+            {!isEmpty(teacherStore.teachers.data) && (
+              <Form.Item name="teachers" label="teachers">
+                <Select
+                  defaultValue={pickedStudent?.teachers}
+                  allowClear
+                  mode="multiple"
+                  placeholder="select teachers"
+                >
+                  {renderOptions()}
+                </Select>
+              </Form.Item>
+            )}
+
             <Form.Item name="photo" label="photo">
               <Uploader onPhotoLoader={onPhotoLoader} />
             </Form.Item>
@@ -181,7 +212,7 @@ const StudentForm = ({
               <Radio.Group
                 buttonStyle="outline"
                 className={s.centered}
-                disabled={spin.spin}
+                disabled={spinStore.spin}
               >
                 <Radio.Button value="male">male</Radio.Button>
                 <Radio.Button value="female">female</Radio.Button>
