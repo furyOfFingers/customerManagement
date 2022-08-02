@@ -21,5 +21,5 @@ export interface ITeacherApi {
 
   getTeacher(id: string): Promise<AxiosResponse<ITeacher>>;
 
-  updateTeacher(updatedTeacher: ITeacher): Promise<AxiosResponse>;
+  updateTeacher(update: ITeacher): Promise<AxiosResponse>;
 }

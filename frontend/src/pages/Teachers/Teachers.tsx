@@ -23,6 +23,9 @@ const Teachers = (): JSX.Element | null => {
   useEffect(() => {
     if (isEmpty(teacherStore.teachers.data)) {
       teacherStore.getTeachers();
+    }
+
+    if (isEmpty(studentStore.students.data)) {
       studentStore.getStudents();
     }
   }, []);

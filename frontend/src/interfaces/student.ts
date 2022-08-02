@@ -21,5 +21,5 @@ export interface IStudentApi {
 
   getStudent(id: string): Promise<AxiosResponse<IStudent>>;
 
-  updateStudent(updatedStudent: IStudent): Promise<AxiosResponse>;
+  updateStudent(update: IStudent): Promise<AxiosResponse>;
 }

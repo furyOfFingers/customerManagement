@@ -21,17 +21,20 @@ class Student(Base):
     def __repr__(self):
         teachers_arr = self.teachers.split(',')
 
-        return str(
-            {
-                "id": str(self.id),
-                "lastname": self.lastname,
-                "firstname": self.firstname,
-                "patronymic": self.patronymic,
-                "phone": self.phone,
-                "birthday": self.birthday,
-                "photo": self.photo,
-                "gender": self.gender,
-                "teachers": teachers_arr,
-                "date_created": str(datetime.timestamp(self.date_created)),
-            }
-        )
+        initial = {
+            "id": str(self.id),
+            "lastname": self.lastname,
+            "firstname": self.firstname,
+            "patronymic": self.patronymic,
+            "phone": self.phone,
+            "birthday": self.birthday,
+            "gender": self.gender,
+            "date_created": str(datetime.timestamp(self.date_created)),
+        }
+
+        if self.teachers:
+            initial['teachers'] = teachers_arr
+        if self.photo:
+            initial['photo'] = self.photo
+
+        return str(initial)

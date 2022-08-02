@@ -11,10 +11,11 @@ function Sidebar() {
   const [activeTab, setActiveTab] = useState("students");
 
   useEffect(() => {
-    setActiveTab(path);
+    setActiveTab(path.replace("/", ""));
   }, []);
 
   const handleChange = (tab: string) => {
+    setActiveTab(tab);
     navigate(`/${tab}`);
   };
 
@@ -26,6 +27,7 @@ function Sidebar() {
         <TabPane tab="Groups" key="groups" />
         <TabPane tab="Payments" key="payments" />
         <TabPane tab="Money report" key="moneyReport" />
+        <TabPane tab="Schedule List" key="scheduleList" />
       </Tabs>
     </div>
   );

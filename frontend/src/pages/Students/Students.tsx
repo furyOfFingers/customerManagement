@@ -21,8 +21,11 @@ const Students = (): JSX.Element | null => {
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
 
   useEffect(() => {
-    if (isEmpty(studentStore.students.data)) {
+    if (isEmpty(teacherStore.teachers.data)) {
       teacherStore.getTeachers();
+    }
+
+    if (isEmpty(studentStore.students.data)) {
       studentStore.getStudents();
     }
   }, []);

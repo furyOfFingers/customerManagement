@@ -11,3 +11,9 @@ export const STUDENTS = "/students";
 
 export const TEACHER = "/teacher";
 export const TEACHERS = "/teachers";
+
+export const GROUP = "/group";
+export const GROUPS = "/groups";
+
+export const SCHEDULELIST = "/scheduleList";
+export const SCHEDULELISTS = "/scheduleLists";

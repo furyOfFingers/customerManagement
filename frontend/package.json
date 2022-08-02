@@ -10,7 +10,7 @@
     "prettier_write": "prettier --write ./src",
     "prepare": "cd .. && husky install ./frontend/.husky"
   },
-  "author": "Marat Asasullaev",
+  "author": "Marat Asadullaev",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.17.5",

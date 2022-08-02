@@ -2,7 +2,6 @@ from datetime import datetime
 
 from db.database import Base
 from sqlalchemy import Column, DateTime, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 
 
 class Teacher(Base):
@@ -21,17 +20,20 @@ class Teacher(Base):
     def __repr__(self):
         students_arr = self.students.split(',')
 
-        return str(
-            {
-                "id": str(self.id),
-                "lastname": self.lastname,
-                "firstname": self.firstname,
-                "patronymic": self.patronymic,
-                "phone": self.phone,
-                "birthday": self.birthday,
-                "photo": self.photo,
-                "gender": self.gender,
-                "students": students_arr,
-                "date_created": str(datetime.timestamp(self.date_created)),
-            }
-        )
+        initial = {
+            "id": str(self.id),
+            "lastname": self.lastname,
+            "firstname": self.firstname,
+            "patronymic": self.patronymic,
+            "phone": self.phone,
+            "birthday": self.birthday,
+            "gender": self.gender,
+            "date_created": str(datetime.timestamp(self.date_created)),
+        }
+
+        if self.students:
+            initial['students'] = students_arr
+        if self.photo:
+            initial['photo'] = self.photo
+
+        return str(initial)
