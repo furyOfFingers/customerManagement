@@ -1,6 +1,6 @@
 from flask import request
-from models.teacher import Teacher
 from db.database import db_session
+from models.teacher import Teacher
 
 
 def updateTeacher():

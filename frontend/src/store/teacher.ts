@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 
 import TeacherApi from "services/Teacher.api";
 import { getInitialData } from "./utils/utils";
-import spin from "store/spin";
+import spinStore from "store/spin";
 import { ITeacher, ITeacherApi } from "interfaces/teacher";
 import { ERequestStatus } from "common/enums";
 
@@ -63,7 +63,7 @@ class Teacher {
   }
 
   *getTeachers() {
-    spin.setSpin(true);
+    spinStore.setSpin(true);
     this.teachers = {
       ...this.teachers,
       status: ERequestStatus.PENDING,
@@ -75,14 +75,14 @@ class Teacher {
         status: ERequestStatus.SUCCESS,
         error: null,
       };
-      spin.setSpin(false);
+      spinStore.setSpin(false);
     } catch (err) {
       this.teachers = {
         ...this.teachers,
         status: ERequestStatus.FAIL,
         error: err as AxiosError,
       };
-      spin.setSpin(false);
+      spinStore.setSpin(false);
     }
   }
 
@@ -141,12 +141,10 @@ class Teacher {
     }
   }
 
-  *updateTeacher(updatedTeacher: ITeacher) {
+  *updateTeacher(update: ITeacher) {
     this.updateRequest.status = ERequestStatus.PENDING;
     try {
-      const { data, status } = yield this.services.updateTeacher(
-        updatedTeacher
-      );
+      const { data, status } = yield this.services.updateTeacher(update);
 
       this.updateRequest = {
         data,
@@ -157,7 +155,7 @@ class Teacher {
       if (status === 201) {
         message.success(
           {
-            content: `teacher: ${updatedTeacher.firstname} updated`,
+            content: `teacher: ${update.firstname} updated`,
             style: {
               marginTop: "20vh",
             },
@@ -172,7 +170,7 @@ class Teacher {
   }
 
   findTeacher(id: string) {
-    const result = this.teachers.data?.find((student) => student.id === id);
+    const result = this.teachers.data?.find((teacher) => teacher.id === id);
 
     return result;
   }
@@ -180,5 +178,3 @@ class Teacher {
 const teacherApi = new TeacherApi();
 
 export default new Teacher(teacherApi);
-
-// export default new Teacher();

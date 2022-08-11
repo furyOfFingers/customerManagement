@@ -8,6 +8,8 @@ from models.user import User
 from routes.auth import signin, signup
 from routes.student import createStudent, deleteStudent, getStudent, getStudents, updateStudent
 from routes.teacher import createTeacher, deleteTeacher, getTeacher, getTeachers, updateTeacher
+from routes.group import createGroup, deleteGroup, getGroup, getGroups, updateGroup
+from routes.scheduleList import createScheduleList, deleteScheduleList, getScheduleList, getScheduleLists, updateScheduleList
 
 app = Flask(__name__)
 init_db()
@@ -54,11 +56,6 @@ def student_getStudent():
     return getStudent.getStudent()
 
 
-@app.route('/api/students', methods=["GET"])
-def student_getStudents():
-    return getStudents.getStudents()
-
-
 @app.route('/api/student', methods=["PUT"])
 def student_update():
     return updateStudent.updateStudent()
@@ -67,6 +64,12 @@ def student_update():
 @app.route('/api/student', methods=["DELETE"])
 def student_delete():
     return deleteStudent.deleteStudent()
+
+
+# students
+@app.route('/api/students', methods=["GET"])
+def student_getStudents():
+    return getStudents.getStudents()
 
 
 # teacher
@@ -80,11 +83,6 @@ def teacher_getTeacher():
     return getTeacher.getTeacher()
 
 
-@app.route('/api/teachers', methods=["GET"])
-def teacher_getTeachers():
-    return getTeachers.getTeachers()
-
-
 @app.route('/api/teacher', methods=["PUT"])
 def teacher_update():
     return updateTeacher.updateTeacher()
@@ -93,6 +91,66 @@ def teacher_update():
 @app.route('/api/teacher', methods=["DELETE"])
 def teacher_delete():
     return deleteTeacher.deleteTeacher()
+
+
+# teachers
+@app.route('/api/teachers', methods=["GET"])
+def teacher_getTeachers():
+    return getTeachers.getTeachers()
+
+
+# group
+@app.route('/api/group', methods=["POST"])
+def group_create():
+    return createGroup.createGroup()
+
+
+@app.route('/api/group', methods=["GET"])
+def group_getGroup():
+    return getGroup.getGroup()
+
+
+@app.route('/api/group', methods=["PUT"])
+def group_update():
+    return updateGroup.updateGroup()
+
+
+@app.route('/api/group', methods=["DELETE"])
+def group_delete():
+    return deleteGroup.deleteGroup()
+
+
+# groups
+@app.route('/api/groups', methods=["GET"])
+def group_getGroups():
+    return getGroups.getGroups()
+
+
+# schedule_list
+@app.route('/api/scheduleList', methods=["POST"])
+def schedule_list_create():
+    return createScheduleList.createScheduleList()
+
+
+@app.route('/api/scheduleList', methods=["GET"])
+def schedule_list_getSchedule_list():
+    return getScheduleList.getScheduleList()
+
+
+@app.route('/api/scheduleList', methods=["PUT"])
+def schedule_list_update():
+    return updateScheduleList.updateScheduleList()
+
+
+@app.route('/api/scheduleList', methods=["DELETE"])
+def schedule_list_delete():
+    return deleteScheduleList.deleteScheduleList()
+
+
+# schedule_lists
+@app.route('/api/scheduleLists', methods=["GET"])
+def schedule_list_getSchedule_lists():
+    return getScheduleLists.getScheduleLists()
 
 
 if __name__ == '__main__':

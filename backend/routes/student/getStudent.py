@@ -1,6 +1,6 @@
 from flask import request
-from models.student import Student
 from db.database import db_session
+from models.student import Student
 
 
 def getStudent():

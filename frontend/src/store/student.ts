@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { message } from "antd";
 import { AxiosError } from "axios";
 
-import spin from "store/spin";
+import spinStore from "store/spin";
 import { IStudentApi, IStudent } from "interfaces/student";
 import StudentApi from "services/Student.api";
 import { getInitialData } from "./utils/utils";
@@ -63,7 +63,7 @@ class Student {
   }
 
   *getStudents() {
-    spin.setSpin(true);
+    spinStore.setSpin(true);
     this.students = {
       ...this.students,
       status: ERequestStatus.PENDING,
@@ -75,14 +75,14 @@ class Student {
         status: ERequestStatus.SUCCESS,
         error: null,
       };
-      spin.setSpin(false);
+      spinStore.setSpin(false);
     } catch (err) {
       this.students = {
         ...this.students,
         status: ERequestStatus.FAIL,
         error: err as AxiosError,
       };
-      spin.setSpin(false);
+      spinStore.setSpin(false);
     }
   }
 

@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-
 import { useRoutes, navigate } from "hookrouter";
 import { isEmpty } from "ramda";
 
@@ -11,6 +10,7 @@ import Teachers from "pages/Teachers";
 import Groups from "pages/Groups";
 import Payments from "pages/Payments";
 import MoneyReport from "pages/MoneyReport";
+import ScheduleList from "pages/ScheduleList";
 import user from "store/user";
 
 const MainRouter = (): JSX.Element => {
@@ -27,6 +27,7 @@ const MainRouter = (): JSX.Element => {
     "/groups": () => wrapper(<Groups />),
     "/payments": () => wrapper(<Payments />),
     "/moneyReport": () => wrapper(<MoneyReport />),
+    "/scheduleList": () => wrapper(<ScheduleList />),
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };
 

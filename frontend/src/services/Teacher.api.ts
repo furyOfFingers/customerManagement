@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { API, TEACHER, TEACHERS } from "constants/api";
 import { ITeacher, ITeacherApi } from "interfaces/teacher";
 
