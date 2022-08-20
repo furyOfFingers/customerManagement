@@ -82,7 +82,7 @@ const ScheduleListTable = ({
               ]}
             >
               <List.Item.Meta
-                title={scheduleList}
+                title={scheduleList.schedule_list_name}
                 description={
                   scheduleListId === scheduleList.id
                     ? scheduleList.date_created
