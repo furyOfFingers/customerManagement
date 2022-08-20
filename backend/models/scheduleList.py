@@ -9,7 +9,7 @@ class ScheduleList(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     schedule_list_name = Column(String(40), nullable=False)
     schedule = Column(String(), nullable=False)
-    date_created = Column(DateTime, default=datetime.utcnow)
+    date_created = Column(DateTime(timezone=True), default=datetime.now())
 
     def __repr__(self):
 

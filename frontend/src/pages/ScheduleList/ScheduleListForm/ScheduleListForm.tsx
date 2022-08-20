@@ -13,8 +13,8 @@ import { schemeScheduleList } from "schemes/scheduleList";
 import { initialValues } from "./constants";
 import { IScheduleList } from "interfaces/scheduleList";
 import ClassDatePicker from "modules/ClassDatePicker/ClassDatePicker";
-import s from "./ScheduleListForm.styl";
 import { ISchedule } from "interfaces/schedule";
+import s from "./ScheduleListForm.styl";
 
 interface IOwnProps {
   pickedScheduleList: IScheduleList | null;

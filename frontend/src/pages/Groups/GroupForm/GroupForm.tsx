@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Button, Modal, Spin, Space, Select } from "antd";
 
-import { IGroup } from "interfaces/group";
+import { IGroup, IGroupScheduleList } from "interfaces/group";
 import { IStudent } from "interfaces/student";
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
 import studentStore from "store/student";
+import scheduleListStore from "store/scheduleList";
 import groupStore from "store/group";
 import { ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
@@ -16,13 +17,13 @@ import { schemeGroupForm } from "schemes/group";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
-import ClassDatePicker from "modules/ClassDatePicker/ClassDatePicker";
 import s from "./GroupForm.styl";
+import { IScheduleList } from "interfaces/scheduleList";
 
 const { Option } = Select;
 
 interface IOwnProps {
-  pickedGroup: IGroup | null;
+  pickedGroup: IGroup | IGroupScheduleList | null;
   onCancel: VoidFunction;
   onUpdate: (data: IGroup) => Promise<void>;
   onAdd: (data: IGroup) => Promise<void>;
@@ -86,6 +87,20 @@ const GroupForm = ({
         </Option>
       );
     });
+  };
+
+  const renderScheduleList = () => {
+    return scheduleListStore.scheduleLists.data.map(
+      (scheduleList: IScheduleList) => {
+        return (
+          <Option key={scheduleList.id} value={scheduleList.id}>
+            {scheduleList.id}
+            {"-"}
+            {scheduleList.schedule_list_name}
+          </Option>
+        );
+      }
+    );
   };
 
   const renderTitle = () => (
@@ -178,7 +193,13 @@ const GroupForm = ({
                 },
               ]}
             >
-              <ClassDatePicker />
+              <Select
+                allowClear
+                placeholder="select class_date"
+                defaultValue={pickedGroup?.schedule_list_name}
+              >
+                {renderScheduleList()}
+              </Select>
             </Form.Item>
 
             <Form.Item>

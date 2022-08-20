@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import cls from "classnames";
 import { List } from "antd";
+import { format } from "date-fns";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -10,7 +11,9 @@ import {
 import { ETableView } from "common/enums";
 import { IScheduleList } from "interfaces/scheduleList";
 import { getGridConfig } from ".//constants";
+import ShowSchedule from "components/ShowSchedule";
 import s from "./ScheduleListTable.styl";
+import { isEmpty } from "ramda";
 
 interface IOwnProps {
   view?: ETableView;
@@ -50,7 +53,10 @@ const ScheduleListTable = ({
         dataSource={list}
         renderItem={(scheduleList: IScheduleList) => {
           if (!scheduleList?.schedule_list_name) return null;
-
+          const date = format(
+            new Date(Number(scheduleList.date_created)),
+            "dd.MM.yyyy"
+          );
           return (
             <List.Item
               onBlur={() => setScheduleListId("")}
@@ -81,14 +87,17 @@ const ScheduleListTable = ({
                 />,
               ]}
             >
-              <List.Item.Meta
-                title={scheduleList.schedule_list_name}
-                description={
-                  scheduleListId === scheduleList.id
-                    ? scheduleList.date_created
-                    : null
-                }
-              />
+              {!isEmpty(scheduleList.schedule) && (
+                <List.Item.Meta
+                  title={
+                    <ShowSchedule
+                      schedule={scheduleList.schedule}
+                      name={scheduleList.schedule_list_name}
+                    />
+                  }
+                  description={scheduleListId === scheduleList.id ? date : null}
+                />
+              )}
             </List.Item>
           );
         }}

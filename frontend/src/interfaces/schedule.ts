@@ -1,9 +1,9 @@
 export interface ISchedule {
-  monday?: Array<string>;
-  tuesday?: Array<string>;
-  wednesday?: Array<string>;
-  thursday?: Array<string>;
-  friday?: Array<string>;
-  saturday?: Array<string>;
-  sunday?: Array<string>;
+  monday?: string[];
+  tuesday?: string[];
+  wednesday?: string[];
+  thursday?: string[];
+  friday?: string[];
+  saturday?: string[];
+  sunday?: string[];
 }
