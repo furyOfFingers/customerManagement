@@ -5,20 +5,20 @@ import { ISchedule } from "interfaces/schedule";
 import s from "./ClassDatePicker.styl";
 
 interface IOwnProps {
-  onClick?: (data: ISchedule) => void;
+  onClick: (data: ISchedule) => void;
 }
 
 function ClassDatePicker({ onClick }: IOwnProps): JSX.Element {
-  const [pickedDay, setPickedDay] = useState<Array<string>>([]);
-  const [pickedDate, setPickedDate] = useState<ISchedule>({});
+  const [pickedDay, setPickedDay] = useState<string[]>([]);
+  const [pickedDate, setPickedDate] = useState({});
 
-  const handleDatePick = (date: ISchedule) => {
+  const handleDatePick = (date: string[]) => {
     const newPickedDate = { ...pickedDate } as ISchedule;
 
-    newPickedDate[Object.keys(date)[0]] = Object.values(date)[0].time;
+    newPickedDate[date[0]] = [date[1], date[2]];
 
     setPickedDate(newPickedDate);
-    onClick && onClick(newPickedDate);
+    onClick(newPickedDate);
   };
 
   const handleDayPick = (day: string) => {

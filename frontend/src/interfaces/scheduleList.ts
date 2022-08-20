@@ -1,11 +1,9 @@
 import { AxiosResponse } from "axios";
 
-import { ISchedule } from "interfaces/schedule";
-
 export interface IScheduleList {
   id?: string;
   schedule_list_name: string;
-  schedule: ISchedule | undefined;
+  schedule: string[];
   date_created: string;
 }
 

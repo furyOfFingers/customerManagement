@@ -7,6 +7,9 @@ export interface IGroup {
   class_date: Array<string>;
   students: Array<string>;
 }
+export interface IGroupScheduleList extends IGroup {
+  schedule_list_name: string;
+}
 
 export interface IGroupApi {
   create(data: IGroup): Promise<AxiosResponse>;

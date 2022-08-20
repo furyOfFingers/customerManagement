@@ -2,7 +2,6 @@ import React from "react";
 import cls from "classnames";
 import { TimePicker } from "antd";
 
-import { ISchedule } from "interfaces/schedule";
 import s from "./WeekPick.styl";
 
 const week = [
@@ -20,7 +19,7 @@ const format = "HH:mm";
 interface IOwnProps {
   picked: Array<string>;
   onClickDay: (picked: string) => void;
-  onChangeDate: (date: ISchedule) => void;
+  onChangeDate: (date: string[]) => void;
 }
 
 function WeekPick({
@@ -32,12 +31,8 @@ function WeekPick({
     onClickDay(day);
   };
 
-  const handleSelect = (day: string, timeString: Array<string>) => {
-    const newDate = {};
-
-    newDate[day] = { time: timeString };
-
-    onChangeDate(newDate);
+  const handleSelect = (day: string, timeString: string[]) => {
+    onChangeDate([day, ...timeString]);
   };
 
   const renderBody = () => {
