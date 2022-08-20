@@ -18,12 +18,8 @@ def createScheduleList():
                 'type': 'string'
             }
         }
-        # print('--->request_data', request_data)
         if 'schedule' in request_data:
-            print('---> before', request_data['schedule'])
             schedule_string = str(request_data['schedule'])
-            print('---> after', schedule_string)
-            # print('--->request_data[]', str(request_data['schedule']))
             request_data['schedule'] = schedule_string
 
         if not v.validate(request_data, schema):

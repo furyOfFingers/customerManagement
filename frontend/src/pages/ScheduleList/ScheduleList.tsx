@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
-import { isEmpty } from "ramda";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
@@ -21,9 +20,7 @@ const ScheduleList = (): JSX.Element | null => {
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
 
   useEffect(() => {
-    if (isEmpty(scheduleListStore.scheduleLists.data)) {
-      scheduleListStore.getScheduleLists();
-    }
+    scheduleListStore.getScheduleLists();
   }, []);
 
   const handleOpenModal = useCallback(() => {

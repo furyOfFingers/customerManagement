@@ -70,12 +70,11 @@ class ScheduleList {
     };
     try {
       const { data } = yield this.services.getScheduleLists();
-      console.log("--> data", data);
-      // this.scheduleLists = {
-      //   data,
-      //   status: ERequestStatus.SUCCESS,
-      //   error: null,
-      // };
+      this.scheduleLists = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
       spinStore.setSpin(false);
     } catch (err) {
       this.scheduleLists = {

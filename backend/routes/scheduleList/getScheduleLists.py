@@ -6,8 +6,7 @@ def getScheduleLists():
     if request.method == "GET":
         try:
             query = ScheduleList.query.all()
-            correctDict = str(query).replace("'", '"')
-            # print('--->getScheduleLists', correctDict)
+            correctDict = str(query).replace("'", '"').replace('"{"', '{"').replace('}"', "}")
             return correctDict, 200
 
         except Exception as e:

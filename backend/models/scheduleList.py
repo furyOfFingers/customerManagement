@@ -12,7 +12,6 @@ class ScheduleList(Base):
     date_created = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        schedule_arr = str(self.schedule)
 
         initial = {
             "id": str(self.id),
