@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
-import { isEmpty } from "ramda";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
@@ -11,6 +10,7 @@ import teacherStore from "store/teacher";
 import groupStore from "store/group";
 import spinStore from "store/spin";
 import studentStore from "store/student";
+import scheduleListStore from "store/scheduleList";
 import s from "./Groups.styl";
 import { IGroup } from "interfaces/group";
 import GroupsTable from "./GroupsTable";
@@ -22,17 +22,10 @@ const Groups = (): JSX.Element | null => {
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
 
   useEffect(() => {
-    if (isEmpty(teacherStore.teachers.data)) {
-      teacherStore.getTeachers();
-    }
-
-    if (isEmpty(studentStore.students.data)) {
-      studentStore.getStudents();
-    }
-
-    if (isEmpty(groupStore.groups.data)) {
-      groupStore.getGroups();
-    }
+    teacherStore.getTeachers();
+    scheduleListStore.getScheduleLists();
+    studentStore.getStudents();
+    groupStore.getGroups();
   }, []);
 
   const handleOpenModal = useCallback(() => {
