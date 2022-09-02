@@ -8,12 +8,12 @@ class Payment(Base):
     __tablename__ = 'payment'
     id = Column(Integer, primary_key=True, autoincrement=True)
     date_created = Column(DateTime, default=datetime.utcnow)
-    payment_amount = Column(Integer(10), nullable=False)
+    payment_amount = Column(String(10), nullable=False)
     type = Column(String(), nullable=False)
-    payerId = Column(Integer(), nullable=False)
+    payerId = Column(String(), nullable=False)
     method = Column(String(5), nullable=False)
-    teacher_id = Column(Integer())
-    group_id = Column(Integer())
+    teacher_id = Column(String())
+    group_id = Column(String())
 
     def __repr__(self):
 

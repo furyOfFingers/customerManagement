@@ -10,6 +10,7 @@ from routes.student import createStudent, deleteStudent, getStudent, getStudents
 from routes.teacher import createTeacher, deleteTeacher, getTeacher, getTeachers, updateTeacher
 from routes.group import createGroup, deleteGroup, getGroup, getGroups, updateGroup
 from routes.scheduleList import createScheduleList, deleteScheduleList, getScheduleList, getScheduleLists, updateScheduleList
+from routes.payment import createPayment, deletePayment, getPayment, getPayments
 
 app = Flask(__name__)
 init_db()
@@ -151,6 +152,28 @@ def schedule_list_delete():
 @app.route('/api/scheduleLists', methods=["GET"])
 def schedule_list_getSchedule_lists():
     return getScheduleLists.getScheduleLists()
+
+
+# payment
+@app.route('/api/payment', methods=["POST"])
+def payment_create():
+    return createPayment.createPayment()
+
+
+@app.route('/api/payment', methods=["GET"])
+def payment_get():
+    return getPayment.getPayment()
+
+
+@app.route('/api/payment', methods=["DELETE"])
+def payment_delete():
+    return deletePayment.deletePayment()
+
+
+# payments
+@app.route('/api/payments', methods=["GET"])
+def payment_get_all():
+    return getPayments.getPayments()
 
 
 if __name__ == '__main__':
