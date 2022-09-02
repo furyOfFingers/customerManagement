@@ -20,6 +20,4 @@ export interface IPaymentApi {
   deletePayment(id: string): Promise<AxiosResponse>;
 
   getPayment(id: string): Promise<AxiosResponse<IPayment>>;
-
-  updatePayment(update: IPayment): Promise<AxiosResponse>;
 }

@@ -17,3 +17,6 @@ export const GROUPS = "/groups";
 
 export const SCHEDULELIST = "/scheduleList";
 export const SCHEDULELISTS = "/scheduleLists";
+
+export const PAYMENT = "/payment";
+export const PAYMENTS = "/payments";
