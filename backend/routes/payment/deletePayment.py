@@ -14,16 +14,16 @@ def deletePayment():
                 return {'remove': {'id': 'payment not found'}}, 400
             else:
                 removed_obj = query_match[0]
-                date = removed_obj.date
+                payment_date = removed_obj.payment_date
                 method = removed_obj.method
                 payment_amount = removed_obj.payment_amount
 
                 Payment.query.filter_by(id=id).delete()
                 db_session.flush()
                 db_session.commit()
-                return "payment with date - {} method - {} and amount -{}. has been removed.".format(date,
-                                                                                                     method,
-                                                                                                     payment_amount), 200
+                return "payment with payment_date - {} method - {} and amount -{}. has been removed.".format(payment_date,
+                                                                                                             method,
+                                                                                                             payment_amount), 200
 
         except Exception as e:
             db_session.rollback()

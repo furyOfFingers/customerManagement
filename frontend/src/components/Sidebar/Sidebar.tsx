@@ -24,10 +24,10 @@ function Sidebar() {
       <Tabs activeKey={activeTab} tabPosition="left" onChange={handleChange}>
         <TabPane tab="Students" key="students" />
         <TabPane tab="Teachers" key="teachers" />
+        <TabPane tab="Schedule List" key="scheduleList" />
         <TabPane tab="Groups" key="groups" />
         <TabPane tab="Payments" key="payments" />
         <TabPane tab="Money report" key="moneyReport" />
-        <TabPane tab="Schedule List" key="scheduleList" />
       </Tabs>
     </div>
   );

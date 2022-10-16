@@ -17,27 +17,26 @@ def createPayment():
                     "16",
                     "individual",
                     "pause", ]
-        # v.require_all = True
         schema = {
-            'date': {
+            'payment_date': {
                 'type': 'string', 'minlength': 2, 'maxlength': 40
             },
             'payment_amount': {
-                'type': 'string', 'minlength': 1, 'maxlength': 80
+                'type': 'integer', 'minlength': 1, 'maxlength': 80
             },
             'type': {
                 'type': 'string', 'allowed': arr_type
             },
-            'payerId': {
+            'payer_id': {
                 'type': 'string', 'minlength': 1, 'maxlength': 30
             },
             'method': {
                 'type': 'string', 'allowed': ['cash', 'card']
             },
-            'teacherId': {
+            'teacher_id': {
                 'type': 'string', 'required': False, 'minlength': 1, 'maxlength': 30
             },
-            'groupId': {
+            'group_id': {
                 'type': 'string', 'required': False, 'minlength': 1, 'maxlength': 30
             },
 
@@ -46,22 +45,22 @@ def createPayment():
         if not v.validate(request_data, schema):
             return v.errors, 400
         else:
-            date = request_data['date']
+            payment_date = request_data['payment_date']
             payment_amount = request_data['payment_amount']
             type = request_data['type']
-            payerId = request_data['payerId']
+            payer_id = request_data['payer_id']
             method = request_data['method']
-            teacherId = request_data['teacherId']
-            groupId = request_data['groupId']
+            teacher_id = request_data['teacher_id']
+            group_id = request_data['group_id']
 
             new_student = Payment(
-                date=date,
+                payment_date=payment_date,
                 payment_amount=payment_amount,
                 type=type,
-                payerId=payerId,
+                payer_id=payer_id,
                 method=method,
-                teacherId=teacherId,
-                groupId=groupId,
+                teacher_id=teacher_id,
+                group_id=group_id,
             )
             try:
                 db_session.add(new_student)
@@ -69,14 +68,13 @@ def createPayment():
                 db_session.commit()
                 return {
                     "id": new_student.id,
-                    "date_created": new_student.date_created,
-                    "date": date,
+                    "payment_date": new_student.payment_date,
                     "payment_amount": payment_amount,
                     "type": type,
-                    "payerId": payerId,
+                    "payer_id": payer_id,
                     "method": method,
-                    "teacherId": teacherId,
-                    "groupId": groupId,
+                    "teacher_id": teacher_id,
+                    "group_id": group_id,
                 }, 201
 
             except Exception as e:
