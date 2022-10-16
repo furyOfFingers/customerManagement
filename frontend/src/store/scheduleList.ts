@@ -45,7 +45,7 @@ class ScheduleList {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
       }
       this.createRequest = {
@@ -102,7 +102,7 @@ class ScheduleList {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
         this.removeRequest = {
           data,
@@ -160,7 +160,7 @@ class ScheduleList {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
       }
     } catch (err) {

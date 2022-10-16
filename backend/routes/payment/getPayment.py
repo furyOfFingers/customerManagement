@@ -14,15 +14,14 @@ def getPayment():
                 return {'getPayment': {'id': 'payment not found'}}, 400
             else:
                 return {
-                    "date": query_match[0].date,
                     "payment_amount": query_match[0].payment_amount,
                     "type": query_match[0].type,
-                    "payerId": query_match[0].payerId,
+                    "payer_id": query_match[0].payer_id,
                     "method": query_match[0].method,
-                    "teacherId": query_match[0].teacherId,
-                    "groupId": query_match[0].groupId,
+                    "teacher_id": query_match[0].teacher_id,
+                    "group_id": query_match[0].group_id,
                     "id": query_match[0].id,
-                    "date_created": query_match[0].date_created
+                    "payment_date": query_match[0].payment_date
                 }, 200
 
         except Exception as e:

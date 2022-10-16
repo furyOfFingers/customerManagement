@@ -45,7 +45,7 @@ class Student {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
       }
       this.createRequest = {
@@ -102,7 +102,7 @@ class Student {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
         this.removeRequest = {
           data,
@@ -162,7 +162,7 @@ class Student {
               marginTop: "20vh",
             },
           },
-          5
+          3
         );
       }
     } catch (err) {

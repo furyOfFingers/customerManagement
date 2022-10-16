@@ -3,13 +3,13 @@ import { EnumPayment } from "enums/payment";
 
 export interface IPayment {
   id: string;
-  date: string;
+  payment_date: string;
   payment_amount: number;
   type: keyof typeof EnumPayment;
-  payerId: string;
+  payer_id: string;
   method: "cash" | "card";
-  teacherId?: string;
-  groupId?: string;
+  teacher_id?: string;
+  group_id?: string;
 }
 
 export interface IPaymentApi {
