@@ -45,4 +45,5 @@ export const OPTIONS_TYPE = [
   "16",
   "individual",
   "pause",
+  "additional session",
 ];
