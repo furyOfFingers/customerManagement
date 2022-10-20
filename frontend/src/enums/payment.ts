@@ -17,4 +17,6 @@ export enum EnumPayment {
   Individual = "individual",
   /** Приостановить. */
   Pause = "pause",
+  /** Дополнительное занятие. */
+  AdditionalSession = "additional session",
 }

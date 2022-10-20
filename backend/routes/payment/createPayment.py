@@ -16,6 +16,7 @@ def createPayment():
                     "8",
                     "16",
                     "individual",
+                    "additional session",
                     "pause", ]
         schema = {
             'payment_date': {
