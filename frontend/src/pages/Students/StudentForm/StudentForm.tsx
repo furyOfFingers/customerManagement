@@ -66,7 +66,14 @@ const StudentForm = ({
   };
 
   const handleSubmitClick = async (data: IStudent) => {
-    const newData = { ...data, photo: image };
+    const newData = {
+      ...data,
+      photo: image,
+      birthday: moment(data.birthday).format("DD.MM.YYYY"),
+    };
+
+    // const newBirthday = moment(data.birthday).format("DD.MM.YYYY");
+    // newData.birthday = newBirthday;
     let editFunc = onAdd;
 
     if (mode === EModalMode.EDIT) {

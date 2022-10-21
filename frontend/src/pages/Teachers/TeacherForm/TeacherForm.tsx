@@ -65,7 +65,11 @@ const TeacherForm = ({
   };
 
   const handleSubmitClick = async (data: ITeacher) => {
-    const newData = { ...data, photo: image };
+    const newData = {
+      ...data,
+      photo: image,
+      birthday: moment(data.birthday).format("DD.MM.YYYY"),
+    };
     let editFunc = onAdd;
 
     if (mode === EModalMode.EDIT) {

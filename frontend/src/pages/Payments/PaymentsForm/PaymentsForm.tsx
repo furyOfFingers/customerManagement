@@ -28,6 +28,7 @@ import { IPayment } from "interfaces/payment";
 import { IStudent } from "interfaces/student";
 import { IGroup } from "interfaces/group";
 import s from "./PaymentsForm.styl";
+import moment from "moment";
 
 const { Option } = Select;
 
@@ -58,6 +59,8 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
   };
 
   const handleSubmitClick = async (data: IPayment) => {
+    const newDate = moment(data.payment_date).format("DD.MM.YYYY");
+    data.payment_date = newDate;
     await onAdd(data);
     await paymentStore.getPayments();
     onCancel();
