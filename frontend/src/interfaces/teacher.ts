@@ -9,7 +9,7 @@ export interface ITeacher {
   birthday: string;
   gender: "male" | "female";
   photo: Blob | undefined;
-  students: Array<string>;
+  students: string[];
 }
 
 export interface ITeacherApi {

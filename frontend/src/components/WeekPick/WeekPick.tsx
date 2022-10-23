@@ -35,28 +35,25 @@ function WeekPick({
     onChangeDate([day, ...timeString]);
   };
 
-  const renderBody = () => {
-    return week.map((day) => {
-      return (
-        <div key={day} className={s.pickerContainer}>
-          <div
-            onClick={() => handleClick(day)}
-            className={cls(s.day, { [s.picked]: picked.includes(day) })}
-          >
-            {day}
-          </div>
-
-          {picked.includes(day) && (
-            <TimePicker.RangePicker
-              format={format}
-              className={s.timePicker}
-              onChange={(_, timeString) => handleSelect(day, timeString)}
-            />
-          )}
+  const renderBody = () =>
+    week.map((day) => (
+      <div key={day} className={s.pickerContainer}>
+        <div
+          onClick={() => handleClick(day)}
+          className={cls(s.day, { [s.picked]: picked.includes(day) })}
+        >
+          {day}
         </div>
-      );
-    });
-  };
+
+        {picked.includes(day) && (
+          <TimePicker.RangePicker
+            format={format}
+            className={s.timePicker}
+            onChange={(_, timeString) => handleSelect(day, timeString)}
+          />
+        )}
+      </div>
+    ));
 
   return <div className={s.container}>{renderBody()} </div>;
 }

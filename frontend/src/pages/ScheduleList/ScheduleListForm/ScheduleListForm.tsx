@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Button, Modal, Spin, Space } from "antd";
 
-import { ButtonsConfig, formItemLayout } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import spinStore from "store/spin";
 import scheduleListStore from "store/scheduleList";
 import { locale } from "common/locale";
-import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeScheduleList } from "schemes/scheduleList";
 import { initialValues } from "./constants";
 import { IScheduleList } from "interfaces/scheduleList";
 import ClassDatePicker from "modules/ClassDatePicker/ClassDatePicker";
 import { ISchedule } from "interfaces/schedule";
+import { ButtonsConfig, formItemLayout, getModalMode } from "common/utils/form";
 import s from "./ScheduleListForm.styl";
 
 interface IOwnProps {
@@ -52,7 +51,7 @@ const ScheduleListForm = ({
       newData.id = pickedScheduleList?.id;
       editFunc = onUpdate;
     }
-    await editFunc(newData);
+    await editFunc(newData as IScheduleList);
     await scheduleListStore.getScheduleLists();
     onCancel();
   };
@@ -82,7 +81,7 @@ const ScheduleListForm = ({
           isPending(scheduleListStore.createRequest)
         }
       >
-        <div className={s.container}>
+        <div>
           <Form
             labelAlign="left"
             {...formItemLayout}
@@ -102,20 +101,12 @@ const ScheduleListForm = ({
               ]}
             >
               <Input
-                disabled={spinStore.spin}
+                disabled={spinStore.get()}
                 placeholder="schedule_list_name"
               />
             </Form.Item>
 
-            <Form.Item
-              name="class_date"
-              label="class_date"
-              // rules={[
-              //   {
-              //     required: true,
-              //   },
-              // ]}
-            >
+            <Form.Item name="class_date" label="class_date">
               <ClassDatePicker onClick={handleClick} />
             </Form.Item>
 

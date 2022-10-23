@@ -9,7 +9,7 @@ export interface IStudent {
   birthday: string;
   gender: "male" | "female";
   photo: Blob | undefined;
-  teachers: Array<string>;
+  teachers: string[];
 }
 
 export interface IStudentApi {

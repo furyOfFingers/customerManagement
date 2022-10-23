@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import axios, { AxiosError } from "axios";
 import { navigate } from "hookrouter";
 
-import spin from "store/spin";
+import spinStore from "store/spin";
 import error from "store/errorHandle";
 import user from "store/user";
 import { IAuthSignIn, IAuthSignUp } from "interfaces/auth";
@@ -14,7 +14,7 @@ class Auth {
   }
 
   signUp(data: IAuthSignUp) {
-    spin.setSpin(true);
+    spinStore.setSpin(true);
     axios
       .post(`${API}${AUTH}${AUTH_SIGNUP}`, data)
       .then((res) => {
@@ -26,11 +26,11 @@ class Auth {
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
-      .finally(() => spin.setSpin(false));
+      .finally(() => spinStore.setSpin(false));
   }
 
   signIn(data: IAuthSignIn) {
-    spin.setSpin(true);
+    spinStore.setSpin(true);
     axios
       .post(`${API}${AUTH}${AUTH_SIGNIN}`, data)
       .then((res) => {
@@ -42,7 +42,7 @@ class Auth {
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
-      .finally(() => spin.setSpin(false));
+      .finally(() => spinStore.setSpin(false));
   }
 
   logout() {

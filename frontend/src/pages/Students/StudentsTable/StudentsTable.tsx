@@ -10,7 +10,7 @@ import {
 
 import { IStudent } from "interfaces/student";
 import { ETableView } from "common/enums";
-import { getGridConfig } from "./constants";
+import { getGridConfig } from "common/utils/form";
 import s from "./StudentsTable.styl";
 
 interface IStudentsTable {
@@ -39,7 +39,7 @@ const StudentsTable = ({
 
   return (
     <div
-      className={cls(s.container, {
+      className={cls({
         [s.view_box]: view === ETableView.BOX,
         [s.view_list]: view === ETableView.LIST,
       })}

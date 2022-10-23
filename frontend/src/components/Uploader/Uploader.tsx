@@ -1,6 +1,7 @@
 import React from "react";
 import { Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+
 import s from "./Uploader.styl";
 
 interface IUploader {

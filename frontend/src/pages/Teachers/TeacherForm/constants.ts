@@ -1,28 +1,4 @@
-import { EModalMode } from "common/enums";
-import { locale } from "common/locale";
 import moment from "moment";
-
-export const ButtonsConfig = {
-  [EModalMode.ADD]: {
-    SubmitButton: {
-      title: locale.form.add,
-    },
-  },
-  [EModalMode.EDIT]: {
-    SubmitButton: {
-      title: locale.form.update,
-    },
-  },
-};
-
-export const formItemLayout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
 
 export const initialValues = {
   remember: true,
@@ -33,5 +9,3 @@ export const initialValues = {
   birthday: moment("28-01-1990", "DD-MM-YYYY"),
   photo: "photo",
 };
-
-export const AVATAR_SIZE = 56;

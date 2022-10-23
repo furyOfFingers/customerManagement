@@ -8,19 +8,16 @@ interface IOwnProps {
 }
 
 function ShowSchedule({ schedule, name }: IOwnProps): JSX.Element {
-  const renderBody = () => {
-    return Object.keys(schedule).map((day, i) => {
-      return (
-        <div key={i} className={s.date}>
-          <div>{day}</div>
+  const renderBody = () =>
+    Object.keys(schedule).map((day: string, i) => (
+      <div key={i} className={s.date}>
+        <div>{day}</div>
 
-          <div className={s.time}>
-            <span>{schedule[day][0]}</span> - <span>{schedule[day][1]}</span>
-          </div>
+        <div className={s.time}>
+          <span>{schedule[day][0]}</span> - <span>{schedule[day][1]}</span>
         </div>
-      );
-    });
-  };
+      </div>
+    ));
 
   return (
     <div className={s.container}>

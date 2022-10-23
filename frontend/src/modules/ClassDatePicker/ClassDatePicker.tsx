@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import WeekPick from "components/WeekPick";
 import { ISchedule } from "interfaces/schedule";
-import s from "./ClassDatePicker.styl";
 
 interface IOwnProps {
   onClick: (data: ISchedule) => void;
@@ -44,7 +43,7 @@ function ClassDatePicker({ onClick }: IOwnProps): JSX.Element {
   };
 
   return (
-    <div className={s.container}>
+    <div>
       <WeekPick
         picked={pickedDay}
         onClickDay={handleDayPick}

@@ -9,16 +9,15 @@ import teacherStore from "store/teacher";
 import studentStore from "store/student";
 import scheduleListStore from "store/scheduleList";
 import groupStore from "store/group";
-import { ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
-import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeGroupForm } from "schemes/group";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
-import s from "./GroupForm.styl";
 import { IScheduleList } from "interfaces/scheduleList";
+import { ButtonsConfig, formItemLayout, getModalMode } from "common/utils/form";
+import s from "./GroupForm.styl";
 
 const { Option } = Select;
 
@@ -65,43 +64,32 @@ const GroupForm = ({
     onCancel();
   };
 
-  const renderTeacherOptions = () => {
-    return teacherStore.teachers.data.map((teacher: ITeacher) => {
-      return (
-        <Option key={teacher.id} value={teacher.id}>
-          {teacher.id}
-          {"-"}
-          {teacher.lastname}. {teacher.firstname[0]}. {teacher.patronymic[0]}
-        </Option>
-      );
-    });
-  };
+  const renderTeacherOptions = () =>
+    teacherStore.teachers.data.map((teacher: ITeacher) => (
+      <Option key={teacher.id} value={teacher.id}>
+        {teacher.id}
+        {"-"}
+        {teacher.lastname}. {teacher.firstname[0]}. {teacher.patronymic[0]}
+      </Option>
+    ));
 
-  const renderStudentOptions = () => {
-    return studentStore.students.data.map((student: IStudent) => {
-      return (
-        <Option key={student.id} value={student.id}>
-          {student.id}
-          {"-"}
-          {student.lastname}. {student.firstname[0]}. {student.patronymic[0]}
-        </Option>
-      );
-    });
-  };
+  const renderStudentOptions = () =>
+    studentStore.students.data.map((student: IStudent) => (
+      <Option key={student.id} value={student.id}>
+        {student.id}
+        {"-"}
+        {student.lastname}. {student.firstname[0]}. {student.patronymic[0]}
+      </Option>
+    ));
 
-  const renderScheduleList = () => {
-    return scheduleListStore.scheduleLists.data.map(
-      (scheduleList: IScheduleList) => {
-        return (
-          <Option key={scheduleList.id} value={scheduleList.id}>
-            {scheduleList.id}
-            {"-"}
-            {scheduleList.schedule_list_name}
-          </Option>
-        );
-      }
-    );
-  };
+  const renderScheduleList = () =>
+    scheduleListStore.scheduleLists.data.map((scheduleList: IScheduleList) => (
+      <Option key={scheduleList.id} value={scheduleList.id}>
+        {scheduleList.id}
+        {"-"}
+        {scheduleList.schedule_list_name}
+      </Option>
+    ));
 
   const renderTitle = () => (
     <Space align="baseline">
@@ -125,7 +113,7 @@ const GroupForm = ({
           isPending(groupStore.createRequest)
         }
       >
-        <div className={s.container}>
+        <div>
           <Form
             labelAlign="left"
             {...formItemLayout}
@@ -144,7 +132,7 @@ const GroupForm = ({
                 },
               ]}
             >
-              <Input disabled={spinStore.spin} placeholder="group name" />
+              <Input disabled={spinStore.get()} placeholder="group name" />
             </Form.Item>
 
             <Form.Item
@@ -196,7 +184,7 @@ const GroupForm = ({
               <Select
                 allowClear
                 placeholder="select class_date"
-                defaultValue={pickedGroup?.schedule_list_name}
+                defaultValue={pickedGroup?.class_date}
               >
                 {renderScheduleList()}
               </Select>
