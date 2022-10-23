@@ -7,13 +7,13 @@ import {
   DeleteOutlined,
   ExpandAltOutlined,
 } from "@ant-design/icons";
+import { isEmpty } from "ramda";
 
 import { ETableView } from "common/enums";
 import { IScheduleList } from "interfaces/scheduleList";
-import { getGridConfig } from ".//constants";
 import ShowSchedule from "components/ShowSchedule";
+import { getGridConfig } from "common/utils/form";
 import s from "./ScheduleListTable.styl";
-import { isEmpty } from "ramda";
 
 interface IOwnProps {
   view?: ETableView;
@@ -41,7 +41,7 @@ const ScheduleListTable = ({
 
   return (
     <div
-      className={cls(s.container, {
+      className={cls({
         [s.view_box]: view === ETableView.BOX,
         [s.view_list]: view === ETableView.LIST,
       })}

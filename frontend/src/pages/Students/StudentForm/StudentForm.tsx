@@ -13,23 +13,26 @@ import {
   Select,
 } from "antd";
 import moment from "moment";
+import { isEmpty } from "ramda";
 
 import Uploader from "components/Uploader";
 import { IStudent } from "interfaces/student";
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
 import studentStore from "store/student";
-import { AVATAR_SIZE, ButtonsConfig, formItemLayout } from "./constants";
 import { locale } from "common/locale";
-import { getModalMode } from "./utils";
 import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
-import s from "./StudentForm.styl";
 import { ITeacher } from "interfaces/teacher";
-import { isEmpty } from "ramda";
+import {
+  AVATAR_SIZE,
+  ButtonsConfig,
+  formItemLayout,
+  getModalMode,
+} from "common/utils/form";
 
 const { Option } = Select;
 
@@ -72,8 +75,6 @@ const StudentForm = ({
       birthday: moment(data.birthday).format("DD.MM.YYYY"),
     };
 
-    // const newBirthday = moment(data.birthday).format("DD.MM.YYYY");
-    // newData.birthday = newBirthday;
     let editFunc = onAdd;
 
     if (mode === EModalMode.EDIT) {
@@ -90,17 +91,14 @@ const StudentForm = ({
     setImage(photo);
   };
 
-  const renderOptions = () => {
-    return teacherStore.teachers.data.map((teacher: ITeacher) => {
-      return (
-        <Option key={teacher.id} value={teacher.id}>
-          {teacher.id}
-          {"-"}
-          {teacher.lastname}. {teacher.firstname[0]}. {teacher.patronymic[0]}
-        </Option>
-      );
-    });
-  };
+  const renderOptions = () =>
+    teacherStore.teachers.data.map((teacher: ITeacher) => (
+      <Option key={teacher.id} value={teacher.id}>
+        {teacher.id}
+        {"-"}
+        {teacher.lastname}. {teacher.firstname[0]}. {teacher.patronymic[0]}
+      </Option>
+    ));
 
   const renderTitle = () => (
     <Space align="baseline">
@@ -122,7 +120,7 @@ const StudentForm = ({
           isPending(studentStore.createRequest)
         }
       >
-        <div className={s.container}>
+        <div>
           <Form
             labelAlign="left"
             {...formItemLayout}
@@ -141,7 +139,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spinStore.spin} placeholder="lastname" />
+              <Input disabled={spinStore.get()} placeholder="lastname" />
             </Form.Item>
 
             <Form.Item
@@ -155,7 +153,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input placeholder="firstname" disabled={spinStore.spin} />
+              <Input placeholder="firstname" disabled={spinStore.get()} />
             </Form.Item>
 
             <Form.Item
@@ -169,7 +167,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spinStore.spin} placeholder="patronymic" />
+              <Input disabled={spinStore.get()} placeholder="patronymic" />
             </Form.Item>
 
             <Form.Item
@@ -183,7 +181,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <Input disabled={spinStore.spin} placeholder="phone" />
+              <Input disabled={spinStore.get()} placeholder="phone" />
             </Form.Item>
 
             <Form.Item
@@ -216,18 +214,14 @@ const StudentForm = ({
             </Form.Item>
 
             <Form.Item name="gender" label="gender" initialValue="male">
-              <Radio.Group
-                buttonStyle="outline"
-                className={s.centered}
-                disabled={spinStore.spin}
-              >
+              <Radio.Group buttonStyle="outline" disabled={spinStore.get()}>
                 <Radio.Button value="male">male</Radio.Button>
                 <Radio.Button value="female">female</Radio.Button>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item>
-              <div className={s.centered}>
+              <div>
                 <Button
                   type="primary"
                   htmlType="submit"

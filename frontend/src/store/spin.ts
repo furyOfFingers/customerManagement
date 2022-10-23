@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 
 class Spin {
-  spin = false;
+  private spin = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -9,6 +9,10 @@ class Spin {
 
   setSpin(spin: boolean) {
     this.spin = spin;
+  }
+
+  get() {
+    return this.spin;
   }
 }
 

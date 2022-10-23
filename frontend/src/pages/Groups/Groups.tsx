@@ -11,10 +11,10 @@ import groupStore from "store/group";
 import spinStore from "store/spin";
 import studentStore from "store/student";
 import scheduleListStore from "store/scheduleList";
-import s from "./Groups.styl";
 import { IGroup } from "interfaces/group";
 import GroupsTable from "./GroupsTable";
 import GroupForm from "./GroupForm";
+import s from "./Groups.styl";
 
 const Groups = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,7 +87,7 @@ const Groups = (): JSX.Element | null => {
     []
   );
 
-  return spinStore.spin ? null : (
+  return spinStore.get() ? null : (
     <div className={s.form_container}>
       <div className={s.action_panel}>
         <AppstoreOutlined

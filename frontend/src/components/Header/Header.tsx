@@ -4,10 +4,10 @@ import { Spin, Avatar, Menu, Dropdown, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import cls from "classnames";
 
-import user from "store/user";
+import userStore from "store/user";
+import spinStore from "store/spin";
+import authStore from "store/auth";
 import s from "./Header.styl";
-import spin from "store/spin";
-import auth from "store/auth";
 
 function Header(): JSX.Element {
   const [isFolded, setIsFolded] = useState(false);
@@ -25,48 +25,29 @@ function Header(): JSX.Element {
 
   const menu = (
     <Menu>
-      <Menu.Item key="1" onClick={() => auth.logout()}>
+      <Menu.Item key="1" onClick={() => authStore.logout()}>
         logout
       </Menu.Item>
     </Menu>
   );
 
-  const renderBody = () => {
-    return (
-      <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
-        {spin.spin && <Spin size="large" className={s.spin} />}
-        {/* <Button
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-          onClick={users.getUsers}
-        >
-          users
-        </Button>
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-          onClick={() =>
-            console.log("--> errorHandle.error", toJS(errorHandle.error.signup))
-          }
-        >
-          show Error
-        </Button> */}
-        <Dropdown
-          overlay={menu}
-          placement="bottomRight"
-          arrow={{ pointAtCenter: true }}
-        >
-          <Button>menu</Button>
-        </Dropdown>
+  const renderBody = () => (
+    <div className={cls(s.container, { [s.containerShadow]: isFolded })}>
+      {spinStore.get() && <Spin size="large" className={s.spin} />}
 
-        <Avatar className={s.avatar} shape="square" icon={<UserOutlined />} />
+      <Dropdown
+        overlay={menu}
+        placement="bottomRight"
+        arrow={{ pointAtCenter: true }}
+      >
+        <Button>menu</Button>
+      </Dropdown>
 
-        <div className={s.username}>{user?.user?.username}</div>
-      </div>
-    );
-  };
+      <Avatar className={s.avatar} shape="square" icon={<UserOutlined />} />
+
+      <div className={s.username}>{userStore.get().username}</div>
+    </div>
+  );
 
   return renderBody();
 }

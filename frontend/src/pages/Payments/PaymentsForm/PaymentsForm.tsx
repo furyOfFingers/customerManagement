@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import {
   Form,
@@ -11,6 +11,7 @@ import {
   Space,
   Select,
 } from "antd";
+import moment from "moment";
 
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
@@ -18,17 +19,14 @@ import groupStore from "store/group";
 import studentStore from "store/student";
 import paymentStore from "store/payment";
 import { locale } from "common/locale";
-import { getModalMode } from "./utils";
-import { EModalMode } from "common/enums";
 import { schemeStudentForm } from "schemes/student";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
-import { formItemLayout, initialValues, OPTIONS_TYPE } from "./constants";
+import { initialValues, OPTIONS_TYPE } from "./constants";
 import { IPayment } from "interfaces/payment";
 import { IStudent } from "interfaces/student";
 import { IGroup } from "interfaces/group";
-import s from "./PaymentsForm.styl";
-import moment from "moment";
+import { formItemLayout } from "common/utils/form";
 
 const { Option } = Select;
 
@@ -39,8 +37,6 @@ interface IOwnProps {
 }
 
 const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
-  const [mode] = useState(getModalMode(picked));
-
   const setInitialValue = (picked: IPayment | null) => {
     if (!picked) {
       return initialValues;
@@ -100,7 +96,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
 
   const renderTitle = () => (
     <Space align="baseline">
-      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} payment`}</p>
+      <p>Add</p>
     </Space>
   );
 
@@ -113,7 +109,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
           isPending(studentStore.createRequest)
         }
       >
-        <div className={s.container}>
+        <div>
           <Form
             labelAlign="left"
             {...formItemLayout}
@@ -208,7 +204,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
             >
               <InputNumber
                 placeholder="payment amount"
-                disabled={spinStore.spin}
+                disabled={spinStore.get()}
               />
             </Form.Item>
 
@@ -220,7 +216,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
             </Form.Item>
 
             <Form.Item>
-              <div className={s.centered}>
+              <div>
                 <Button
                   type="primary"
                   htmlType="submit"

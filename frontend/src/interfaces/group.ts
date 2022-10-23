@@ -4,8 +4,8 @@ export interface IGroup {
   id?: string;
   group_name: string;
   teacher: string;
-  class_date: Array<string>;
-  students: Array<string>;
+  class_date: string[];
+  students: string[];
 }
 export interface IGroupScheduleList extends IGroup {
   schedule_list_name: string;

@@ -76,7 +76,6 @@ const MoneyReport = (): JSX.Element => {
 
   const handleCalendarChange = (_: Moment | null, dateString: string) => {
     setDate(dateString);
-    console.log("--> date", date);
   };
 
   const renderStudentOptions = () =>

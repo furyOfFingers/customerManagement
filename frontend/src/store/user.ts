@@ -1,13 +1,13 @@
 import { makeAutoObservable, autorun } from "mobx";
 import axios, { AxiosError } from "axios";
 
-import spin from "store/spin";
+import spinStore from "store/spin";
 import error from "store/errorHandle";
 import { IUser } from "interfaces/user";
 import { AUTH_USERS, API } from "constants/api";
 
 class Users {
-  user = {};
+  private user = {} as IUser;
 
   constructor() {
     makeAutoObservable(this);
@@ -20,13 +20,13 @@ class Users {
   }
 
   getUsers() {
-    spin.setSpin(true);
+    spinStore.setSpin(true);
     axios
       .get(`${API}${AUTH_USERS}`)
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
-      .finally(() => spin.setSpin(false));
+      .finally(() => spinStore.setSpin(false));
   }
 
   setUser(data: IUser) {
@@ -35,7 +35,11 @@ class Users {
   }
 
   removeUser() {
-    this.user = {};
+    this.user = {} as IUser;
+  }
+
+  get() {
+    return this.user;
   }
 }
 

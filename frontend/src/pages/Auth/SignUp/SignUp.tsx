@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { toJS } from "mobx";
 import { Form, Input, Button, Radio } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 
@@ -21,7 +20,8 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
     error.removeError("", "", true);
     onFinish(SIGNUP, data);
   };
-  const err = toJS(error.error);
+
+  const err = error.error;
 
   return (
     <div className={s.container}>

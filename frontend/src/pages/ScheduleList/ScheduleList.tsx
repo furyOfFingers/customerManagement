@@ -85,7 +85,7 @@ const ScheduleList = (): JSX.Element | null => {
     []
   );
 
-  return spinStore.spin ? null : (
+  return spinStore.get() ? null : (
     <div className={s.form_container}>
       <div className={s.action_panel}>
         <AppstoreOutlined

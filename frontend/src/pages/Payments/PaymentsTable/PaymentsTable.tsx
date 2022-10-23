@@ -2,12 +2,12 @@ import React, { useCallback, useState } from "react";
 import cls from "classnames";
 import { List } from "antd";
 import { DeleteOutlined, ExpandAltOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 import { IPayment } from "interfaces/payment";
 import { ETableView } from "common/enums";
-import { getGridConfig } from "./constants";
+import { getGridConfig } from "common/utils/form";
 import s from "./PaymentsTable.styl";
-import moment from "moment";
 
 interface IPaymentsTable {
   view?: ETableView;
@@ -33,7 +33,7 @@ const PaymentsTable = ({
 
   return (
     <div
-      className={cls(s.container, {
+      className={cls({
         [s.view_box]: view === ETableView.BOX,
         [s.view_list]: view === ETableView.LIST,
       })}
