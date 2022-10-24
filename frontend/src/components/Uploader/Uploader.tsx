@@ -5,17 +5,21 @@ import { UploadOutlined } from "@ant-design/icons";
 import s from "./Uploader.styl";
 
 interface IUploader {
-  onPhotoLoader: (data: Blob) => void;
+  onFileLoader: (data: Blob) => void;
+  text?: string;
 }
 
-function Uploader({ onPhotoLoader }: IUploader): JSX.Element {
+function Uploader({
+  onFileLoader,
+  text = "Upload photo",
+}: IUploader): JSX.Element {
   const request = ({ file, onSuccess }) => {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
 
     reader.onload = function () {
-      onPhotoLoader(reader.result);
+      onFileLoader(reader.result);
     };
 
     reader.onerror = function () {
@@ -30,7 +34,7 @@ function Uploader({ onPhotoLoader }: IUploader): JSX.Element {
   return (
     <div className={s.container}>
       <Upload customRequest={request} maxCount={1}>
-        <Button icon={<UploadOutlined />}>Upload photo</Button>
+        <Button icon={<UploadOutlined />}>{text}</Button>
       </Upload>
     </div>
   );
