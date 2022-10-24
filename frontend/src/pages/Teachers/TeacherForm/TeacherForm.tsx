@@ -84,7 +84,7 @@ const TeacherForm = ({
     onCancel();
   };
 
-  const onPhotoLoader = (photo: Blob) => {
+  const onFileLoader = (photo: Blob) => {
     setImage(photo);
   };
 
@@ -207,7 +207,7 @@ const TeacherForm = ({
             )}
 
             <Form.Item name="photo" label="photo">
-              <Uploader onPhotoLoader={onPhotoLoader} />
+              <Uploader onFileLoader={onFileLoader} />
             </Form.Item>
 
             <Form.Item name="gender" label="gender" initialValue="male">

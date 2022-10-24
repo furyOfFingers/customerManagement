@@ -171,6 +171,34 @@ class Student {
     }
   }
 
+  *uploadStudents(file: Blob) {
+    this.updateRequest.status = ERequestStatus.PENDING;
+    try {
+      const { data, status } = yield this.services.uploadStudents(file);
+
+      this.updateRequest = {
+        data,
+        status: ERequestStatus.SUCCESS,
+        error: null,
+      };
+
+      if (status === 201) {
+        message.success(
+          {
+            content: "students are uploaded",
+            style: {
+              marginTop: "20vh",
+            },
+          },
+          3
+        );
+      }
+    } catch (err) {
+      this.updateRequest.status = ERequestStatus.FAIL;
+      this.updateRequest.error = err as AxiosError;
+    }
+  }
+
   findStudent(id: string) {
     const result = this.students.data?.find((student) => student.id === id);
 

@@ -87,7 +87,7 @@ const StudentForm = ({
     onCancel();
   };
 
-  const onPhotoLoader = (photo: Blob) => {
+  const onFileLoader = (photo: Blob) => {
     setImage(photo);
   };
 
@@ -193,7 +193,7 @@ const StudentForm = ({
                 },
               ]}
             >
-              <DatePicker placeholder="birthday" format={"DD.MM.YY"} />
+              <DatePicker placeholder="birthday" format={"DD.MM.YYYY"} />
             </Form.Item>
 
             {!isEmpty(teacherStore.teachers.data) && (
@@ -210,7 +210,7 @@ const StudentForm = ({
             )}
 
             <Form.Item name="photo" label="photo">
-              <Uploader onPhotoLoader={onPhotoLoader} />
+              <Uploader onFileLoader={onFileLoader} />
             </Form.Item>
 
             <Form.Item name="gender" label="gender" initialValue="male">

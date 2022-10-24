@@ -22,4 +22,6 @@ export interface IStudentApi {
   getStudent(id: string): Promise<AxiosResponse<IStudent>>;
 
   updateStudent(update: IStudent): Promise<AxiosResponse>;
+
+  uploadStudents(file: Blob): Promise<AxiosResponse>;
 }

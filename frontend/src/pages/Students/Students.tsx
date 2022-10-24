@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button, Modal } from "antd";
-import { isEmpty } from "ramda";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
@@ -13,21 +12,18 @@ import studentStore from "store/student";
 import StudentsTable from "./StudentsTable";
 import spinStore from "store/spin";
 import { ETableView } from "common/enums";
+import Uploader from "components/Uploader";
 import s from "./Students.styl";
 
 const Students = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
+  const [file, setFile] = useState<Blob>();
 
   useEffect(() => {
-    if (isEmpty(teacherStore.teachers.data)) {
-      teacherStore.getTeachers();
-    }
-
-    if (isEmpty(studentStore.students.data)) {
-      studentStore.getStudents();
-    }
+    teacherStore.getTeachers();
+    studentStore.getStudents();
   }, []);
 
   const handleOpenModal = useCallback(() => {
@@ -63,6 +59,14 @@ const Students = (): JSX.Element | null => {
       onOk: () => confirmHandleRemove(selectedStudent.id!),
       onCancel: handleResetStudent,
     });
+  };
+
+  const onFileLoader = (file: Blob) => {
+    setFile(file);
+  };
+
+  const handleUpload = () => {
+    studentStore.uploadStudents(file!);
   };
 
   const handleEdit = useCallback((id: string) => {
@@ -106,9 +110,15 @@ const Students = (): JSX.Element | null => {
         />
       </div>
 
-      <Button type="primary" onClick={handleOpenModal}>
-        Add student
-      </Button>
+      <div className={s.main_buttons}>
+        <Button type="primary" onClick={handleOpenModal}>
+          Add student
+        </Button>
+
+        <Uploader text="Upload few students" onFileLoader={onFileLoader} />
+
+        {file && <Button onClick={handleUpload}>Upload Students</Button>}
+      </div>
 
       <div
         className={cls(s.container, {

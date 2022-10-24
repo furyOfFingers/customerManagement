@@ -24,4 +24,8 @@ export default class StudentApi implements IStudentApi {
   async updateStudent(updatedStudent: IStudent) {
     return await axios.put(STUDENT_URL, updatedStudent);
   }
+
+  async uploadStudents(file: Blob) {
+    return await axios.post(`${API}${STUDENTS}`, file);
+  }
 }
