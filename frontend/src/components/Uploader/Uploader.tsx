@@ -6,12 +6,14 @@ import s from "./Uploader.styl";
 
 interface IUploader {
   onFileLoader: (data: Blob) => void;
+  onRemove?: () => void;
   text?: string;
 }
 
 function Uploader({
   onFileLoader,
   text = "Upload photo",
+  onRemove,
 }: IUploader): JSX.Element {
   const request = ({ file, onSuccess }) => {
     const reader = new FileReader();
@@ -33,7 +35,7 @@ function Uploader({
 
   return (
     <div className={s.container}>
-      <Upload customRequest={request} maxCount={1}>
+      <Upload onRemove={onRemove} customRequest={request} maxCount={1}>
         <Button icon={<UploadOutlined />}>{text}</Button>
       </Upload>
     </div>

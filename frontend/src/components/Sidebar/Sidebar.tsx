@@ -28,6 +28,7 @@ function Sidebar() {
         <TabPane tab="Groups" key="groups" />
         <TabPane tab="Payments" key="payments" />
         <TabPane tab="Money report" key="moneyReport" />
+        <TabPane tab="Help" key="help" />
       </Tabs>
     </div>
   );

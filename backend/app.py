@@ -1,16 +1,21 @@
 import json
 import os
 
-from flask import Flask, request
-
 from db.database import db_session, init_db
+from flask import Flask, request
 from models.user import User
 from routes.auth import signin, signup
-from routes.student import createStudent, deleteStudent, getStudent, getStudents, updateStudent
-from routes.teacher import createTeacher, deleteTeacher, getTeacher, getTeachers, updateTeacher
-from routes.group import createGroup, deleteGroup, getGroup, getGroups, updateGroup
-from routes.scheduleList import createScheduleList, deleteScheduleList, getScheduleList, getScheduleLists, updateScheduleList
-from routes.payment import createPayment, deletePayment, getPayment, getPayments
+from routes.group import (createGroup, deleteGroup, getGroup, getGroups,
+                          updateGroup)
+from routes.payment import (createPayment, deletePayment, getPayment,
+                            getPayments)
+from routes.scheduleList import (createScheduleList, deleteScheduleList,
+                                 getScheduleList, getScheduleLists,
+                                 updateScheduleList)
+from routes.student import (createStudent, deleteStudent, getStudent,
+                            getStudents, updateStudent, uploadStudents)
+from routes.teacher import (createTeacher, deleteTeacher, getTeacher,
+                            getTeachers, updateTeacher)
 
 app = Flask(__name__)
 init_db()
@@ -71,6 +76,11 @@ def student_delete():
 @app.route('/api/students', methods=["GET"])
 def student_getStudents():
     return getStudents.getStudents()
+
+
+@app.route('/api/upload_students', methods=["POST"])
+def student_uploadStudents():
+    return uploadStudents.uploadStudents()
 
 
 # teacher

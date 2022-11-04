@@ -19,7 +19,7 @@ const Students = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
-  const [file, setFile] = useState<Blob>();
+  const [file, setFile] = useState<Blob | null>();
 
   useEffect(() => {
     teacherStore.getTeachers();
@@ -65,9 +65,13 @@ const Students = (): JSX.Element | null => {
     setFile(file);
   };
 
-  const handleUpload = () => {
-    studentStore.uploadStudents(file!);
+  const handleUpload = async () => {
+    await studentStore.uploadStudents(file!);
+    await studentStore.getStudents();
+    setFile(null);
   };
+
+  const handleRemoveFile = () => setFile(null);
 
   const handleEdit = useCallback((id: string) => {
     if (!studentStore.students.data) return;
@@ -115,7 +119,11 @@ const Students = (): JSX.Element | null => {
           Add student
         </Button>
 
-        <Uploader text="Upload few students" onFileLoader={onFileLoader} />
+        <Uploader
+          onRemove={handleRemoveFile}
+          text="Upload few students"
+          onFileLoader={onFileLoader}
+        />
 
         {file && <Button onClick={handleUpload}>Upload Students</Button>}
       </div>

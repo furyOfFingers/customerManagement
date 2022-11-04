@@ -1,6 +1,6 @@
+from db.database import db_session
 from flask import request
 from models.student import Student
-from db.database import db_session
 
 
 def updateStudent():
