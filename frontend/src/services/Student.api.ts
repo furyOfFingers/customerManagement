@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API, STUDENT, STUDENTS } from "constants/api";
+import { API, STUDENT, STUDENTS, UPLOAD } from "constants/api";
 import { IStudentApi, IStudent } from "interfaces/student";
 
 const STUDENT_URL = `${API}${STUDENT}`;
@@ -10,7 +10,7 @@ export default class StudentApi implements IStudentApi {
   }
 
   async getStudents() {
-    return await axios.get(`${API}${STUDENTS}`);
+    return await axios.get(`${API}/${STUDENTS}`);
   }
 
   async deleteStudent(id: string) {
@@ -26,6 +26,10 @@ export default class StudentApi implements IStudentApi {
   }
 
   async uploadStudents(file: Blob) {
-    return await axios.post(`${API}${STUDENTS}`, file);
+    return await axios.post(`${API}${UPLOAD}/${STUDENTS}`, file, {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
   }
 }

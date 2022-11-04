@@ -1,7 +1,6 @@
-from datetime import datetime
 
 from db.database import Base
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, Integer, String
 
 
 class Student(Base):
@@ -16,7 +15,6 @@ class Student(Base):
     photo = Column(String())
     gender = Column(String(10), nullable=False)
     teachers = Column(String())
-    date_created = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         teachers_arr = self.teachers.split(',')
@@ -29,7 +27,6 @@ class Student(Base):
             "phone": self.phone,
             "birthday": self.birthday,
             "gender": self.gender,
-            "date_created": str(datetime.timestamp(self.date_created)),
         }
 
         if self.teachers:

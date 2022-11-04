@@ -1,5 +1,5 @@
-from flask import request
 from db.database import db_session
+from flask import request
 from models.student import Student
 
 
@@ -22,7 +22,6 @@ def getStudent():
                     "photo": query_match[0].photo,
                     "gender": query_match[0].gender,
                     "id": query_match[0].id,
-                    "date_created": query_match[0].date_created
                 }, 200
 
         except Exception as e:

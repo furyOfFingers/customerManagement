@@ -11,10 +11,13 @@ import Groups from "pages/Groups";
 import Payments from "pages/Payments";
 import MoneyReport from "pages/MoneyReport";
 import ScheduleList from "pages/ScheduleList";
-import user from "store/user";
+import userStore from "store/user";
+import Help from "pages/Help";
+
+import s from "./MainRouter.styl";
 
 const MainRouter = (): JSX.Element => {
-  const isAuth = !isEmpty(user?.user);
+  const isAuth = !isEmpty(userStore.get()?.user);
 
   const wrapper = (children: JSX.Element) => (
     <PageWrapper>{children}</PageWrapper>
@@ -28,6 +31,7 @@ const MainRouter = (): JSX.Element => {
     "/payments": () => wrapper(<Payments />),
     "/moneyReport": () => wrapper(<MoneyReport />),
     "/scheduleList": () => wrapper(<ScheduleList />),
+    "/help": () => wrapper(<Help />),
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };
 
@@ -39,7 +43,7 @@ const MainRouter = (): JSX.Element => {
   const notAuthResult = useRoutes(notAuthRoutes);
 
   if (isAuth) {
-    return authResult || <div>not found</div>;
+    return authResult || <div className={s.container}>not found</div>;
   } else {
     navigate("/");
     return notAuthResult;

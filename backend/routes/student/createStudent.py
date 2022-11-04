@@ -75,7 +75,6 @@ def createStudent():
                     "gender": gender,
                     "teachers": teachers,
                     "id": new_student.id,
-                    "date_created": new_student.date_created
                 }, 201
 
             except Exception as e:
