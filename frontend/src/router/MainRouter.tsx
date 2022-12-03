@@ -11,8 +11,9 @@ import Groups from "pages/Groups";
 import Payments from "pages/Payments";
 import MoneyReport from "pages/MoneyReport";
 import ScheduleList from "pages/ScheduleList";
-import userStore from "store/user";
 import Help from "pages/Help";
+import VisitList from "pages/VisitList";
+import userStore from "store/user";
 
 import s from "./MainRouter.styl";
 
@@ -27,10 +28,11 @@ const MainRouter = (): JSX.Element => {
     "/": () => <Auth />,
     "/students": () => wrapper(<Students />),
     "/teachers": () => wrapper(<Teachers />),
+    "/scheduleList": () => wrapper(<ScheduleList />),
+    "/visitList": () => wrapper(<VisitList />),
     "/groups": () => wrapper(<Groups />),
     "/payments": () => wrapper(<Payments />),
     "/moneyReport": () => wrapper(<MoneyReport />),
-    "/scheduleList": () => wrapper(<ScheduleList />),
     "/help": () => wrapper(<Help />),
     // '/products/:id': ({id}) => <ProductDetails id={id} />
   };

@@ -8,7 +8,7 @@ const { Title } = Typography;
 const Help = (): JSX.Element => {
   return (
     <div className={s.container}>
-      <Tabs defaultActiveKey="1">
+      <Tabs>
         <Tabs.TabPane tab="make multiple entries" key="1">
           <Title level={4}>1. create text file with txt extension</Title>
 

@@ -6,6 +6,17 @@ import s from "./Sidebar.styl";
 
 const { TabPane } = Tabs;
 
+const tabs = [
+  { tab: "Students", key: "students" },
+  { tab: "Teachers", key: "teachers" },
+  { tab: "Schedule List", key: "scheduleList" },
+  { tab: "Visit List", key: "visitList" },
+  { tab: "Groups", key: "groups" },
+  { tab: "Payments", key: "payments" },
+  { tab: "Money report", key: "moneyReport" },
+  { tab: "Help", key: "help" },
+];
+
 function Sidebar() {
   const path = usePath();
   const [activeTab, setActiveTab] = useState("students");
@@ -19,16 +30,13 @@ function Sidebar() {
     navigate(`/${tab}`);
   };
 
+  const renderTabs = () =>
+    tabs.map(({ tab, key }) => <TabPane tab={tab} key={key} />);
+
   return (
     <div className={s.container}>
       <Tabs activeKey={activeTab} tabPosition="left" onChange={handleChange}>
-        <TabPane tab="Students" key="students" />
-        <TabPane tab="Teachers" key="teachers" />
-        <TabPane tab="Schedule List" key="scheduleList" />
-        <TabPane tab="Groups" key="groups" />
-        <TabPane tab="Payments" key="payments" />
-        <TabPane tab="Money report" key="moneyReport" />
-        <TabPane tab="Help" key="help" />
+        {renderTabs()}
       </Tabs>
     </div>
   );

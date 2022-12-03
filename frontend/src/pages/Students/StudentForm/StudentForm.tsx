@@ -78,7 +78,7 @@ const StudentForm = ({
     let editFunc = onAdd;
 
     if (mode === EModalMode.EDIT) {
-      newData.id = pickedStudent?.id;
+      newData.id = pickedStudent?.id ? pickedStudent?.id : "";
       editFunc = onUpdate;
     }
 

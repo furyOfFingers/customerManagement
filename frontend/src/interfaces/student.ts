@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 export interface IStudent {
-  id?: string;
+  id: string;
   firstname: string;
   lastname: string;
   patronymic: string;
