@@ -1,0 +1,30 @@
+.container
+  table
+    thead
+      tr
+        border-bottom 1px solid #f0f0f0
+        th
+          min-width 50px
+          padding-bottom 10px
+    tbody
+      tr
+        td
+          border-right 1px solid #f0f0f0
+          transition color, background-color 0.2s ease-in-out;
+          padding 5px
+          text-align center
+          color rgba(0, 0, 0, 0.85)
+          &:first-child
+            text-align left
+            &:hover
+              cursor default
+              color rgba(0, 0, 0, 0.85)
+              background-color transparent
+
+          &:hover
+            cursor pointer
+            color white
+            background-color rgb(24, 144, 255)
+
+.unpicked
+  background-color white !important

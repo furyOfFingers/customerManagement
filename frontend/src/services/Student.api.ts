@@ -26,7 +26,7 @@ export default class StudentApi implements IStudentApi {
   }
 
   async uploadStudents(file: Blob) {
-    return await axios.post(`${API}${UPLOAD}/${STUDENTS}`, file, {
+    return await axios.post(`${API}${UPLOAD}${STUDENTS}`, file, {
       headers: {
         "Content-Type": "text/plain",
       },
