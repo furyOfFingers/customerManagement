@@ -21,3 +21,5 @@ export const SCHEDULELISTS = "/scheduleLists";
 
 export const PAYMENT = "/payment";
 export const PAYMENTS = "/payments";
+
+export const VISITLIST = "/visitList";
