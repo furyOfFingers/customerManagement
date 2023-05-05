@@ -35,9 +35,8 @@ class VisitList {
     };
     try {
       const { data } = yield this.services.getVisitList(params);
-
       this.visitList = {
-        data: data as TVisitList,
+        data,
         status: ERequestStatus.SUCCESS,
         error: null,
       };
@@ -64,7 +63,7 @@ class VisitList {
       if (status === 201) {
         message.success(
           {
-            content: `shedule updated`,
+            content: "shedule updated",
             style: {
               marginTop: "20vh",
             },
@@ -76,6 +75,10 @@ class VisitList {
       this.updateRequest.status = ERequestStatus.FAIL;
       this.updateRequest.error = err as AxiosError;
     }
+  }
+
+  public get getVisitListData() {
+    return this.visitList.data;
   }
 }
 const visitListApi = new VisitListApi();
