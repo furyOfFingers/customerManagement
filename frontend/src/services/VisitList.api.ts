@@ -10,8 +10,8 @@ import {
 const VISITLIST_URL = `${API}${VISITLIST}`;
 
 export default class VisitListApi implements IVisitListApi {
-  async getVisitList(data: IRequestVisitList) {
-    return await axios.get(VISITLIST_URL, { params: { data } });
+  async getVisitList(params: IRequestVisitList) {
+    return await axios.get(VISITLIST_URL, { params });
   }
 
   async setVisitList(data: TVisitList) {

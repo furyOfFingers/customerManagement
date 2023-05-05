@@ -16,6 +16,7 @@ from routes.student import (createStudent, deleteStudent, getStudent,
                             getStudents, updateStudent, uploadStudents)
 from routes.teacher import (createTeacher, deleteTeacher, getTeacher,
                             getTeachers, updateTeacher)
+from routes.visitList import getVisitList, setVisitList
 
 app = Flask(__name__)
 init_db()
@@ -184,6 +185,17 @@ def payment_delete():
 @app.route('/api/payments', methods=["GET"])
 def payment_get_all():
     return getPayments.getPayments()
+
+
+# visitList
+@app.route('/api/visitList', methods=["GET"])
+def visit_list_get():
+    return getVisitList.getVisitList()
+
+
+@app.route('/api/visitList', methods=["PUT"])
+def visit_list_set():
+    return setVisitList.setVisitList()
 
 
 if __name__ == '__main__':

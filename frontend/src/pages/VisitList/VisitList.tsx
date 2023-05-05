@@ -6,37 +6,62 @@ import moment, { Moment } from "moment";
 import { isEmpty } from "ramda";
 
 import groupStore from "store/group";
+import visitListStore from "store/visitList";
 import studentStore from "store/student";
 import { IGroup } from "interfaces/group";
 import {
   IColumnVisitList,
+  TVisitList,
   TVisitListStudents,
   visitList,
 } from "interfaces/visitList";
 import Tab from "./Tab";
 import s from "./VisitList.styl";
 
+const getDate = (date: Moment | string | null, format: string) =>
+  moment(date).format(format);
+
 const { TabPane } = Tabs;
 
 const VisitList = (): JSX.Element => {
+  const { getVisitListData } = visitListStore;
   const [date, setDate] = useState(moment());
-  const [initial, setInitial] = useState(visitList);
-  const year = moment(date).format("yyyy");
-  const month = moment(date).format("MMMM");
+  const [groupId, setGroupId] = useState("1");
+  const [initial, setInitial] = useState<TVisitList>(visitList);
+
+  const year = getDate(date, "yyyy");
+  const month = getDate(date, "MMMM");
+
+  const request = {
+    groupId,
+    year,
+    month,
+  };
 
   useEffect(() => {
     groupStore.getGroups();
     studentStore.getStudents();
+    visitListStore.getVisitList(request);
   }, []);
 
-  const handleCalendarChange = (day: Moment | null) => {
-    if (day) {
-      return setDate(day);
+  useEffect(() => {
+    if (!isEmpty(getVisitListData)) {
+      setInitial(getVisitListData!);
     }
-    setDate(moment());
+  }, [getVisitListData]);
+
+  const handleCalendarChange = (day: Moment | null, tabId?: string) => {
+    const data = {
+      groupId: tabId ?? groupId,
+      year: getDate(day, "yyyy"),
+      month: getDate(day, "MMMM"),
+    };
+    visitListStore.getVisitList(data);
+
+    setDate(day!);
   };
 
-  const onSubmit = (column: IColumnVisitList[], groupId: string) => {
+  const onSubmit = async (column: IColumnVisitList[], groupId: string) => {
     const student: TVisitListStudents = {};
 
     Object.keys(column).forEach((el) => {
@@ -47,12 +72,13 @@ const VisitList = (): JSX.Element => {
           days[i + 1] = day;
         }
       });
+
       if (!isEmpty(days)) {
         student[column[el].key] = days;
       }
     });
 
-    const data = {
+    const setData = {
       [groupId]: {
         [year]: {
           [month]: student,
@@ -60,7 +86,28 @@ const VisitList = (): JSX.Element => {
       },
     };
 
-    setInitial(data);
+    const getData = {
+      groupId,
+      year: getDate(date, "yyyy"),
+      month: getDate(date, "MMMM"),
+    };
+
+    await visitListStore.setVisitList(setData);
+    await visitListStore.getVisitList(getData);
+  };
+
+  // const handleChangeMonth = (key: string) => {
+  //   const actualDate =
+  //     key === "next"
+  //       ? moment(date).add(1, "months")
+  //       : moment(date).subtract(1, "months");
+
+  //   handleCalendarChange(actualDate);
+  // };
+
+  const handleTabChange = (tabId: string) => {
+    handleCalendarChange(date, tabId);
+    setGroupId(tabId);
   };
 
   const renderTabs = () =>
@@ -70,35 +117,53 @@ const VisitList = (): JSX.Element => {
         studentsId.includes(el.id!)
       );
 
-      const filteredVisitList = initial[group.id!]?.[year]?.[month];
+      const filteredVisitList = initial?.[group.id!]?.[year]?.[month];
 
       return (
-        <TabPane tab={`${group.id}-${group.group_name}`} key={group.id}>
-          <Tab
-            date={date}
-            groupId={group.id}
-            students={students}
-            onSubmit={onSubmit}
-            visitList={filteredVisitList}
-          />
-        </TabPane>
+        !isEmpty(initial) && (
+          <TabPane tab={`${group.id}-${group.group_name}`} key={group.id}>
+            <Tab
+              date={date}
+              groupId={group.id}
+              students={students}
+              onSubmit={onSubmit}
+              visitList={filteredVisitList!}
+            />
+          </TabPane>
+        )
       );
     });
 
-  return (
-    <div className={s.container}>
-      <div className={s.date}>
-        <DatePicker
-          onChange={handleCalendarChange}
-          allowClear
-          picker="month"
-          placeholder="select date"
-        />
-      </div>
+  const renderBody = () => {
+    if (
+      isEmpty(groupStore.groups.data) ||
+      isEmpty(studentStore.students.data)
+    ) {
+      return <div>no data</div>;
+    }
 
-      <Tabs>{renderTabs()}</Tabs>
-    </div>
-  );
+    return (
+      <>
+        <div className={s.date}>
+          {/* <span onClick={() => handleChangeMonth("prev")}>left</span> */}
+
+          <DatePicker
+            onChange={(day) => handleCalendarChange(day)}
+            allowClear
+            picker="month"
+            placeholder="select date"
+            defaultValue={moment()}
+          />
+
+          {/* <span onClick={() => handleChangeMonth("next")}>right</span> */}
+        </div>
+
+        <Tabs onChange={handleTabChange}>{renderTabs()}</Tabs>
+      </>
+    );
+  };
+
+  return <div className={s.container}>{renderBody()}</div>;
 };
 
 export default observer(VisitList);

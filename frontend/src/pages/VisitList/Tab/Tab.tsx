@@ -94,9 +94,26 @@ const Tab = ({
         <tr>
           <th>Students</th>
 
-          {header?.map((_, i) => (
-            <th key={i}>{i + 1}</th>
-          ))}
+          {header?.map((_, i) => {
+            const holiday =
+              moment(`2023-05-${i + 1}`).day() === 0 ||
+              moment(`2023-05-${i + 1}`).day() === 6;
+
+            return (
+              <th key={i}>
+                <div className={cls(s.headWrap, { [s.holiday]: holiday })}>
+                  <span>
+                    {moment(`2023-05-${i + 1}`)
+                      .locale("ru")
+                      .format("dddd")
+                      .substring(0, 2)}
+                  </span>
+
+                  <span>{i + 1}</span>
+                </div>
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
