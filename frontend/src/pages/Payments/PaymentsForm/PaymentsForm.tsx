@@ -190,7 +190,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
                 },
               ]}
             >
-              <DatePicker placeholder="payment date" format={"DD.MM.YY"} />
+              <DatePicker placeholder="payment date" format={"DD-MM-YYYY"} />
             </Form.Item>
 
             <Form.Item

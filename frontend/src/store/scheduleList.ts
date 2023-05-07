@@ -41,9 +41,6 @@ class ScheduleList {
         message.success(
           {
             content: `scheduleList: ${scheduleList.schedule_list_name} added`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -98,9 +95,6 @@ class ScheduleList {
         message.success(
           {
             content: data,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -156,9 +150,6 @@ class ScheduleList {
         message.success(
           {
             content: `ScheduleList: ${update.name} updated`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );

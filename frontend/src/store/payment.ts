@@ -41,9 +41,6 @@ class Payment {
         message.success(
           {
             content: `payment: with method -  ${payment.method} and amount - ${payment.payment_amount} added`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -98,9 +95,6 @@ class Payment {
         message.success(
           {
             content: data,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );

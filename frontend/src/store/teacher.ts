@@ -41,9 +41,6 @@ class Teacher {
         message.success(
           {
             content: `teacher: ${teacher.firstname} added`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -98,9 +95,6 @@ class Teacher {
         message.success(
           {
             content: data,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -156,9 +150,6 @@ class Teacher {
         message.success(
           {
             content: `teacher: ${update.firstname} updated`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
