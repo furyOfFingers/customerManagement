@@ -48,7 +48,7 @@ const PaymentsTable = ({
 
           const title = `type - ${item?.method}, amount - 
             ${item.payment_amount}, date - ${moment(item.payment_date).format(
-            "DD-MM-YYYY"
+            "DD.MM.YYYY"
           )}`;
 
           return (

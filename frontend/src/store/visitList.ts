@@ -64,9 +64,6 @@ class VisitList {
         message.success(
           {
             content: "shedule updated",
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );

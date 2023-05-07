@@ -41,9 +41,6 @@ class Group {
         message.success(
           {
             content: `group: ${group.group_name} added`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -98,9 +95,6 @@ class Group {
         message.success(
           {
             content: data,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -156,9 +150,6 @@ class Group {
         message.success(
           {
             content: `group: ${update.group_name} updated`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );

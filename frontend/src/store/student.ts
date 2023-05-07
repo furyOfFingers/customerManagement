@@ -41,9 +41,6 @@ class Student {
         message.success(
           {
             content: `student: ${student.firstname} added`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -98,9 +95,6 @@ class Student {
         message.success(
           {
             content: data,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -158,9 +152,6 @@ class Student {
         message.success(
           {
             content: `student: ${updatedStudent.firstname} updated`,
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );
@@ -186,9 +177,6 @@ class Student {
         message.success(
           {
             content: "students are uploaded",
-            style: {
-              marginTop: "20vh",
-            },
           },
           3
         );

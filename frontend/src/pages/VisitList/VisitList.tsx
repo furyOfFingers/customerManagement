@@ -149,7 +149,7 @@ const VisitList = (): JSX.Element => {
 
           <DatePicker
             onChange={(day) => handleCalendarChange(day)}
-            allowClear
+            allowClear={false}
             picker="month"
             placeholder="select date"
             defaultValue={moment()}

@@ -6,7 +6,7 @@ export const initialValues = {
   payer_id: "1",
   teacher_id: "1",
   group_id: "1",
-  payment_date: moment("28-01-1990", "DD-MM-YYYY"),
+  payment_date: moment(),
   payment_amount: 2,
 };
 
