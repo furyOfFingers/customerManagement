@@ -23,3 +23,4 @@ export const PAYMENT = "/payment";
 export const PAYMENTS = "/payments";
 
 export const VISITLIST = "/visitList";
+export const MONEYREPORT = "/moneyReport";
