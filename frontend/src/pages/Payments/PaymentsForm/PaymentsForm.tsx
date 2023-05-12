@@ -69,7 +69,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
       </Option>
     ));
 
-  const renderOptionspayer_id = () =>
+  const renderOptionsPayer = () =>
     studentStore.students.data.map((student: IStudent) => (
       <Option key={student.id} value={student.id}>
         {student.id}
@@ -141,7 +141,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
               ]}
             >
               <Select allowClear placeholder="payer Id">
-                {renderOptionspayer_id()}
+                {renderOptionsPayer()}
               </Select>
             </Form.Item>
 

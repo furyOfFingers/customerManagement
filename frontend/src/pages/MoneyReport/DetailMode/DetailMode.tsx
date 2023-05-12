@@ -109,7 +109,7 @@ const DetailMode = ({
   const groupInfo = (id: string) => {
     const result = groups.find((group) => group.id === id);
 
-    return result!.group_name;
+    return result?.group_name;
   };
 
   const handleDatePickerChange = (_: Moment | null, dateString: string) => {

@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Button, Modal } from "antd";
+import { Button, Modal, DatePicker } from "antd";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
+import { RangeValue } from "rc-picker/lib/interface";
+import moment, { Moment } from "moment";
 
 import { IPayment } from "interfaces/payment";
 import { ETableView } from "common/enums";
@@ -17,10 +19,13 @@ import studentStore from "store/student";
 
 import s from "./Payments.styl";
 
+const { RangePicker } = DatePicker;
+
 const Payments = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [picked, setPicked] = useState<IPayment | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
+  const [date, setDate] = useState<[string, string]>(["", ""]);
 
   useEffect(() => {
     teacherStore.getTeachers();
@@ -51,6 +56,36 @@ const Payments = (): JSX.Element | null => {
       onOk: () => confirmHandleRemove(selected.id!),
       onCancel: handleReset,
     });
+  };
+
+  const filterByDate = () => {
+    let filtered = [...paymentStore.payments.data];
+
+    if (date[0] === "") {
+      const from = moment().startOf("month").format("DD.MM.YYYY");
+      const to = moment().endOf("month").format("DD.MM.YYYY");
+
+      filtered = filtered.filter(
+        (el: IPayment) => el.payment_date >= from && el.payment_date <= to
+      );
+    } else {
+      filtered = filtered.filter(
+        (el: IPayment) =>
+          el.payment_date >= date[0] && el.payment_date <= date[1]
+      );
+    }
+
+    return filtered;
+  };
+
+  const handleRangePickerChange = (
+    _: RangeValue<Moment>,
+    formatString: [string, string]
+  ) => {
+    if (formatString[0] === "") {
+      return setDate(["", ""]);
+    }
+    setDate(formatString);
   };
 
   const handleCloseEditModal = useCallback(() => {
@@ -86,6 +121,8 @@ const Payments = (): JSX.Element | null => {
           className={s.icon}
           onClick={handleSetView(ETableView.LIST)}
         />
+
+        <RangePicker onChange={handleRangePickerChange} format={"DD.MM.YYYY"} />
       </div>
 
       <Button type="primary" onClick={handleOpenModal}>
@@ -100,7 +137,7 @@ const Payments = (): JSX.Element | null => {
         <PaymentsTable
           view={tableView}
           remove={handleRemove}
-          list={paymentStore.payments.data}
+          list={filterByDate()}
         />
       </div>
 
