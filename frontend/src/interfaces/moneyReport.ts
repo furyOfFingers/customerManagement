@@ -1,6 +1,13 @@
 import { AxiosResponse } from "axios";
 
-export interface IMoneyReportSettings {
+export interface IMoney {
+  /** Вычитаемая часть из оплаты за АБ учителю. */
+  teacher_salary: string;
+  /** Абонементская плата за услугу. */
+  subscription_payment: string;
+}
+
+export interface IMoneyReportSettings extends IMoney {
   id: string;
   /** Наименование свойства объекта. */
   value: string;
@@ -8,24 +15,20 @@ export interface IMoneyReportSettings {
   label: string;
   /** Подсказка для свойства объекта. */
   hint: string;
-  /** Вычитаемая часть из оплаты за АБ учителю. */
-  teacher_salary: string;
 }
 
 export interface IUpdateReportSettings {
   /** Вычитаемая часть из оплаты за АБ учителю. */
-  [id: number]: string;
+  [id: number]: IMoney;
 }
 
-export interface ICreateReportSettings {
+export interface ICreateReportSettings extends IMoney {
   /** Наименование свойства объекта. */
   value: string;
   /** Наименование поля свойства объекта. */
   label: string;
   /** Подсказка для свойства объекта. */
   hint: string;
-  /** Вычитаемая часть из оплаты за АБ учителю. */
-  teacher_salary: string;
 }
 
 export interface IMoneyReportSettingsApi {

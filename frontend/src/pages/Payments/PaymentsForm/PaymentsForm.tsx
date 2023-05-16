@@ -12,6 +12,7 @@ import {
   Select,
 } from "antd";
 import moment from "moment";
+import { isEmpty } from "ramda";
 
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
@@ -22,24 +23,38 @@ import { locale } from "common/locale";
 import { schemeStudentForm } from "schemes/student";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
-import { initialValues, OPTIONS_TYPE } from "./constants";
+import { initialValues } from "./constants";
 import { IPayment } from "interfaces/payment";
 import { IStudent } from "interfaces/student";
 import { IGroup } from "interfaces/group";
 import { formItemLayout } from "common/utils/form";
+import { IMoneyReportSettings } from "interfaces/moneyReport";
 
 const { Option } = Select;
 
 interface IOwnProps {
   picked: IPayment | null;
+  optionsType: IMoneyReportSettings[] | null;
   onCancel: VoidFunction;
   onAdd: (data: IPayment) => Promise<void>;
 }
 
-const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
+const StudentForm = ({
+  picked,
+  optionsType,
+  onAdd,
+  onCancel,
+}: IOwnProps): JSX.Element => {
+  const [form] = Form.useForm();
   const setInitialValue = (picked: IPayment | null) => {
     if (!picked) {
-      return initialValues;
+      return isEmpty(optionsType)
+        ? initialValues
+        : {
+            ...initialValues,
+            type: optionsType?.[0].value,
+            payment_amount: optionsType?.[0].subscription_payment,
+          };
     }
 
     return {
@@ -56,18 +71,26 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
 
   const handleSubmitClick = async (data: IPayment) => {
     const newDate = moment(data.payment_date).format("DD.MM.YYYY");
+    const newPaymentAmount = String(data.payment_amount);
     data.payment_date = newDate;
+    data.payment_amount = newPaymentAmount;
+
     await onAdd(data);
     await paymentStore.getPayments();
     onCancel();
   };
 
-  const renderOptionsType = () =>
-    OPTIONS_TYPE.map((el: string) => (
-      <Option key={el} value={el}>
-        {el}
+  const renderOptionsType = () => {
+    if (isEmpty(optionsType)) {
+      return [];
+    }
+
+    return optionsType!.map((el: IMoneyReportSettings) => (
+      <Option key={el.id} value={el.value}>
+        {el.value}
       </Option>
     ));
+  };
 
   const renderOptionsPayer = () =>
     studentStore.students.data.map((student: IStudent) => (
@@ -100,6 +123,16 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
     </Space>
   );
 
+  const handleTypeSelect = (select: string) => {
+    const selectedOption = optionsType?.find((el) => el.value === select);
+
+    if (selectedOption) {
+      form.setFieldsValue({
+        payment_amount: selectedOption.subscription_payment,
+      });
+    }
+  };
+
   return (
     <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
       <Spin
@@ -111,6 +144,7 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
       >
         <div>
           <Form
+            form={form}
             labelAlign="left"
             {...formItemLayout}
             onFinish={handleSubmitClick}
@@ -126,7 +160,11 @@ const StudentForm = ({ picked, onAdd, onCancel }: IOwnProps): JSX.Element => {
                 },
               ]}
             >
-              <Select allowClear placeholder="select type">
+              <Select
+                onSelect={handleTypeSelect}
+                allowClear
+                placeholder="select type"
+              >
                 {renderOptionsType()}
               </Select>
             </Form.Item>

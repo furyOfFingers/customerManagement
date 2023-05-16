@@ -4,7 +4,7 @@ import { EnumPayment } from "enums/payment";
 export interface IPayment {
   id: string;
   payment_date: string;
-  payment_amount: number;
+  payment_amount: string;
   type: keyof typeof EnumPayment;
   payer_id: string;
   method: "cash" | "card";

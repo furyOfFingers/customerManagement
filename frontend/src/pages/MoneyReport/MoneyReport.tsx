@@ -34,7 +34,12 @@ const MoneyReport = (): JSX.Element => {
     groupStore.getGroups();
     studentStore.getStudents();
     paymentStore.getPayments();
+    moneyReportStore.getMoneyReportSettings();
   }, []);
+
+  const optionsType = isEmpty(moneyReportStore.moneyReportSettings.data)
+    ? []
+    : moneyReportStore.moneyReportSettings.data;
 
   const handleOpenAddModal = () => setIsModalAddOpen(true);
   const handleCloseAddModal = () => setIsModalAddOpen(false);
@@ -90,9 +95,11 @@ const MoneyReport = (): JSX.Element => {
           teachers={teacherStore.teachers.data}
           payments={paymentStore.payments.data}
           groups={groupStore.groups.data}
+          moneyReport={moneyReportStore.moneyReportSettings.data}
         />
       ) : (
         <DetailMode
+          optionsType={optionsType}
           students={studentStore.students.data}
           teachers={teacherStore.teachers.data}
           payments={paymentStore.payments.data}
@@ -113,7 +120,7 @@ const MoneyReport = (): JSX.Element => {
           isLoading={loading}
           onUpdate={handleUpdate}
           onCancel={handleCloseEditModal}
-          settings={settings}
+          settings={optionsType}
         />
       )}
     </div>

@@ -2,28 +2,26 @@ from cerberus import Validator
 from db.database import db_session
 from flask import request
 from models.payment import Payment
+from models.moneyReport import MoneyReport
 
 
 def createPayment():
     if request.method == "POST":
         request_data = request.get_json()
         v = Validator()
-        arr_type = ["commercial rent",
-                    "non commercial rent",
-                    "trial",
-                    "1",
-                    "4",
-                    "8",
-                    "16",
-                    "individual",
-                    "additional session",
-                    "pause", ]
+        query_obj = MoneyReport.query.all()
+
+        arr_type = []
+
+        for report in query_obj:
+            arr_type.append(report.value)
+
         schema = {
             'payment_date': {
-                'type': 'string', 'minlength': 2, 'maxlength': 40
+                'type': 'string', 'minlength': 1, 'maxlength': 40
             },
             'payment_amount': {
-                'type': 'integer', 'minlength': 1, 'maxlength': 80
+                'type': 'string', 'minlength': 1, 'maxlength': 80
             },
             'type': {
                 'type': 'string', 'allowed': arr_type

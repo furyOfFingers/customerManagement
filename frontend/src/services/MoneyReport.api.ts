@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { API, MONEYREPORT } from "constants/api";
+import { API, MONEYREPORT, MONEYREPORTS } from "constants/api";
 import {
   ICreateReportSettings,
   IUpdateReportSettings,
@@ -15,7 +15,7 @@ export default class MoneyReportSettingsApi implements IMoneyReportSettingsApi {
   }
 
   async getMoneyReportSettings() {
-    return await axios.get(URL);
+    return await axios.get(`${API}${MONEYREPORTS}`);
   }
 
   async updateMoneyReportSettings(update: IUpdateReportSettings) {
