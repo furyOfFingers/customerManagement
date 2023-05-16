@@ -1,13 +1,13 @@
-import { Button, DatePicker, Table } from "antd";
+import { DatePicker, Table } from "antd";
 import React, { useState } from "react";
 import moment, { Moment } from "moment";
-import { isEmpty } from "ramda";
 import { RangeValue } from "rc-picker/lib/interface";
 
 import { ITeacher } from "interfaces/teacher";
 import { IStudent } from "interfaces/student";
 import { IGroup } from "interfaces/group";
 import { IPayment } from "interfaces/payment";
+import { IMoneyReportSettings } from "interfaces/moneyReport";
 import { EnumPayment } from "enums/payment";
 import { commonColumns, personalColumns } from "./constants";
 import s from "./CommonMode.styl";
@@ -19,16 +19,21 @@ interface IOwnProps {
   teachers: ITeacher[];
   payments: IPayment[];
   groups: IGroup[];
+  moneyReport: IMoneyReportSettings[] | null;
 }
 
-const CommonMode = ({ teachers, payments, groups }: IOwnProps): JSX.Element => {
-  const [isRangeData, setIsRangeData] = useState(false);
-  const [date, setDate] = useState<[string, string] | string>("");
+const CommonMode = ({
+  teachers,
+  payments,
+  groups,
+  moneyReport,
+}: IOwnProps): JSX.Element => {
+  const [date, setDate] = useState<[string, string]>(["", ""]);
 
   const filterByDate = (payments: IPayment[]) => {
     let filtered = [...payments];
 
-    if (isEmpty(date)) {
+    if (date[0] === "") {
       const from = moment().startOf("month").format("DD.MM.YYYY");
       const to = moment().endOf("month").format("DD.MM.YYYY");
 
@@ -36,12 +41,10 @@ const CommonMode = ({ teachers, payments, groups }: IOwnProps): JSX.Element => {
         (el: IPayment) => el.payment_date >= from && el.payment_date <= to
       );
     } else {
-      filtered = !isRangeData
-        ? filtered.filter(
-            (el: IPayment) =>
-              el.payment_date >= date[0] && el.payment_date <= date[1]
-          )
-        : filtered.filter((el: IPayment) => el.payment_date === date);
+      filtered = filtered.filter(
+        (el: IPayment) =>
+          el.payment_date >= date[0] && el.payment_date <= date[1]
+      );
     }
     return filtered;
   };
@@ -107,7 +110,11 @@ const CommonMode = ({ teachers, payments, groups }: IOwnProps): JSX.Element => {
 
     filterByDate(payments).forEach((payment) => {
       if (payment.teacher_id === id) {
-        count = count + payment.payment_amount - 30;
+        moneyReport?.forEach((report) => {
+          if (report.value === payment.type) {
+            count = count + Number(report.teacher_salary);
+          }
+        });
       }
     });
 
@@ -119,7 +126,11 @@ const CommonMode = ({ teachers, payments, groups }: IOwnProps): JSX.Element => {
 
     filterByDate(payments).forEach((payment) => {
       if (payment.teacher_id === id) {
-        count = count + payment.payment_amount - 60;
+        moneyReport?.forEach((report) => {
+          if (report.value === payment.type) {
+            count = count + Number(report.subscription_payment);
+          }
+        });
       }
     });
 
@@ -175,45 +186,15 @@ const CommonMode = ({ teachers, payments, groups }: IOwnProps): JSX.Element => {
       sum: countPersonalSummAmount(el.id!),
     }));
 
-  const handleChangeDataPickerMode = () => {
-    setIsRangeData(!isRangeData);
-  };
-
-  const handleDatePickerChange = (_: Moment | null, dateString: string) => {
-    setDate(dateString);
-  };
-
   const handleRangePickerChange = (
     _: RangeValue<Moment>,
     formatString: [string, string]
-  ) => {
-    if (formatString[0] === "") {
-      return setDate("");
-    }
-    setDate(formatString);
-  };
+  ) => setDate(formatString);
 
   return (
     <div className={s.container}>
-      <div className={s.settings}>
-        <Button onClick={handleChangeDataPickerMode}>
-          {isRangeData ? "range" : "single"}
-        </Button>
-      </div>
-
       <div className={s.filters}>
-        {isRangeData ? (
-          <DatePicker
-            onChange={handleDatePickerChange}
-            placeholder="payment date"
-            format={"DD.MM.YYYY"}
-          />
-        ) : (
-          <RangePicker
-            onChange={handleRangePickerChange}
-            format={"DD.MM.YYYY"}
-          />
-        )}
+        <RangePicker onChange={handleRangePickerChange} format={"DD.MM.YYYY"} />
       </div>
 
       <div className={s.tables}>

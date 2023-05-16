@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Moment } from "moment";
-import { Table, Select, DatePicker, Button } from "antd";
+import { Table, Select, DatePicker } from "antd";
 import { RangeValue } from "rc-picker/lib/interface";
 import { isEmpty } from "ramda";
 import moment from "moment";
@@ -9,7 +9,7 @@ import { ITeacher } from "interfaces/teacher";
 import { IStudent } from "interfaces/student";
 import { IGroup } from "interfaces/group";
 import { IPayment } from "interfaces/payment";
-import { OPTIONS_TYPE } from "pages/Payments/PaymentsForm/constants";
+import { IMoneyReportSettings } from "interfaces/moneyReport";
 import { columns } from "./constants";
 import s from "./DetailMode.styl";
 
@@ -23,14 +23,8 @@ const renderMethodOptions = () =>
     </Option>
   ));
 
-const renderTypeOptions = () =>
-  OPTIONS_TYPE.map((el: string) => (
-    <Option key={el} value={el}>
-      {el}
-    </Option>
-  ));
-
 interface IownProps {
+  optionsType: IMoneyReportSettings[] | null;
   students: IStudent[];
   teachers: ITeacher[];
   payments: IPayment[];
@@ -42,27 +36,25 @@ const DetailMode = ({
   teachers,
   payments,
   groups,
+  optionsType,
 }: IownProps): JSX.Element => {
   const [teacherId, setTeacherId] = useState("");
   const [studentId, setStudentId] = useState("");
   const [method, setMethod] = useState("");
   const [groupId, setGroupId] = useState("");
-  const [date, setDate] = useState<[string, string] | string>("");
+  const [date, setDate] = useState<[string, string]>(["", ""]);
   const [type, setType] = useState("");
-  const [isRangeData, setIsRangeData] = useState(false);
 
-  const handleClearAll = () => {
-    setTeacherId("");
-    setStudentId("");
-    setMethod("");
-    setGroupId("");
-    setDate("");
-    setType("");
-  };
+  const renderOptionsType = () => {
+    if (isEmpty(optionsType)) {
+      return [];
+    }
 
-  const handleChangeDataPickerMode = () => {
-    setDate("");
-    setIsRangeData(!isRangeData);
+    return optionsType?.map((el: IMoneyReportSettings) => (
+      <Option key={el.id} value={el.value}>
+        {el.value}
+      </Option>
+    ));
   };
 
   const studentInfo = (id: string) => {
@@ -112,19 +104,10 @@ const DetailMode = ({
     return result?.group_name;
   };
 
-  const handleDatePickerChange = (_: Moment | null, dateString: string) => {
-    setDate(dateString);
-  };
-
   const handleRangePickerChange = (
     _: RangeValue<Moment>,
     formatString: [string, string]
-  ) => {
-    if (formatString[0] === "") {
-      return setDate("");
-    }
-    setDate(formatString);
-  };
+  ) => setDate(formatString);
 
   const returnData = () => {
     let filtered = [...payments];
@@ -149,20 +132,17 @@ const DetailMode = ({
       filtered = filtered.filter((el: IPayment) => el.type === type);
     }
 
-    if (date) {
-      filtered = !isRangeData
-        ? filtered.filter(
-            (el: IPayment) =>
-              el.payment_date >= date[0] && el.payment_date <= date[1]
-          )
-        : filtered.filter((el: IPayment) => el.payment_date === date);
-    }
-    if (isEmpty(date)) {
+    if (date[0] === "") {
       const from = moment().startOf("month").format("DD.MM.YYYY");
       const to = moment().endOf("month").format("DD.MM.YYYY");
 
       filtered = filtered.filter(
         (el: IPayment) => el.payment_date >= from && el.payment_date <= to
+      );
+    } else {
+      filtered = filtered.filter(
+        (el: IPayment) =>
+          el.payment_date >= date[0] && el.payment_date <= date[1]
       );
     }
 
@@ -181,14 +161,6 @@ const DetailMode = ({
 
   return (
     <>
-      <div className={s.settings}>
-        <Button onClick={handleClearAll}>clear</Button>
-
-        <Button onClick={handleChangeDataPickerMode}>
-          {isRangeData ? "range" : "single"}
-        </Button>
-      </div>
-
       <div className={s.filters}>
         <Select
           allowClear
@@ -217,18 +189,7 @@ const DetailMode = ({
           {renderGroupOptions()}
         </Select>
 
-        {isRangeData ? (
-          <DatePicker
-            onChange={handleDatePickerChange}
-            placeholder="payment date"
-            format={"DD.MM.YYYY"}
-          />
-        ) : (
-          <RangePicker
-            onChange={handleRangePickerChange}
-            format={"DD.MM.YYYY"}
-          />
-        )}
+        <RangePicker onChange={handleRangePickerChange} format={"DD.MM.YYYY"} />
 
         <Select
           allowClear
@@ -245,7 +206,7 @@ const DetailMode = ({
           onClear={() => setType("")}
           placeholder="select type"
         >
-          {renderTypeOptions()}
+          {renderOptionsType()}
         </Select>
       </div>
 

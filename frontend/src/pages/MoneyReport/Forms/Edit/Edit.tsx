@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Button, Divider, Form, InputNumber, Modal, Space, Spin } from "antd";
 
 import {
+  IMoney,
   IMoneyReportSettings,
   IUpdateReportSettings,
 } from "interfaces/moneyReport";
@@ -12,7 +13,7 @@ import s from "./Edit.styl";
 
 interface IownProps {
   isLoading: boolean;
-  settings: IMoneyReportSettings[];
+  settings: IMoneyReportSettings[] | null;
   onCancel: VoidFunction;
   onUpdate: (data: IUpdateReportSettings) => Promise<void>;
 }
@@ -31,10 +32,14 @@ const Edit = ({
 }: IownProps): JSX.Element => {
   const handleSubmitClick = async (data: IUpdateReportSettings) => {
     const update = {} as IUpdateReportSettings;
+    const money = {} as IMoney;
 
     Object.keys(data).forEach((el) => {
-      if (typeof data[el] === "number" && data[el] !== "") {
-        update[el] = data[el];
+      const [id, name] = el.split(" - ");
+
+      if (typeof data[el] === "number") {
+        money[name] = data[el];
+        update[id] = { ...money };
       }
     });
 
@@ -45,13 +50,9 @@ const Edit = ({
     <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
       <Spin tip="Loading..." spinning={isLoading}>
         <div className={s.editWrapper}>
-          <Form
-            labelAlign="left"
-            {...formItemLayout}
-            onFinish={handleSubmitClick}
-          >
+          <Form {...formItemLayout} onFinish={handleSubmitClick}>
             <>
-              {settings.map((el) => (
+              {settings?.map((el) => (
                 <Fragment key={el.id}>
                   <Divider>{el.label}</Divider>
 
@@ -62,9 +63,23 @@ const Edit = ({
                       <div>hint: {el.hint}</div>
                     </div>
 
-                    <Form.Item name={el.id} initialValue={el.teacher_salary}>
-                      <InputNumber />
-                    </Form.Item>
+                    <div className={s.inputBlock}>
+                      <Form.Item
+                        name={`${el.id} - subscription_payment`}
+                        initialValue={el.subscription_payment}
+                      >
+                        <InputNumber
+                          addonBefore={<label>subscription</label>}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        name={`${el.id} - teacher_salary`}
+                        initialValue={el.teacher_salary}
+                      >
+                        <InputNumber addonBefore={<label>teacher</label>} />
+                      </Form.Item>
+                    </div>
                   </div>
                 </Fragment>
               ))}

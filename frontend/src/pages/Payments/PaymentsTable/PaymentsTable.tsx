@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import cls from "classnames";
 import { List } from "antd";
 import { DeleteOutlined, ExpandAltOutlined } from "@ant-design/icons";
-import moment from "moment";
 
 import { IPayment } from "interfaces/payment";
 import { ETableView } from "common/enums";
@@ -47,9 +46,7 @@ const PaymentsTable = ({
           if (!item?.id) return null;
 
           const title = `type - ${item?.method}, amount - 
-            ${item.payment_amount}, date - ${moment(item.payment_date).format(
-            "DD.MM.YYYY"
-          )}`;
+            ${item.payment_amount}, date - ${item.payment_date}`;
 
           return (
             <List.Item

@@ -6,6 +6,7 @@ import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 import { RangeValue } from "rc-picker/lib/interface";
 import moment, { Moment } from "moment";
+import { isEmpty } from "ramda";
 
 import { IPayment } from "interfaces/payment";
 import { ETableView } from "common/enums";
@@ -15,6 +16,7 @@ import teacherStore from "store/teacher";
 import groupStore from "store/group";
 import paymentStore from "store/payment";
 import spinStore from "store/spin";
+import moneyReportStore from "store/moneyReport";
 import studentStore from "store/student";
 
 import s from "./Payments.styl";
@@ -32,7 +34,12 @@ const Payments = (): JSX.Element | null => {
     groupStore.getGroups();
     studentStore.getStudents();
     paymentStore.getPayments();
+    moneyReportStore.getMoneyReportSettings();
   }, []);
+
+  const optionsType = isEmpty(moneyReportStore.moneyReportSettings.data)
+    ? []
+    : moneyReportStore.moneyReportSettings.data;
 
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true);
@@ -143,6 +150,7 @@ const Payments = (): JSX.Element | null => {
 
       {isModalOpen && (
         <PaymentsForm
+          optionsType={optionsType}
           picked={picked}
           onAdd={handleAdd}
           onCancel={handleCloseEditModal}

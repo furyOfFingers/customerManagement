@@ -5,8 +5,16 @@ import { ICreateReportSettings } from "interfaces/moneyReport";
 import { formItemLayout } from "common/utils/form";
 import { locale } from "common/locale";
 import s from "./Add.styl";
+import { schemeMoneyReportSettings } from "schemes/moneyReportSettings";
 
-const options = ["value", "label", "hint", "teacher_salary"];
+const options = {
+  value: { min: 1, max: 50 },
+  label: { min: 1, max: 50 },
+  hint: { min: 1, max: 100 },
+  subscription_payment: { min: 1, max: 10 },
+  teacher_salary: { min: 1, max: 10 },
+};
+
 interface IOwnProps {
   isLoading: boolean;
   onCancel: VoidFunction;
@@ -32,9 +40,10 @@ const Add = ({ onCancel, onAdd, isLoading }: IOwnProps): JSX.Element => {
             labelAlign="left"
             {...formItemLayout}
             onFinish={handleSubmitClick}
+            validateMessages={schemeMoneyReportSettings}
           >
             <>
-              {options.map((el) => (
+              {Object.keys(options).map((el) => (
                 <Form.Item
                   key={el}
                   name={el}
@@ -42,6 +51,8 @@ const Add = ({ onCancel, onAdd, isLoading }: IOwnProps): JSX.Element => {
                   rules={[
                     {
                       required: true,
+                      min: options[el].min,
+                      max: options[el].max,
                     },
                   ]}
                 >

@@ -5,8 +5,8 @@ from sqlalchemy import Column, Integer, String
 class Payment(Base):
     __tablename__ = 'payment'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    payment_date = Column(String(), nullable=False)
-    payment_amount = Column(Integer(), nullable=False)
+    payment_date = Column(String(10), nullable=False)
+    payment_amount = Column(String(10), nullable=False)
     type = Column(String(30), nullable=False)
     payer_id = Column(String(), nullable=False)
     method = Column(String(5), nullable=False)

@@ -17,6 +17,7 @@ from routes.student import (createStudent, deleteStudent, getStudent,
 from routes.teacher import (createTeacher, deleteTeacher, getTeacher,
                             getTeachers, updateTeacher)
 from routes.visitList import getVisitList, setVisitList
+from routes.moneyReportSettings import getMoneyReportSettings, createMoneyReportSettings, updateMoneyReportSettings
 
 app = Flask(__name__)
 init_db()
@@ -196,6 +197,22 @@ def visit_list_get():
 @app.route('/api/visitList', methods=["PUT"])
 def visit_list_set():
     return setVisitList.setVisitList()
+
+
+# money report settings
+@app.route('/api/moneyReport', methods=["POST"])
+def moneyReportSettings_create():
+    return createMoneyReportSettings.createMoneyReportSettings()
+
+
+@app.route('/api/moneyReport', methods=["PUT"])
+def moneyReportSettings_list_update():
+    return updateMoneyReportSettings.updateMoneyReportSettings()
+
+
+@app.route('/api/moneyReports', methods=["GET"])
+def moneyReportSettings_get_all():
+    return getMoneyReportSettings.getMoneyReportSettings()
 
 
 if __name__ == '__main__':
