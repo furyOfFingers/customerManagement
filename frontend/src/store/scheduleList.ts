@@ -149,7 +149,7 @@ class ScheduleList {
       if (status === 201) {
         message.success(
           {
-            content: `ScheduleList: ${update.name} updated`,
+            content: `ScheduleList: ${update.schedule_list_name} updated`,
           },
           3
         );

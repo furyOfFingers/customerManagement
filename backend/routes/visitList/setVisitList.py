@@ -18,7 +18,7 @@ def setVisitList():
                 actualDays = {}
 
                 for key, value in days.items():
-                    if value != '-':
+                    if value != '.':
                         actualDays[key] = value
 
                 days_json = json.dumps(actualDays)

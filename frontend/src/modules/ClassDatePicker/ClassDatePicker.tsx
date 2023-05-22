@@ -2,14 +2,20 @@ import React, { useState } from "react";
 
 import WeekPick from "components/WeekPick";
 import { ISchedule } from "interfaces/schedule";
+import { IScheduleList } from "interfaces/scheduleList";
 
 interface IOwnProps {
+  picked: IScheduleList | null;
   onClick: (data: ISchedule) => void;
 }
 
-function ClassDatePicker({ onClick }: IOwnProps): JSX.Element {
-  const [pickedDay, setPickedDay] = useState<string[]>([]);
-  const [pickedDate, setPickedDate] = useState({});
+function ClassDatePicker({ onClick, picked }: IOwnProps): JSX.Element {
+  const [pickedDay, setPickedDay] = useState<string[]>(
+    picked?.id ? Object.keys(picked?.schedule) : []
+  );
+  const [pickedDate, setPickedDate] = useState(
+    picked?.id ? picked?.schedule : {}
+  );
 
   const handleDatePick = (date: string[]) => {
     const newPickedDate = { ...pickedDate } as ISchedule;
@@ -36,6 +42,7 @@ function ClassDatePicker({ onClick }: IOwnProps): JSX.Element {
       });
 
       setPickedDate(newPickedDate);
+      onClick(newPickedDate);
     }
 
     newPickedDay.sort();
@@ -43,13 +50,12 @@ function ClassDatePicker({ onClick }: IOwnProps): JSX.Element {
   };
 
   return (
-    <div>
-      <WeekPick
-        picked={pickedDay}
-        onClickDay={handleDayPick}
-        onChangeDate={handleDatePick}
-      />
-    </div>
+    <WeekPick
+      pickedDay={pickedDay}
+      pickedDate={pickedDate}
+      onClickDay={handleDayPick}
+      onChangeDate={handleDatePick}
+    />
   );
 }
 

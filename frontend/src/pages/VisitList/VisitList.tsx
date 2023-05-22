@@ -8,6 +8,7 @@ import { isEmpty } from "ramda";
 import groupStore from "store/group";
 import visitListStore from "store/visitList";
 import studentStore from "store/student";
+import scheduleListStore from "store/scheduleList";
 import { IGroup } from "interfaces/group";
 import {
   IColumnVisitList,
@@ -41,6 +42,7 @@ const VisitList = (): JSX.Element => {
   useEffect(() => {
     groupStore.getGroups();
     studentStore.getStudents();
+    scheduleListStore.getScheduleLists();
     visitListStore.getVisitList(request);
   }, []);
 
@@ -118,12 +120,16 @@ const VisitList = (): JSX.Element => {
       );
 
       const filteredVisitList = initial?.[group.id!]?.[year]?.[month];
+      const actualScheduleList = scheduleListStore.scheduleLists.data.find(
+        (scheduleList) => scheduleList.id == group.class_date
+      );
 
       return (
         !isEmpty(initial) && (
           <TabPane tab={`${group.id}-${group.group_name}`} key={group.id}>
             <Tab
               date={date}
+              scheduleList={actualScheduleList!}
               groupId={group.id}
               students={students}
               onSubmit={onSubmit}

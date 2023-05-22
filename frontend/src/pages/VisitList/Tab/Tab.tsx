@@ -3,7 +3,9 @@ import cls from "classnames";
 import React, { useState, useEffect } from "react";
 import moment, { Moment } from "moment";
 
+import { week } from "constants/weekDay";
 import { IStudent } from "interfaces/student";
+import { IScheduleList } from "interfaces/scheduleList";
 import { IColumnVisitList, TVisitListStudents } from "interfaces/visitList";
 import s from "./Tab.styl";
 
@@ -11,6 +13,7 @@ const initial = ["0000", "0000"];
 const radioButton = ["present", "absent", "sick", "frozen", "-"];
 
 interface IownProps {
+  scheduleList: IScheduleList;
   students: IStudent[];
   visitList: TVisitListStudents;
   groupId: string | undefined;
@@ -23,6 +26,7 @@ const Tab = ({
   students,
   date,
   onSubmit,
+  scheduleList,
   visitList,
   groupId,
 }: IownProps): JSX.Element => {
@@ -32,17 +36,41 @@ const Tab = ({
   const [column, setColumn] = useState<IColumnVisitList[]>();
 
   useEffect(() => {
-    const newHeader = [...Array(moment(date).daysInMonth())];
+    let daysInMonth = moment(date).daysInMonth();
 
-    setHeader(newHeader);
+    const firstWeek = Object.values(week).slice(
+      moment(date).startOf("month").day() - 1
+    );
+    const monthDays: string[] = [];
+
+    while (daysInMonth > 0) {
+      if (monthDays.length < 1) {
+        firstWeek.forEach((el) => {
+          monthDays.push(el);
+          daysInMonth--;
+        });
+      } else {
+        Object.values(week).forEach((el) => {
+          if (daysInMonth < 1) {
+            return;
+          }
+          monthDays.push(el);
+          daysInMonth--;
+        });
+      }
+    }
+
+    setHeader(monthDays);
   }, [date]);
 
   const initialColumn = () => {
     const newColumn = students.map((student: IStudent) => {
       const filteredStudent = visitList?.[student.id];
-      const days = header?.map((day, i) =>
-        filteredStudent?.[i + 1] ? filteredStudent?.[i + 1] : day
+      const days = header?.map((_, i) =>
+        // На be применяется replace по "."
+        filteredStudent?.[i + 1] ? filteredStudent?.[i + 1] : "."
       );
+
       return {
         key: student.id.toString(),
         student: `${student.id} - ${student.lastname} ${student.firstname} ${student.patronymic}`,
@@ -94,22 +122,21 @@ const Tab = ({
         <tr>
           <th>Students</th>
 
-          {header?.map((_, i) => {
-            const holiday =
-              moment(`2023-05-${i + 1}`).day() === 0 ||
-              moment(`2023-05-${i + 1}`).day() === 6;
+          {header?.map((el, i) => {
+            const scheduleDay = scheduleList?.schedule[el];
 
             return (
               <th key={i}>
-                <div className={cls(s.headWrap, { [s.holiday]: holiday })}>
-                  <span>
-                    {moment(`2023-05-${i + 1}`)
-                      .locale("ru")
-                      .format("dddd")
-                      .substring(0, 2)}
-                  </span>
-
+                <div className={cls(s.headWrap, { [s.holiday]: scheduleDay })}>
+                  <span>{el.substring(0, 2)}</span>
                   <span>{i + 1}</span>
+
+                  {scheduleDay && (
+                    <>
+                      <span>{scheduleDay[0]}</span>
+                      <span>{scheduleDay[1]}</span>
+                    </>
+                  )}
                 </div>
               </th>
             );

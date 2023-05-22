@@ -16,11 +16,12 @@ def updateScheduleList():
             else:
                 update_query = query_match[0]
 
-                schedule_string = ','.join(request_data['schedule'])
-                update_query.schedule = schedule_string
+                if 'schedule' in request_data:
+                    schedule_string = str(request_data['schedule'])
+                    update_query.schedule = schedule_string
 
-                update_query.schedule_list_name = request_data['schedule_list_name']
-                update_query.schedule = schedule_string
+                if 'schedule_list_name' in request_data:
+                    update_query.schedule_list_name = request_data['schedule_list_name']
 
                 db_session.commit()
                 return "", 204
