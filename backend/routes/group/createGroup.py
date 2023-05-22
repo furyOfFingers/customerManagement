@@ -30,8 +30,7 @@ def createGroup():
             request_data['students'] = students_string
 
         if 'class_date' in request_data:
-            class_date_string = ','.join(request_data['class_date'])
-            request_data['class_date'] = class_date_string
+            request_data['class_date'] = request_data['class_date']
 
         if not v.validate(request_data, schema):
             return v.errors, 400

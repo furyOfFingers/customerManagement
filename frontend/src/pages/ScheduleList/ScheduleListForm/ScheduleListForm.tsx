@@ -107,7 +107,10 @@ const ScheduleListForm = ({
             </Form.Item>
 
             <Form.Item name="class_date" label="class_date">
-              <ClassDatePicker onClick={handleClick} />
+              <ClassDatePicker
+                picked={pickedScheduleList}
+                onClick={handleClick}
+              />
             </Form.Item>
 
             <Form.Item>

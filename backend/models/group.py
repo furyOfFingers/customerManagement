@@ -12,14 +12,13 @@ class Group(Base):
 
     def __repr__(self):
         students_arr = self.students.split(',')
-        class_date_arr = self.class_date.split(',')
 
         initial = {
             "id": str(self.id),
             "group_name": self.group_name,
             "teacher": self.teacher,
             "students": students_arr,
-            "class_date": class_date_arr,
+            "class_date": self.class_date,
         }
 
         return str(initial)
