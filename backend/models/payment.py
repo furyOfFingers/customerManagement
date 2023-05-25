@@ -15,7 +15,7 @@ class Payment(Base):
 
     def __repr__(self):
 
-        initial = {
+        return str({
             "id": self.id,
             "payment_date": self.payment_date,
             "payment_amount": self.payment_amount,
@@ -24,6 +24,4 @@ class Payment(Base):
             "method": self.method,
             "teacher_id": self.teacher_id,
             "group_id": self.group_id,
-        }
-
-        return str(initial)
+        })

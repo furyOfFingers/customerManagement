@@ -33,6 +33,7 @@ import { IMoneyReportSettings } from "interfaces/moneyReport";
 const { Option } = Select;
 
 interface IOwnProps {
+  date: [string, string];
   picked: IPayment | null;
   optionsType: IMoneyReportSettings[] | null;
   onCancel: VoidFunction;
@@ -40,6 +41,7 @@ interface IOwnProps {
 }
 
 const StudentForm = ({
+  date,
   picked,
   optionsType,
   onAdd,
@@ -76,7 +78,7 @@ const StudentForm = ({
     data.payment_amount = newPaymentAmount;
 
     await onAdd(data);
-    await paymentStore.getPayments();
+    await paymentStore.getPayments(date[0], date[1]);
     onCancel();
   };
 

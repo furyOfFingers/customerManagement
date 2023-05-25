@@ -59,14 +59,14 @@ class Payment {
     }
   }
 
-  *getPayments() {
+  *getPayments(from: string, to: string) {
     spinStore.setSpin(true);
     this.payments = {
       ...this.payments,
       status: ERequestStatus.PENDING,
     };
     try {
-      const { data } = yield this.services.getPayments();
+      const { data } = yield this.services.getPayments(from, to);
       this.payments = {
         data,
         status: ERequestStatus.SUCCESS,

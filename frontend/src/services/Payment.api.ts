@@ -9,8 +9,8 @@ export default class PaymentApi implements IPaymentApi {
     return await axios.post(PAYMENT_URL, data);
   }
 
-  async getPayments() {
-    return await axios.get(`${API}${PAYMENTS}`);
+  async getPayments(from: string, to: string) {
+    return await axios.get(`${API}${PAYMENTS}`, { params: { from, to } });
   }
 
   async deletePayment(id: string) {
