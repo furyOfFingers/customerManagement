@@ -15,7 +15,7 @@ export interface IPayment {
 export interface IPaymentApi {
   create(data: IPayment): Promise<AxiosResponse>;
 
-  getPayments(): Promise<AxiosResponse<IPayment[]>>;
+  getPayments(from: string, to: string): Promise<AxiosResponse<IPayment[]>>;
 
   deletePayment(id: string): Promise<AxiosResponse>;
 

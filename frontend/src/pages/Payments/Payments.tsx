@@ -15,25 +15,26 @@ import PaymentsTable from "./PaymentsTable";
 import teacherStore from "store/teacher";
 import groupStore from "store/group";
 import paymentStore from "store/payment";
-import spinStore from "store/spin";
 import moneyReportStore from "store/moneyReport";
 import studentStore from "store/student";
 
 import s from "./Payments.styl";
 
 const { RangePicker } = DatePicker;
+const from = moment().startOf("month").format("DD.MM.YYYY");
+const to = moment().endOf("month").format("DD.MM.YYYY");
 
 const Payments = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [picked, setPicked] = useState<IPayment | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
-  const [date, setDate] = useState<[string, string]>(["", ""]);
+  const [date, setDate] = useState<[string, string]>([from, to]);
 
   useEffect(() => {
     teacherStore.getTeachers();
     groupStore.getGroups();
     studentStore.getStudents();
-    paymentStore.getPayments();
+    paymentStore.getPayments(date[0], date[1]);
     moneyReportStore.getMoneyReportSettings();
   }, []);
 
@@ -65,33 +66,15 @@ const Payments = (): JSX.Element | null => {
     });
   };
 
-  const filterByDate = () => {
-    let filtered = [...paymentStore.payments.data];
-
-    if (date[0] === "") {
-      const from = moment().startOf("month").format("DD.MM.YYYY");
-      const to = moment().endOf("month").format("DD.MM.YYYY");
-
-      filtered = filtered.filter(
-        (el: IPayment) => el.payment_date >= from && el.payment_date <= to
-      );
-    } else {
-      filtered = filtered.filter(
-        (el: IPayment) =>
-          el.payment_date >= date[0] && el.payment_date <= date[1]
-      );
-    }
-
-    return filtered;
-  };
-
   const handleRangePickerChange = (
     _: RangeValue<Moment>,
     formatString: [string, string]
   ) => {
     if (formatString[0] === "") {
-      return setDate(["", ""]);
+      paymentStore.getPayments(from, to);
+      return setDate([from, to]);
     }
+    paymentStore.getPayments(formatString[0], formatString[1]);
     setDate(formatString);
   };
 
@@ -106,7 +89,7 @@ const Payments = (): JSX.Element | null => {
 
   const confirmHandleRemove = async (id: string) => {
     await paymentStore.removePayment(id);
-    await paymentStore.getPayments();
+    await paymentStore.getPayments(date[0], date[1]);
     handleReset();
   };
 
@@ -117,7 +100,7 @@ const Payments = (): JSX.Element | null => {
     []
   );
 
-  return spinStore.get() ? null : (
+  return (
     <div className={s.form_container}>
       <div className={s.action_panel}>
         <AppstoreOutlined
@@ -144,12 +127,13 @@ const Payments = (): JSX.Element | null => {
         <PaymentsTable
           view={tableView}
           remove={handleRemove}
-          list={filterByDate()}
+          list={paymentStore.payments.data}
         />
       </div>
 
       {isModalOpen && (
         <PaymentsForm
+          date={date}
           optionsType={optionsType}
           picked={picked}
           onAdd={handleAdd}
