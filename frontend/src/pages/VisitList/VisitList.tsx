@@ -8,6 +8,7 @@ import { isEmpty } from "ramda";
 import groupStore from "store/group";
 import visitListStore from "store/visitList";
 import studentStore from "store/student";
+import paymentStore from "store/payment";
 import scheduleListStore from "store/scheduleList";
 import { IGroup } from "interfaces/group";
 import {
@@ -17,10 +18,8 @@ import {
   visitList,
 } from "interfaces/visitList";
 import Tab from "./Tab";
+import { getDate, startDate, endDate } from "utils/date";
 import s from "./VisitList.styl";
-
-const getDate = (date: Moment | string | null, format: string) =>
-  moment(date).format(format);
 
 const { TabPane } = Tabs;
 
@@ -44,6 +43,7 @@ const VisitList = (): JSX.Element => {
     studentStore.getStudents();
     scheduleListStore.getScheduleLists();
     visitListStore.getVisitList(request);
+    paymentStore.getPayments(startDate(), endDate());
   }, []);
 
   useEffect(() => {
@@ -59,6 +59,7 @@ const VisitList = (): JSX.Element => {
       month: getDate(day, "MMMM"),
     };
     visitListStore.getVisitList(data);
+    paymentStore.getPayments(startDate(day), endDate(day));
 
     setDate(day!);
   };

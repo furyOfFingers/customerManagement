@@ -1,6 +1,6 @@
 import { DatePicker, Table } from "antd";
-import React, { useState } from "react";
-import moment, { Moment } from "moment";
+import React from "react";
+import { Moment } from "moment";
 import { RangeValue } from "rc-picker/lib/interface";
 
 import { ITeacher } from "interfaces/teacher";
@@ -10,6 +10,7 @@ import { IPayment } from "interfaces/payment";
 import { IMoneyReportSettings } from "interfaces/moneyReport";
 import { EnumPayment } from "enums/payment";
 import { commonColumns, personalColumns } from "./constants";
+import { startDate, endDate } from "utils/date";
 import s from "./CommonMode.styl";
 
 const { RangePicker } = DatePicker;
@@ -20,6 +21,8 @@ interface IOwnProps {
   payments: IPayment[];
   groups: IGroup[];
   moneyReport: IMoneyReportSettings[] | null;
+  date: [string, string];
+  onDateChange: (date: [string, string]) => void;
 }
 
 const CommonMode = ({
@@ -27,18 +30,16 @@ const CommonMode = ({
   payments,
   groups,
   moneyReport,
+  date,
+  onDateChange,
 }: IOwnProps): JSX.Element => {
-  const [date, setDate] = useState<[string, string]>(["", ""]);
-
   const filterByDate = (payments: IPayment[]) => {
     let filtered = [...payments];
 
     if (date[0] === "") {
-      const from = moment().startOf("month").format("DD.MM.YYYY");
-      const to = moment().endOf("month").format("DD.MM.YYYY");
-
       filtered = filtered.filter(
-        (el: IPayment) => el.payment_date >= from && el.payment_date <= to
+        (el: IPayment) =>
+          el.payment_date >= startDate() && el.payment_date <= endDate()
       );
     } else {
       filtered = filtered.filter(
@@ -189,7 +190,7 @@ const CommonMode = ({
   const handleRangePickerChange = (
     _: RangeValue<Moment>,
     formatString: [string, string]
-  ) => setDate(formatString);
+  ) => onDateChange(formatString);
 
   return (
     <div className={s.container}>
