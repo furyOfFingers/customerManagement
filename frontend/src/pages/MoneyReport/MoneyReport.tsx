@@ -18,12 +18,14 @@ import {
 import Add from "./Forms/Add";
 import Edit from "./Forms/Edit";
 import { isPending } from "common/utils/data.utils";
+import { startDate, endDate } from "utils/date";
 import s from "./MoneyReport.styl";
 
 const MoneyReport = (): JSX.Element => {
   const [isCommonMode, setIsCommonMode] = useState(false);
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [date, setDate] = useState<[string, string]>(["", ""]);
 
   const loading =
     isPending(moneyReportStore.updateRequest) ||
@@ -33,7 +35,7 @@ const MoneyReport = (): JSX.Element => {
     teacherStore.getTeachers();
     groupStore.getGroups();
     studentStore.getStudents();
-    paymentStore.getPayments();
+    paymentStore.getPayments(startDate(), endDate());
     moneyReportStore.getMoneyReportSettings();
   }, []);
 
@@ -54,6 +56,8 @@ const MoneyReport = (): JSX.Element => {
     await handleCloseAddModal();
     await handleRequest();
   };
+
+  const handleChangeDate = (value: [string, string]) => setDate(value);
 
   const handleRequest = async () => {
     await moneyReportStore.getMoneyReportSettings();
@@ -91,6 +95,8 @@ const MoneyReport = (): JSX.Element => {
 
       {isCommonMode ? (
         <CommonMode
+          date={date}
+          onDateChange={handleChangeDate}
           students={studentStore.students.data}
           teachers={teacherStore.teachers.data}
           payments={paymentStore.payments.data}
@@ -99,6 +105,8 @@ const MoneyReport = (): JSX.Element => {
         />
       ) : (
         <DetailMode
+          date={date}
+          onDateChange={handleChangeDate}
           optionsType={optionsType}
           students={studentStore.students.data}
           teachers={teacherStore.teachers.data}

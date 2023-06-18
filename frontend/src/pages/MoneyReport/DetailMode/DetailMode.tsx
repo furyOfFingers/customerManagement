@@ -3,7 +3,6 @@ import { Moment } from "moment";
 import { Table, Select, DatePicker } from "antd";
 import { RangeValue } from "rc-picker/lib/interface";
 import { isEmpty } from "ramda";
-import moment from "moment";
 
 import { ITeacher } from "interfaces/teacher";
 import { IStudent } from "interfaces/student";
@@ -11,6 +10,7 @@ import { IGroup } from "interfaces/group";
 import { IPayment } from "interfaces/payment";
 import { IMoneyReportSettings } from "interfaces/moneyReport";
 import { columns } from "./constants";
+import { startDate, endDate } from "utils/date";
 import s from "./DetailMode.styl";
 
 const { RangePicker } = DatePicker;
@@ -29,6 +29,8 @@ interface IownProps {
   teachers: ITeacher[];
   payments: IPayment[];
   groups: IGroup[];
+  date: [string, string];
+  onDateChange: (date: [string, string]) => void;
 }
 
 const DetailMode = ({
@@ -37,12 +39,13 @@ const DetailMode = ({
   payments,
   groups,
   optionsType,
+  date,
+  onDateChange,
 }: IownProps): JSX.Element => {
   const [teacherId, setTeacherId] = useState("");
   const [studentId, setStudentId] = useState("");
   const [method, setMethod] = useState("");
   const [groupId, setGroupId] = useState("");
-  const [date, setDate] = useState<[string, string]>(["", ""]);
   const [type, setType] = useState("");
 
   const renderOptionsType = () => {
@@ -58,19 +61,19 @@ const DetailMode = ({
   };
 
   const studentInfo = (id: string) => {
-    const { lastname, firstname, patronymic } = students.find(
-      (item) => item.id === id
-    )!;
+    const found = students.find((item) => item.id === id)!;
 
-    return `${lastname} ${firstname[0].toUpperCase()}. ${patronymic[0].toUpperCase()}.`;
+    return `${
+      found.lastname
+    } ${found.firstname[0].toUpperCase()}. ${found.patronymic[0].toUpperCase()}.`;
   };
 
   const teacherInfo = (id: string) => {
-    const { lastname, firstname, patronymic } = teachers.find(
-      (item) => item.id === id
-    )!;
+    const found = teachers.find((item) => item.id === id)!;
 
-    return `${lastname} ${firstname[0].toUpperCase()}. ${patronymic[0].toUpperCase()}.`;
+    return `${
+      found.lastname
+    } ${found.firstname[0].toUpperCase()}. ${found.patronymic[0].toUpperCase()}.`;
   };
 
   const renderStudentOptions = () =>
@@ -107,7 +110,7 @@ const DetailMode = ({
   const handleRangePickerChange = (
     _: RangeValue<Moment>,
     formatString: [string, string]
-  ) => setDate(formatString);
+  ) => onDateChange(formatString);
 
   const returnData = () => {
     let filtered = [...payments];
@@ -133,11 +136,9 @@ const DetailMode = ({
     }
 
     if (date[0] === "") {
-      const from = moment().startOf("month").format("DD.MM.YYYY");
-      const to = moment().endOf("month").format("DD.MM.YYYY");
-
       filtered = filtered.filter(
-        (el: IPayment) => el.payment_date >= from && el.payment_date <= to
+        (el: IPayment) =>
+          el.payment_date >= startDate() && el.payment_date <= endDate()
       );
     } else {
       filtered = filtered.filter(

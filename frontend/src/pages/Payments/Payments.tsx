@@ -5,7 +5,7 @@ import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 import { RangeValue } from "rc-picker/lib/interface";
-import moment, { Moment } from "moment";
+import { Moment } from "moment";
 import { isEmpty } from "ramda";
 
 import { IPayment } from "interfaces/payment";
@@ -17,18 +17,17 @@ import groupStore from "store/group";
 import paymentStore from "store/payment";
 import moneyReportStore from "store/moneyReport";
 import studentStore from "store/student";
+import { startDate, endDate } from "utils/date";
 
 import s from "./Payments.styl";
 
 const { RangePicker } = DatePicker;
-const from = moment().startOf("month").format("DD.MM.YYYY");
-const to = moment().endOf("month").format("DD.MM.YYYY");
 
 const Payments = (): JSX.Element | null => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [picked, setPicked] = useState<IPayment | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
-  const [date, setDate] = useState<[string, string]>([from, to]);
+  const [date, setDate] = useState<[string, string]>([startDate(), endDate()]);
 
   useEffect(() => {
     teacherStore.getTeachers();
@@ -71,8 +70,8 @@ const Payments = (): JSX.Element | null => {
     formatString: [string, string]
   ) => {
     if (formatString[0] === "") {
-      paymentStore.getPayments(from, to);
-      return setDate([from, to]);
+      paymentStore.getPayments(startDate(), endDate());
+      return setDate([startDate(), endDate()]);
     }
     paymentStore.getPayments(formatString[0], formatString[1]);
     setDate(formatString);
