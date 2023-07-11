@@ -12,25 +12,7 @@ class User(Base):
     gender = Column(String(6), nullable=False)
     date_created = Column(DateTime, default=datetime.utcnow)
 
-    # def __init__(self, username=None, email=None, password=None, gender=None, date_created=None):
-    #     self.username = username
-    #     self.email = email
-    #     self.password = password
-    #     self.gender = gender
-    #     self.date_created = date_created
-
     def __repr__(self):
-        # return f'<{self.username} / {self.email} / {self.gender} / {self.date_created} / {self.password}>'
-        # date = {
-        #     "year": self.date_created.year,
-        #     "month": self.date_created.month,
-        #     "day": self.date_created.day,
-        #     "hour": self.date_created.hour,
-        #     "minute": self.date_created.minute,
-        #     "second": self.date_created.second,
-        #     "timestamp": datetime.timestamp(self.date_created)
-        # }
-
         return str(
             {
                 "id": str(self.id),
