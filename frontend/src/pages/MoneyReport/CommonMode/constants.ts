@@ -5,7 +5,7 @@ export const commonColumns = [
     key: "id",
   },
   {
-    title: "group name",
+    title: "groupName",
     dataIndex: "groupName",
     key: "groupName",
   },
@@ -38,7 +38,7 @@ export const personalColumns = [
     key: "teacher",
   },
   {
-    title: "all payments",
+    title: "allPayments",
     dataIndex: "allPayments",
     key: "allPayments",
   },

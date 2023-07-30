@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { Button, Divider, Form, InputNumber, Modal, Space, Spin } from "antd";
+import { useTranslation } from "react-i18next";
 
 import {
   IMoney,
@@ -7,7 +8,6 @@ import {
   IUpdateReportSettings,
 } from "interfaces/moneyReport";
 import { formItemLayout } from "common/utils/form";
-import { locale } from "common/locale";
 
 import s from "./Edit.styl";
 
@@ -18,18 +18,19 @@ interface IownProps {
   onUpdate: (data: IUpdateReportSettings) => Promise<void>;
 }
 
-const renderTitle = () => (
-  <Space align="baseline">
-    <p>Edit Money Report Settings</p>
-  </Space>
-);
-
 const Edit = ({
   settings,
   onCancel,
   onUpdate,
   isLoading,
 }: IownProps): JSX.Element => {
+  const { t } = useTranslation();
+  const renderTitle = () => (
+    <Space align="baseline">
+      <p>{t("common.panelControl.edit")}</p>
+    </Space>
+  );
+
   const handleSubmitClick = async (data: IUpdateReportSettings) => {
     const update = {} as IUpdateReportSettings;
     const money = {} as IMoney;
@@ -47,7 +48,7 @@ const Edit = ({
   };
 
   return (
-    <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
+    <Modal title={renderTitle()} open onCancel={onCancel} footer={null} mask>
       <Spin tip="Loading..." spinning={isLoading}>
         <div className={s.editWrapper}>
           <Form {...formItemLayout} onFinish={handleSubmitClick}>
@@ -59,8 +60,14 @@ const Edit = ({
                   <div className={s.infoWrappBlock}>
                     <div className={s.infoBlock}>
                       <div>id: {el.id}</div>
-                      <div>value: {el.value}</div>
-                      <div>hint: {el.hint}</div>
+
+                      <div>
+                        {t("report.fieldNames.value")}: {el.value}
+                      </div>
+
+                      <div>
+                        {t("report.fieldNames.hint")}: {el.hint}
+                      </div>
                     </div>
 
                     <div className={s.inputBlock}>
@@ -69,7 +76,11 @@ const Edit = ({
                         initialValue={el.subscription_payment}
                       >
                         <InputNumber
-                          addonBefore={<label>subscription</label>}
+                          addonBefore={
+                            <label>
+                              {t("report.fieldNames.subscription_payment")}
+                            </label>
+                          }
                         />
                       </Form.Item>
 
@@ -77,7 +88,13 @@ const Edit = ({
                         name={`${el.id} - teacher_salary`}
                         initialValue={el.teacher_salary}
                       >
-                        <InputNumber addonBefore={<label>teacher</label>} />
+                        <InputNumber
+                          addonBefore={
+                            <label>
+                              {t("report.fieldNames.teacher_salary")}
+                            </label>
+                          }
+                        />
                       </Form.Item>
                     </div>
                   </div>
@@ -88,11 +105,11 @@ const Edit = ({
             <Form.Item>
               <div className={s.buttons}>
                 <Button type="primary" htmlType="submit" loading={isLoading}>
-                  {locale.form.update}
+                  {t("common.panelControl.add")}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
-                  {locale.form.cancel}
+                  {t("common.panelControl.cancel")}
                 </Button>
               </div>
             </Form.Item>

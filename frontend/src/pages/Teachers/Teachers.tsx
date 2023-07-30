@@ -5,6 +5,7 @@ import { isEmpty } from "ramda";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
+import { useTranslation } from "react-i18next";
 
 import TeacherForm from "./TeacherForm";
 import TeachersTable from "./TeachersTable";
@@ -16,6 +17,7 @@ import s from "./Teachers.styl";
 import { ETableView } from "common/enums";
 
 const Teachers = (): JSX.Element | null => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedTeacher, setPickedTeacher] = useState<ITeacher | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
@@ -56,10 +58,12 @@ const Teachers = (): JSX.Element | null => {
 
     setPickedTeacher(selectedTeacher);
     Modal.confirm({
-      title: "Remove teacher",
-      content: `remove teacher ${selectedTeacher.lastname}
+      title: t("common.panelControl.remove"),
+      content: `${t("common.panelControl.remove")} ${selectedTeacher.lastname}
         ${selectedTeacher.firstname.substring(0, 1)}.
         ${selectedTeacher.patronymic.substring(0, 1)}. ?`,
+      okText: t("common.panelControl.ok"),
+      cancelText: t("common.panelControl.cancel"),
       onOk: () => confirmHandleRemove(selectedTeacher.id!),
       onCancel: handleResetTeacher,
     });
@@ -107,7 +111,7 @@ const Teachers = (): JSX.Element | null => {
       </div>
 
       <Button type="primary" onClick={handleOpenModal}>
-        Add teacher
+        {t("common.panelControl.add")}
       </Button>
 
       <div

@@ -4,7 +4,7 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 const path = require("path");
 
 const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./src/index.html",
+  template: "./public/index.html",
   filename: "./index.html",
 });
 

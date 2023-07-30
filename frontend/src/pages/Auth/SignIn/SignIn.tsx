@@ -28,11 +28,11 @@ const SignIn = ({ onFormChange, onFinish, disabled }: ISignIn): JSX.Element => {
       <Form
         onValuesChange={() => error.removeError("signin", "email")}
         validateMessages={schemeSignIn}
-        initialValues={{
-          remember: true,
-          email: "wills900@mail.ru",
-          password: "MaratAsadullaev",
-        }}
+        // initialValues={{
+        //   remember: true,
+        //   email: "wills900@mail.ru",
+        //   password: "MaratAsadullaev",
+        // }}
         onFinish={onSubmit}
       >
         <Form.Item

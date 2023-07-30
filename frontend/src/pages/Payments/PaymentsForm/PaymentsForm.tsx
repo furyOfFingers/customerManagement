@@ -13,13 +13,13 @@ import {
 } from "antd";
 import moment from "moment";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
 import groupStore from "store/group";
 import studentStore from "store/student";
 import paymentStore from "store/payment";
-import { locale } from "common/locale";
 import { schemeStudentForm } from "schemes/student";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
@@ -47,6 +47,7 @@ const StudentForm = ({
   onAdd,
   onCancel,
 }: IOwnProps): JSX.Element => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const setInitialValue = (picked: IPayment | null) => {
     if (!picked) {
@@ -87,7 +88,7 @@ const StudentForm = ({
       return [];
     }
 
-    return optionsType!.map((el: IMoneyReportSettings) => (
+    return optionsType?.map((el: IMoneyReportSettings) => (
       <Option key={el.id} value={el.value}>
         {el.value}
       </Option>
@@ -136,7 +137,7 @@ const StudentForm = ({
   };
 
   return (
-    <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
+    <Modal title={renderTitle()} open onCancel={onCancel} footer={null} mask>
       <Spin
         tip="Loading..."
         spinning={
@@ -155,7 +156,7 @@ const StudentForm = ({
           >
             <Form.Item
               name="type"
-              label="type"
+              label={t("common.fieldNames.type")}
               rules={[
                 {
                   required: true,
@@ -173,7 +174,7 @@ const StudentForm = ({
 
             <Form.Item
               name="payer_id"
-              label="payer"
+              label={t("common.fieldNames.payer")}
               rules={[
                 {
                   required: true,
@@ -187,7 +188,7 @@ const StudentForm = ({
 
             <Form.Item
               name="teacher_id"
-              label="teacher"
+              label={t("common.fieldNames.teacher")}
               rules={[
                 {
                   required: true,
@@ -205,7 +206,7 @@ const StudentForm = ({
 
             <Form.Item
               name="group_id"
-              label="group"
+              label={t("common.fieldNames.groupName")}
               rules={[
                 {
                   required: true,
@@ -223,7 +224,7 @@ const StudentForm = ({
 
             <Form.Item
               name="payment_date"
-              label="payment date"
+              label={t("common.fieldNames.paymentDate")}
               rules={[
                 {
                   required: true,
@@ -235,7 +236,7 @@ const StudentForm = ({
 
             <Form.Item
               name="payment_amount"
-              label="payment amount"
+              label={t("common.fieldNames.paymentAmount")}
               rules={[
                 {
                   required: true,
@@ -248,7 +249,11 @@ const StudentForm = ({
               />
             </Form.Item>
 
-            <Form.Item name="method" initialValue="cash" label="payment type">
+            <Form.Item
+              name="method"
+              initialValue="cash"
+              label={t("common.fieldNames.paymentType")}
+            >
               <Radio.Group buttonStyle="outline">
                 <Radio.Button value="cash">cash</Radio.Button>
                 <Radio.Button value="card">card</Radio.Button>
@@ -265,11 +270,11 @@ const StudentForm = ({
                     isPending(studentStore.createRequest)
                   }
                 >
-                  Add
+                  {t("common.panelControl.add")}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
-                  {locale.form.cancel}
+                  {t("common.panelControl.cancel")}
                 </Button>
               </div>
             </Form.Item>

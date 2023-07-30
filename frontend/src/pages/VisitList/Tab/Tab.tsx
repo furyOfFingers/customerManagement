@@ -2,6 +2,7 @@ import { Button, Radio, RadioChangeEvent } from "antd";
 import cls from "classnames";
 import React, { useState, useEffect } from "react";
 import moment, { Moment } from "moment";
+import { useTranslation } from "react-i18next";
 
 import { week } from "constants/weekDay";
 import { IStudent } from "interfaces/student";
@@ -30,6 +31,7 @@ const Tab = ({
   visitList,
   groupId,
 }: IownProps): JSX.Element => {
+  const { t } = useTranslation();
   const [day, setDay] = useState<string[]>(initial);
   const [isChanges, setIsChanges] = useState(false);
   const [header, setHeader] = useState<string[]>();
@@ -120,7 +122,7 @@ const Tab = ({
     <table>
       <thead>
         <tr>
-          <th>Students</th>
+          <th>{t("sidebar.students")}</th>
 
           {header?.map((el, i) => {
             const scheduleDay = scheduleList?.schedule[el];
@@ -128,7 +130,8 @@ const Tab = ({
             return (
               <th key={i}>
                 <div className={cls(s.headWrap, { [s.holiday]: scheduleDay })}>
-                  <span>{el.substring(0, 2)}</span>
+                  {/* слайсится по первым 2 символам и в случае увеличения символов нужно изменять locale */}
+                  <span>{t(`visitList.weekDays.${el.substring(0, 2)}`)}</span>
                   <span>{i + 1}</span>
 
                   {scheduleDay && (
@@ -190,11 +193,11 @@ const Tab = ({
       {renderTable()}
 
       <Button type="primary" disabled={!isChanges} onClick={handleSubmit}>
-        save
+        {t("common.panelControl.update")}
       </Button>
 
       <Button disabled={!isChanges} onClick={handleDecline}>
-        cancel
+        {t("common.panelControl.cancel")}
       </Button>
     </div>
   );

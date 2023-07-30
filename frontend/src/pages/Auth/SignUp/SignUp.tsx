@@ -28,12 +28,12 @@ const SignUp = ({ onFormChange, onFinish, disabled }: ISignUp): JSX.Element => {
       <Form
         validateMessages={schemeSignUp}
         onFinish={onSubmit}
-        initialValues={{
-          remember: true,
-          username: "MaratAsadullaev",
-          password: "MaratAsadullaev",
-          email: "wills900@mail.ru",
-        }}
+        // initialValues={{
+        //   remember: true,
+        //   username: "MaratAsadullaev",
+        //   password: "MaratAsadullaev",
+        //   email: "wills900@mail.ru",
+        // }}
       >
         <Form.Item
           name="username"

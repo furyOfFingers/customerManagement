@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Button, Modal, Spin, Space } from "antd";
+import { useTranslation } from "react-i18next";
 
 import { isPending } from "common/utils/data.utils";
 import spinStore from "store/spin";
 import scheduleListStore from "store/scheduleList";
-import { locale } from "common/locale";
 import { EModalMode } from "common/enums";
 import { schemeScheduleList } from "schemes/scheduleList";
-import { initialValues } from "./constants";
+// import { initialValues } from "./constants";
 import { IScheduleList } from "interfaces/scheduleList";
 import ClassDatePicker from "modules/ClassDatePicker/ClassDatePicker";
 import { ISchedule } from "interfaces/schedule";
@@ -28,13 +28,15 @@ const ScheduleListForm = ({
   onUpdate,
   onAdd,
 }: IOwnProps): JSX.Element => {
+  const { t } = useTranslation();
   const [mode] = useState(getModalMode(pickedScheduleList));
   const [schedule, setSchedule] = useState<ISchedule>();
+  const endName = ButtonsConfig[mode].SubmitButton.title;
 
   const setInitialValue = (pickedScheduleList: IScheduleList | null) => {
-    if (!pickedScheduleList) {
-      return initialValues;
-    }
+    // if (!pickedScheduleList) {
+    //   return initialValues;
+    // }
 
     return {
       remember: true,
@@ -58,7 +60,11 @@ const ScheduleListForm = ({
 
   const renderTitle = () => (
     <Space align="baseline">
-      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} schedule list`}</p>
+      <p>{`${
+        mode === EModalMode.ADD
+          ? t("common.panelControl.add")
+          : t("common.panelControl.edit")
+      }`}</p>
     </Space>
   );
 
@@ -70,7 +76,7 @@ const ScheduleListForm = ({
     <Modal
       className={s.modal}
       title={renderTitle()}
-      visible
+      open
       onCancel={onCancel}
       footer={null}
     >
@@ -91,7 +97,7 @@ const ScheduleListForm = ({
           >
             <Form.Item
               name="schedule_list_name"
-              label="schedule_list_name"
+              label={t("common.fieldNames.scheduleListName")}
               rules={[
                 {
                   required: true,
@@ -106,7 +112,10 @@ const ScheduleListForm = ({
               />
             </Form.Item>
 
-            <Form.Item name="class_date" label="class_date">
+            <Form.Item
+              name="class_date"
+              label={t("common.fieldNames.classDate")}
+            >
               <ClassDatePicker
                 picked={pickedScheduleList}
                 onClick={handleClick}
@@ -123,11 +132,11 @@ const ScheduleListForm = ({
                     isPending(scheduleListStore.createRequest)
                   }
                 >
-                  {ButtonsConfig[mode].SubmitButton.title}
+                  {t(`common.panelControl.${endName}`)}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
-                  {locale.form.cancel}
+                  {t("common.panelControl.cancel")}
                 </Button>
               </div>
             </Form.Item>

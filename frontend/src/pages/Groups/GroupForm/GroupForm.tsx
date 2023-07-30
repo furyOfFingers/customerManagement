@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Button, Modal, Spin, Space, Select } from "antd";
+import { useTranslation } from "react-i18next";
 
 import { IGroup, IGroupScheduleList } from "interfaces/group";
 import { IStudent } from "interfaces/student";
@@ -9,10 +10,9 @@ import teacherStore from "store/teacher";
 import studentStore from "store/student";
 import scheduleListStore from "store/scheduleList";
 import groupStore from "store/group";
-import { locale } from "common/locale";
 import { EModalMode } from "common/enums";
 import { schemeGroupForm } from "schemes/group";
-import { initialValues } from "./constants";
+// import { initialValues } from "./constants";
 import { isPending } from "common/utils/data.utils";
 import { ITeacher } from "interfaces/teacher";
 import { IScheduleList } from "interfaces/scheduleList";
@@ -34,12 +34,14 @@ const GroupForm = ({
   onUpdate,
   onAdd,
 }: IOwnProps): JSX.Element => {
+  const { t } = useTranslation();
   const [mode] = useState(getModalMode(pickedGroup));
+  const endName = ButtonsConfig[mode].SubmitButton.title;
 
   const setInitialValue = (pickedGroup: IGroup | null) => {
-    if (!pickedGroup) {
-      return initialValues;
-    }
+    // if (!pickedGroup) {
+    //   return initialValues;
+    // }
 
     return {
       remember: true,
@@ -93,7 +95,11 @@ const GroupForm = ({
 
   const renderTitle = () => (
     <Space align="baseline">
-      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} group`}</p>
+      <p>{`${
+        mode === EModalMode.ADD
+          ? t("common.panelControl.add")
+          : t("common.panelControl.edit")
+      }`}</p>
     </Space>
   );
 
@@ -101,7 +107,7 @@ const GroupForm = ({
     <Modal
       className={s.modal}
       title={renderTitle()}
-      visible
+      open
       onCancel={onCancel}
       footer={null}
       mask
@@ -123,7 +129,7 @@ const GroupForm = ({
           >
             <Form.Item
               name="group_name"
-              label="group_name"
+              label={t("common.fieldNames.groupName")}
               rules={[
                 {
                   required: true,
@@ -137,7 +143,7 @@ const GroupForm = ({
 
             <Form.Item
               name="teacher"
-              label="teacher"
+              label={t("common.fieldNames.teacher")}
               rules={[
                 {
                   required: true,
@@ -155,7 +161,7 @@ const GroupForm = ({
 
             <Form.Item
               name="students"
-              label="students"
+              label={t("common.fieldNames.students")}
               rules={[
                 {
                   required: true,
@@ -174,7 +180,7 @@ const GroupForm = ({
 
             <Form.Item
               name="class_date"
-              label="class_date"
+              label={t("common.fieldNames.classDate")}
               rules={[
                 {
                   required: true,
@@ -200,11 +206,11 @@ const GroupForm = ({
                     isPending(groupStore.createRequest)
                   }
                 >
-                  {ButtonsConfig[mode].SubmitButton.title}
+                  {t(`common.panelControl.${endName}`)}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
-                  {locale.form.cancel}
+                  {t("common.panelControl.cancel")}
                 </Button>
               </div>
             </Form.Item>

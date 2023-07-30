@@ -10,93 +10,54 @@ import {
   ScheduleOutlined,
   PoundCircleOutlined,
 } from "@ant-design/icons";
-import { navigate, usePath } from "hookrouter";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import s from "./Sidebar.styl";
 
-const { TabPane } = Tabs;
-
-const tabs = [
+const tabs: { Icon: unknown; key: string }[] = [
   {
-    tab: (
-      <>
-        <AndroidOutlined />
-        <span className={s.tabText}>Students</span>
-      </>
-    ),
+    Icon: AndroidOutlined,
     key: "students",
   },
   {
-    tab: (
-      <>
-        <UserOutlined />
-        <span className={s.tabText}>Teachers</span>
-      </>
-    ),
+    Icon: UserOutlined,
     key: "teachers",
   },
   {
-    tab: (
-      <>
-        <ScheduleOutlined />
-        <span className={s.tabText}>Schedule List</span>
-      </>
-    ),
+    Icon: ScheduleOutlined,
     key: "scheduleList",
   },
   {
-    tab: (
-      <>
-        <SolutionOutlined />
-        <span className={s.tabText}>Visit List</span>
-      </>
-    ),
+    Icon: SolutionOutlined,
     key: "visitList",
   },
   {
-    tab: (
-      <>
-        <TeamOutlined />
-        <span className={s.tabText}>Groups</span>
-      </>
-    ),
+    Icon: TeamOutlined,
     key: "groups",
   },
   {
-    tab: (
-      <>
-        <PoundCircleOutlined />
-        <span className={s.tabText}>Payments</span>
-      </>
-    ),
+    Icon: PoundCircleOutlined,
     key: "payments",
   },
   {
-    tab: (
-      <>
-        <FundProjectionScreenOutlined />
-        <span className={s.tabText}>Money report</span>
-      </>
-    ),
+    Icon: FundProjectionScreenOutlined,
     key: "moneyReport",
   },
   {
-    tab: (
-      <>
-        <FileUnknownOutlined />
-        <span className={s.tabText}>Help</span>
-      </>
-    ),
+    Icon: FileUnknownOutlined,
     key: "help",
   },
 ];
 
 function Sidebar() {
-  const path = usePath();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("students");
 
   useEffect(() => {
-    setActiveTab(path.replace("/", ""));
+    setActiveTab(pathname.replace("/", ""));
   }, []);
 
   const handleChange = (tab: string) => {
@@ -104,14 +65,25 @@ function Sidebar() {
     navigate(`/${tab}`);
   };
 
-  const renderTabs = () =>
-    tabs.map(({ tab, key }) => <TabPane tab={tab} key={key} />);
-
   return (
     <div className={s.container}>
-      <Tabs activeKey={activeTab} tabPosition="left" onChange={handleChange}>
-        {renderTabs()}
-      </Tabs>
+      <Tabs
+        activeKey={activeTab}
+        tabPosition="left"
+        onChange={handleChange}
+        items={tabs.map(({ Icon, key }) => {
+          return {
+            label: (
+              <div>
+                <Icon />
+                <span>{t(`sidebar.${key}`)}</span>
+              </div>
+            ),
+            key,
+            // children: <span className={s.tabText}>{key}</span>,
+          };
+        })}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { DatePicker, Table } from "antd";
 import React from "react";
 import { Moment } from "moment";
 import { RangeValue } from "rc-picker/lib/interface";
+import { useTranslation } from "react-i18next";
 
 import { ITeacher } from "interfaces/teacher";
 import { IStudent } from "interfaces/student";
@@ -33,6 +34,7 @@ const CommonMode = ({
   date,
   onDateChange,
 }: IOwnProps): JSX.Element => {
+  const { t } = useTranslation();
   const filterByDate = (payments: IPayment[]) => {
     let filtered = [...payments];
 
@@ -199,17 +201,25 @@ const CommonMode = ({
       </div>
 
       <div className={s.tables}>
-        <Table
-          columns={commonColumns}
-          dataSource={returnCommonData()}
-          pagination={false}
-        />
+        <Table dataSource={returnCommonData()} pagination={false}>
+          {Object.keys(commonColumns).map((el) => (
+            <Table.Column
+              key={commonColumns[el].key}
+              title={t(`common.fieldNames.${commonColumns[el].title}`)}
+              dataIndex={commonColumns[el].dataIndex}
+            />
+          ))}
+        </Table>
 
-        <Table
-          columns={personalColumns}
-          dataSource={returnPersonalData()}
-          pagination={false}
-        />
+        <Table dataSource={returnPersonalData()} pagination={false}>
+          {Object.keys(personalColumns).map((el) => (
+            <Table.Column
+              key={personalColumns[el].key}
+              title={t(`common.fieldNames.${personalColumns[el].title}`)}
+              dataIndex={personalColumns[el].dataIndex}
+            />
+          ))}
+        </Table>
       </div>
     </div>
   );

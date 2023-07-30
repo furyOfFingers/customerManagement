@@ -1,9 +1,6 @@
 import React from "react";
-import { observer } from "mobx-react";
-import { useRoutes, navigate } from "hookrouter";
-import { isEmpty } from "ramda";
 
-import Auth from "pages/Auth";
+// import Auth from "pages/Auth";
 import PageWrapper from "components/PageWrapper";
 import Students from "pages/Students";
 import Teachers from "pages/Teachers";
@@ -13,43 +10,55 @@ import MoneyReport from "pages/MoneyReport";
 import ScheduleList from "pages/ScheduleList";
 import Help from "pages/Help";
 import VisitList from "pages/VisitList";
-import userStore from "store/user";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "components/Layout";
 
-import s from "./MainRouter.styl";
+const wrapper = (children: JSX.Element) => (
+  <PageWrapper>{children}</PageWrapper>
+);
 
-const MainRouter = (): JSX.Element => {
-  const isAuth = !isEmpty(userStore.get()?.user);
+const router = createBrowserRouter([
+  {
+    id: "root",
+    path: "/",
+    Component: Layout,
+    children: [
+      {
+        path: "students",
+        Component: () => wrapper(<Students />),
+      },
+      {
+        path: "teachers",
+        Component: () => wrapper(<Teachers />),
+      },
+      {
+        path: "scheduleList",
+        Component: () => wrapper(<ScheduleList />),
+      },
+      {
+        path: "visitList",
+        Component: () => wrapper(<VisitList />),
+      },
+      {
+        path: "groups",
+        Component: () => wrapper(<Groups />),
+      },
+      {
+        path: "payments",
+        Component: () => wrapper(<Payments />),
+      },
+      {
+        path: "moneyReport",
+        Component: () => wrapper(<MoneyReport />),
+      },
+      {
+        path: "help",
+        Component: () => wrapper(<Help />),
+      },
+    ],
+  },
+]);
 
-  const wrapper = (children: JSX.Element) => (
-    <PageWrapper>{children}</PageWrapper>
-  );
+const MainRouter = (): JSX.Element => <RouterProvider router={router} />;
 
-  const authRoutes = {
-    "/": () => <Auth />,
-    "/students": () => wrapper(<Students />),
-    "/teachers": () => wrapper(<Teachers />),
-    "/scheduleList": () => wrapper(<ScheduleList />),
-    "/visitList": () => wrapper(<VisitList />),
-    "/groups": () => wrapper(<Groups />),
-    "/payments": () => wrapper(<Payments />),
-    "/moneyReport": () => wrapper(<MoneyReport />),
-    "/help": () => wrapper(<Help />),
-    // '/products/:id': ({id}) => <ProductDetails id={id} />
-  };
-
-  const notAuthRoutes = {
-    "/": () => <Auth />,
-  };
-
-  const authResult = useRoutes(authRoutes);
-  const notAuthResult = useRoutes(notAuthRoutes);
-
-  if (isAuth) {
-    return authResult || <div className={s.container}>not found</div>;
-  } else {
-    navigate("/");
-    return notAuthResult;
-  }
-};
-
-export default observer(MainRouter);
+export default MainRouter;
