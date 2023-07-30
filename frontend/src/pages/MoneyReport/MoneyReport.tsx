@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Button } from "antd";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import CommonMode from "./CommonMode";
 import paymentStore from "store/payment";
@@ -22,6 +23,7 @@ import { startDate, endDate } from "utils/date";
 import s from "./MoneyReport.styl";
 
 const MoneyReport = (): JSX.Element => {
+  const { t } = useTranslation();
   const [isCommonMode, setIsCommonMode] = useState(false);
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
@@ -79,16 +81,16 @@ const MoneyReport = (): JSX.Element => {
     <div className={s.container}>
       <div className={s.settings}>
         <Button type="link" onClick={handleChangeReportMode}>
-          {isCommonMode ? "detail mode" : "common mode"}
+          {isCommonMode ? t("report.detailMode") : t("report.commonMode")}
         </Button>
 
         <Button type="primary" onClick={handleOpenAddModal}>
-          add settings
+          {t("common.panelControl.add")}
         </Button>
 
         {!isEmpty(settings) && (
           <Button type="primary" onClick={handleOpenEditModal}>
-            edit settings
+            {t("common.panelControl.edit")}
           </Button>
         )}
       </div>

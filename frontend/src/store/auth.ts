@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 import axios, { AxiosError } from "axios";
-import { navigate } from "hookrouter";
 
 import spinStore from "store/spin";
 import error from "store/errorHandle";
@@ -22,7 +21,7 @@ class Auth {
           user.setUser(res.data);
         }
       })
-      .then(() => navigate("/students"))
+      // .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
@@ -38,7 +37,7 @@ class Auth {
           user.setUser(res.data);
         }
       })
-      .then(() => navigate("/students"))
+      // .then(() => navigate("/students"))
       .catch((err: AxiosError) => {
         error.errorHandle(err);
       })
@@ -48,7 +47,7 @@ class Auth {
   logout() {
     user.removeUser();
     localStorage.removeItem("user");
-    navigate("/");
+    // navigate("/");
   }
 }
 

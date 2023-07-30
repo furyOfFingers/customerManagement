@@ -4,6 +4,7 @@ import { Button, Modal } from "antd";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
+import { useTranslation } from "react-i18next";
 
 import { IStudent } from "interfaces/student";
 import StudentForm from "./StudentForm";
@@ -16,6 +17,7 @@ import Uploader from "components/Uploader";
 import s from "./Students.styl";
 
 const Students = (): JSX.Element | null => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedStudent, setPickedStudent] = useState<IStudent | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
@@ -52,10 +54,12 @@ const Students = (): JSX.Element | null => {
 
     setPickedStudent(selectedStudent);
     Modal.confirm({
-      title: "Remove student",
-      content: `remove student ${selectedStudent.lastname}
+      title: t("common.panelControl.remove"),
+      content: `${t("common.panelControl.remove")} ${selectedStudent.lastname}
         ${selectedStudent.firstname.substring(0, 1)}.
         ${selectedStudent.patronymic.substring(0, 1)}. ?`,
+      okText: t("common.panelControl.ok"),
+      cancelText: t("common.panelControl.cancel"),
       onOk: () => confirmHandleRemove(selectedStudent.id!),
       onCancel: handleResetStudent,
     });
@@ -116,16 +120,18 @@ const Students = (): JSX.Element | null => {
 
       <div className={s.main_buttons}>
         <Button type="primary" onClick={handleOpenModal}>
-          Add student
+          {t("common.panelControl.add")}
         </Button>
 
         <Uploader
           onRemove={handleRemoveFile}
-          text="Upload few students"
+          text={t("common.panelControl.addFew")}
           onFileLoader={onFileLoader}
         />
 
-        {file && <Button onClick={handleUpload}>Upload Students</Button>}
+        {file && (
+          <Button onClick={handleUpload}>{t("common.panelControl.add")}</Button>
+        )}
       </div>
 
       <div

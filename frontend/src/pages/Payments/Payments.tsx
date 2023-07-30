@@ -7,6 +7,7 @@ import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
 import { RangeValue } from "rc-picker/lib/interface";
 import { Moment } from "moment";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import { IPayment } from "interfaces/payment";
 import { ETableView } from "common/enums";
@@ -24,6 +25,7 @@ import s from "./Payments.styl";
 const { RangePicker } = DatePicker;
 
 const Payments = (): JSX.Element | null => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [picked, setPicked] = useState<IPayment | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
@@ -58,8 +60,12 @@ const Payments = (): JSX.Element | null => {
 
     setPicked(selected);
     Modal.confirm({
-      title: "Remove payment",
-      content: `remove payment ${selected.method} ${selected.payment_amount}?`,
+      title: t("common.panelControl.remove"),
+      content: `${t("common.panelControl.remove")} ${selected.method} ${
+        selected.payment_amount
+      }?`,
+      okText: t("common.panelControl.ok"),
+      cancelText: t("common.panelControl.cancel"),
       onOk: () => confirmHandleRemove(selected.id!),
       onCancel: handleReset,
     });
@@ -115,7 +121,7 @@ const Payments = (): JSX.Element | null => {
       </div>
 
       <Button type="primary" onClick={handleOpenModal}>
-        Add payment
+        {t("common.panelControl.add")}
       </Button>
 
       <div

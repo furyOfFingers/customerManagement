@@ -1,5 +1,11 @@
 import { EModalMode, ETableView } from "common/enums";
-import { locale } from "common/locale";
+
+const locale = {
+  form: {
+    update: "update",
+    add: "add",
+  },
+};
 
 export const getModalMode = (value?: unknown) => () =>
   value ? EModalMode.EDIT : EModalMode.ADD;

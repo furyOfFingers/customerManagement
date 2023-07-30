@@ -4,6 +4,7 @@ import { Button, Modal } from "antd";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
+import { useTranslation } from "react-i18next";
 
 import { ETableView } from "common/enums";
 import teacherStore from "store/teacher";
@@ -17,6 +18,7 @@ import GroupForm from "./GroupForm";
 import s from "./Groups.styl";
 
 const Groups = (): JSX.Element | null => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedGroup, setPickedGroup] = useState<IGroup | null>(null);
   const [tableView, setTableView] = useState<ETableView>(ETableView.LIST);
@@ -54,8 +56,12 @@ const Groups = (): JSX.Element | null => {
 
     setPickedGroup(selectedGroup);
     Modal.confirm({
-      title: "Remove group",
-      content: `remove group ${selectedGroup.group_name} ?`,
+      title: t("common.panelControl.remove"),
+      content: `${t("common.panelControl.remove")} ${
+        selectedGroup.group_name
+      } ?`,
+      okText: t("common.panelControl.ok"),
+      cancelText: t("common.panelControl.cancel"),
       onOk: () => confirmHandleRemove(selectedGroup.id!),
       onCancel: handleResetGroup,
     });
@@ -101,7 +107,7 @@ const Groups = (): JSX.Element | null => {
       </div>
 
       <Button type="primary" onClick={handleOpenModal}>
-        Add group
+        {t("common.panelControl.add")}
       </Button>
 
       <div

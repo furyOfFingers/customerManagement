@@ -4,6 +4,7 @@ import { Button, Modal } from "antd";
 import cls from "classnames";
 import AppstoreOutlined from "@ant-design/icons/lib/icons/AppstoreOutlined";
 import MenuOutlined from "@ant-design/icons/lib/icons/MenuOutlined";
+import { useTranslation } from "react-i18next";
 
 import ScheduleListForm from "./ScheduleListForm";
 import ScheduleListTable from "./ScheduleListTable";
@@ -14,6 +15,7 @@ import { IScheduleList } from "interfaces/scheduleList";
 import s from "./ScheduleList.styl";
 
 const ScheduleList = (): JSX.Element | null => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pickedScheduleList, setPickedScheduleList] =
     useState<IScheduleList | null>(null);
@@ -50,8 +52,12 @@ const ScheduleList = (): JSX.Element | null => {
     setPickedScheduleList(selected);
 
     Modal.confirm({
-      title: "Remove schedule list",
-      content: `remove schedule list ${selected.schedule_list_name} ?`,
+      title: t("common.panelControl.remove"),
+      content: `${t("common.panelControl.remove")} ${
+        selected.schedule_list_name
+      } ?`,
+      okText: t("common.panelControl.ok"),
+      cancelText: t("common.panelControl.cancel"),
       onOk: () => confirmHandleRemove(selected.id!),
       onCancel: handleReset,
     });
@@ -99,7 +105,7 @@ const ScheduleList = (): JSX.Element | null => {
       </div>
 
       <Button type="primary" onClick={handleOpenModal}>
-        Add schedule list
+        {t("common.panelControl.add")}
       </Button>
 
       <div

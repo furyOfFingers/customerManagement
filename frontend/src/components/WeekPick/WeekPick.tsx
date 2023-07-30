@@ -29,9 +29,8 @@ function WeekPick({
     onClickDay(day);
   };
 
-  const handleSelect = (day: string, timeString: string[]) => {
+  const handleSelect = (day: string, timeString: string[]) =>
     onChangeDate([day, ...timeString]);
-  };
 
   const renderBody = () =>
     Object.values(week).map((day) => (

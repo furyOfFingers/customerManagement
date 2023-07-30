@@ -14,6 +14,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import { IStudent } from "interfaces/student";
 import { isPending } from "common/utils/data.utils";
@@ -23,7 +24,6 @@ import { ITeacher } from "interfaces/teacher";
 import spinStore from "store/spin";
 import teacherStore from "store/teacher";
 import studentStore from "store/student";
-import { locale } from "common/locale";
 import { EModalMode } from "common/enums";
 import { schemeTeacherForm } from "schemes/teacher";
 import { initialValues } from "./constants";
@@ -48,8 +48,10 @@ const TeacherForm = ({
   onUpdate,
   onAdd,
 }: IOwnProps): JSX.Element => {
+  const { t } = useTranslation();
   const [image, setImage] = useState<Blob>();
   const [mode] = useState(getModalMode(pickedTeacher));
+  const endName = ButtonsConfig[mode].SubmitButton.title;
 
   const setInitialValue = (pickedTeacher: ITeacher | null) => {
     if (!pickedTeacher) {
@@ -104,12 +106,16 @@ const TeacherForm = ({
         src={pickedTeacher?.photo}
         icon={<UserOutlined />}
       />
-      <p>{`${mode === EModalMode.ADD ? "Add" : "Edit"} teacher`}</p>
+      <p>{`${
+        mode === EModalMode.ADD
+          ? t("common.panelControl.add")
+          : t("common.panelControl.edit")
+      }`}</p>
     </Space>
   );
 
   return (
-    <Modal title={renderTitle()} visible onCancel={onCancel} footer={null} mask>
+    <Modal title={renderTitle()} open onCancel={onCancel} footer={null} mask>
       <Spin
         tip="Loading..."
         spinning={
@@ -127,7 +133,7 @@ const TeacherForm = ({
           >
             <Form.Item
               name="lastname"
-              label="lastname"
+              label={t("common.fieldNames.lastname")}
               rules={[
                 {
                   required: true,
@@ -141,7 +147,7 @@ const TeacherForm = ({
 
             <Form.Item
               name="firstname"
-              label="firstname"
+              label={t("common.fieldNames.firstname")}
               rules={[
                 {
                   required: true,
@@ -155,7 +161,7 @@ const TeacherForm = ({
 
             <Form.Item
               name="patronymic"
-              label="patronymic"
+              label={t("common.fieldNames.patronymic")}
               rules={[
                 {
                   required: true,
@@ -169,7 +175,7 @@ const TeacherForm = ({
 
             <Form.Item
               name="phone"
-              label="phone"
+              label={t("common.fieldNames.phone")}
               rules={[
                 {
                   required: true,
@@ -183,7 +189,7 @@ const TeacherForm = ({
 
             <Form.Item
               name="birthday"
-              label="birthday"
+              label={t("common.fieldNames.birthday")}
               rules={[
                 {
                   required: true,
@@ -194,7 +200,10 @@ const TeacherForm = ({
             </Form.Item>
 
             {!isEmpty(studentStore.students.data) && (
-              <Form.Item name="students" label="students">
+              <Form.Item
+                name="students"
+                label={t("common.fieldNames.students")}
+              >
                 <Select
                   defaultValue={pickedTeacher?.students}
                   allowClear
@@ -206,14 +215,25 @@ const TeacherForm = ({
               </Form.Item>
             )}
 
-            <Form.Item name="photo" label="photo">
-              <Uploader onFileLoader={onFileLoader} />
+            <Form.Item name="photo" label={t("common.fieldNames.photo")}>
+              <Uploader
+                text={t("common.fieldNames.uploadPhoto")}
+                onFileLoader={onFileLoader}
+              />
             </Form.Item>
 
-            <Form.Item name="gender" label="gender" initialValue="male">
+            <Form.Item
+              name="gender"
+              label={t("common.fieldNames.gender")}
+              initialValue="male"
+            >
               <Radio.Group buttonStyle="outline" disabled={spinStore.get()}>
-                <Radio.Button value="male">male</Radio.Button>
-                <Radio.Button value="female">female</Radio.Button>
+                <Radio.Button value="male">
+                  {t("common.fieldNames.male")}
+                </Radio.Button>
+                <Radio.Button value="female">
+                  {t("common.fieldNames.female")}
+                </Radio.Button>
               </Radio.Group>
             </Form.Item>
 
@@ -227,11 +247,11 @@ const TeacherForm = ({
                     isPending(teacherStore.createRequest)
                   }
                 >
-                  {ButtonsConfig[mode].SubmitButton.title}
+                  {t(`common.panelControl.${endName}`)}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
-                  {locale.form.cancel}
+                  {t("common.panelControl.cancel")}
                 </Button>
               </div>
             </Form.Item>

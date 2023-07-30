@@ -3,6 +3,7 @@ import { Moment } from "moment";
 import { Table, Select, DatePicker } from "antd";
 import { RangeValue } from "rc-picker/lib/interface";
 import { isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import { ITeacher } from "interfaces/teacher";
 import { IStudent } from "interfaces/student";
@@ -42,6 +43,7 @@ const DetailMode = ({
   date,
   onDateChange,
 }: IownProps): JSX.Element => {
+  const { t } = useTranslation();
   const [teacherId, setTeacherId] = useState("");
   const [studentId, setStudentId] = useState("");
   const [method, setMethod] = useState("");
@@ -64,8 +66,8 @@ const DetailMode = ({
     const found = students.find((item) => item.id === id)!;
 
     return `${
-      found.lastname
-    } ${found.firstname[0].toUpperCase()}. ${found.patronymic[0].toUpperCase()}.`;
+      found?.lastname
+    } ${found?.firstname[0].toUpperCase()}. ${found?.patronymic[0].toUpperCase()}.`;
   };
 
   const teacherInfo = (id: string) => {
@@ -211,7 +213,15 @@ const DetailMode = ({
         </Select>
       </div>
 
-      <Table columns={columns} dataSource={returnData()} pagination={false} />
+      <Table dataSource={returnData()} pagination={false}>
+        {Object.keys(columns).map((el) => (
+          <Table.Column
+            key={columns[el].key}
+            title={t(`common.fieldNames.${columns[el].title}`)}
+            dataIndex={columns[el].dataIndex}
+          />
+        ))}
+      </Table>
     </>
   );
 };
