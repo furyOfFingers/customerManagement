@@ -37,11 +37,14 @@ function Header(): JSX.Element {
     },
   ];
 
+  const setLanguage = (lang: string) => {
+    localStorage.setItem("language", lang);
+    i18n.changeLanguage(lang);
+  };
+
   const onClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "2") {
-      i18n.language === "en"
-        ? i18n.changeLanguage("ru")
-        : i18n.changeLanguage("en");
+      i18n.language === "en" ? setLanguage("ru") : setLanguage("en");
     }
   };
 
