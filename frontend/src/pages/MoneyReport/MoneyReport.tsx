@@ -59,7 +59,10 @@ const MoneyReport = (): JSX.Element => {
     await handleRequest();
   };
 
-  const handleChangeDate = (value: [string, string]) => setDate(value);
+  const handleChangeDate = (value: [string, string]) => {
+    setDate(value);
+    paymentStore.getPayments(value[0], value[1]);
+  };
 
   const handleRequest = async () => {
     await moneyReportStore.getMoneyReportSettings();

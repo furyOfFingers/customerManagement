@@ -105,7 +105,7 @@ const Edit = ({
             <Form.Item>
               <div className={s.buttons}>
                 <Button type="primary" htmlType="submit" loading={isLoading}>
-                  {t("common.panelControl.add")}
+                  {t("common.panelControl.edit")}
                 </Button>
 
                 <Button type="ghost" onClick={onCancel}>
