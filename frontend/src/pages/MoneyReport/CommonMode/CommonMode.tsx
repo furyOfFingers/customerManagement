@@ -77,7 +77,7 @@ const CommonMode = ({
 
     filterByDate(payments).forEach((payment) => {
       if (payment.group_id === groupId) {
-        sum = sum + payment.payment_amount;
+        sum = sum + Number(payment.payment_amount);
       }
     });
 
@@ -131,7 +131,10 @@ const CommonMode = ({
       if (payment.teacher_id === id) {
         moneyReport?.forEach((report) => {
           if (report.value === payment.type) {
-            count = count + Number(report.subscription_payment);
+            count =
+              count +
+              (Number(report.subscription_payment) -
+                Number(report.teacher_salary));
           }
         });
       }
@@ -148,7 +151,7 @@ const CommonMode = ({
         payment.teacher_id === id &&
         payment.type == String(EnumPayment.Trial)
       ) {
-        count = count + payment.payment_amount;
+        count = count + Number(payment.payment_amount);
       }
     });
 
@@ -160,7 +163,7 @@ const CommonMode = ({
 
     filterByDate(payments).forEach((payment) => {
       if (payment.teacher_id === id) {
-        sum = sum + payment.payment_amount;
+        sum = sum + Number(payment.payment_amount);
       }
     });
 
