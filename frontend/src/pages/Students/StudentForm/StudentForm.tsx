@@ -67,6 +67,7 @@ const StudentForm = ({
       phone: pickedStudent?.phone,
       birthday: moment(pickedStudent?.birthday, "DD-MM-YYYY"),
       photo: pickedStudent?.photo,
+      gender: pickedStudent.gender,
     };
   };
 
