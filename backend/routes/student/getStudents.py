@@ -5,7 +5,7 @@ from models.student import Student
 def getStudents():
     if request.method == "GET":
         try:
-            students = Student.query.all()
+            students = Student.query.order_by(Student.lastname).all()
             correctDict = str(students).replace("'", '"')
 
             return correctDict, 200
